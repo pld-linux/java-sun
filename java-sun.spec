@@ -1,18 +1,31 @@
 Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
-Version:	1.4.1_03
+Version:	1.4.2
 Release:	1
 License:	restricted, non-distributable
 Group:		Development/Languages/Java
-# download through forms from http://java.sun.com/j2se/1.4.1/download.html
-Source0:	j2sdk-1_4_1_03-linux-i586.bin
+# download through forms from http://java.sun.com/j2se/1.4.2/download.html
+Source0:	j2sdk-1_4_2-linux-i586.bin
 NoSource:	0
 URL:		http://java.sun.com/linux/
 BuildRequires:	unzip
 Requires:	java-sun-jre = %{version}
 Provides:	jdk = %{version}
 Provides:	j2sdk = %{version}
+Provides:	jndi = %{version}
+Provides:	jndi-ldap = %{version}
+Provides:	jndi-cos = %{version}
+Provides:	jndi-rmi = %{version}
+Provides:       jndi-dns = %{version}
+Provides:	jaas = %{version}
+Provides:       jsse = %{version}
+Provides:       jce = %{version}
+Provides:	jdbc-stdext = 3.0
+Provides:	jdbc-stdext = %{version}
+Provides:	libjava.so(SUNWprivate_1.1)
+Provides:	libnet.so(SUNWprivate_1.1)
+Provides:	libverify.so(SUNWprivate_1.1)
 Obsoletes:	blackdown-java-sdk
 Obsoletes:	ibm-java
 Obsoletes:	java-blackdown
@@ -23,20 +36,26 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		javadir		%{_libdir}/java
 %define		jredir		%{_libdir}/java/jre
-%define		classdir	%{_datadir}/java
+%define		_javalibdir	%{_datadir}/java
 %define		netscape4dir	/usr/lib/netscape
 %define		mozilladir	/usr/lib/mozilla
-
-# prevent wrong requires when building with another JRE
-%define		_noautoreqdep	libawt.so libjava.so libjvm.so libmlib_image.so libverify.so libnet.so
-# ??? unixODBC-devel?
-%define		_noautoreq	libodbcinst.so libodbc.so
 
 %description
 Java Development Kit for Linux.
 
 %description -l pl
 ¦rodowisko programistyczne Javy dla Linuksa.
+
+%package jdbc
+Summary:	JDBC files for %{name}
+Group:		Development/Libraries/Java
+Requires:	%{name} = %{version}-%{release}
+AutoReqProv:    no
+Requires:	libodbc.so.1
+Requires:	libodbcinst.so.1
+
+%description jdbc
+This package contains JDBC files for %{name}.
 
 %package jre
 Summary:	Sun JRE (Java Runtime Environment) for Linux
@@ -45,7 +64,7 @@ Group:		Development/Languages/Java
 Provides:	java1.4
 Provides:	jre = %{version}
 Requires:	java-shared
-#rovides:	jar
+Provides:	javaws = %{version}
 Provides:	java
 Obsoletes:	jre
 Obsoletes:	java-blackdown-jre
@@ -119,6 +138,7 @@ Obsoletes:	java-sun-moz-plugin
 Obsoletes:	jre-mozilla-plugin
 Obsoletes:	mozilla-plugin-blackdown-java-sdk
 Obsoletes:	mozilla-plugin-java-blackdown
+Obsoletes:	mozilla-plugin-gcc32-%{name}
 
 %description -n mozilla-plugin-%{name}
 Java plugin for Mozilla.
@@ -126,18 +146,37 @@ Java plugin for Mozilla.
 %description -n mozilla-plugin-%{name} -l pl
 Wtyczka z obs³ug± Javy dla Mozilli.
 
+%package -n mozilla-plugin-gcc32-%{name}
+Summary:	Mozilla Java plugin
+Summary(pl):	Wtyczka Javy do Mozilli
+Group:		Development/Languages/Java
+PreReq:		mozilla-embedded
+Requires:	jre = %{version}
+Obsoletes:	blackdown-java-sdk-mozilla-plugin
+Obsoletes:	java-sun-moz-plugin
+Obsoletes:	jre-mozilla-plugin
+Obsoletes:	mozilla-plugin-blackdown-java-sdk
+Obsoletes:	mozilla-plugin-java-blackdown
+Obsoletes:	mozilla-plugin-%{name}
+
+%description -n mozilla-plugin-gcc32-%{name}
+Java plugin for Mozilla.
+
+%description -n mozilla-plugin-gcc32-%{name} -l pl
+Wtyczka z obs³ug± Javy dla Mozilli.
+
+
 %prep
 %setup -q -T -c -n j2sdk%{version}
 cd ..
-outname=install.sfx.$$
-tail +438 %{SOURCE0} >$outname
-chmod +x $outname
-./$outname
-rm -f $outname
+export MORE=10000
+sh %{SOURCE0} <<EOF
+yes
+EOF
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{jredir},%{classdir},%{_bindir},%{_includedir}} \
+install -d $RPM_BUILD_ROOT{%{jredir},%{_javalibdir},%{_bindir},%{_includedir}} \
 	$RPM_BUILD_ROOT%{_mandir}/{,ja/}man1
 
 cp -rf bin demo include lib $RPM_BUILD_ROOT%{javadir}
@@ -170,19 +209,41 @@ rm -f $RPM_BUILD_ROOT%{javadir}/bin/java
 ln -sf %{jredir}/bin/java $RPM_BUILD_ROOT%{javadir}/bin/java
 
 install -d $RPM_BUILD_ROOT%{netscape4dir}/{plugins,java/classes}
-install jre/plugin/i386/ns4/javaplugin.so $RPM_BUILD_ROOT%{netscape4dir}/plugins
+install jre/plugin/i386/ns4/libjavaplugin.so $RPM_BUILD_ROOT%{netscape4dir}/plugins
 for i in javaplugin rt sunrsasign ; do
 	ln -sf %{jredir}/lib/$i.jar $RPM_BUILD_ROOT%{netscape4dir}/java/classes
 done
 
-install -d $RPM_BUILD_ROOT{%{mozilladir}/plugins,%{jredir}/plugin/i386/ns610}
+install -d $RPM_BUILD_ROOT{%{mozilladir}/plugins,%{jredir}/plugin/i386/{ns610,ns610-gcc32}}
 install jre/plugin/i386/ns610/libjavaplugin_oji.so \
 	$RPM_BUILD_ROOT%{jredir}/plugin/i386/ns610
 ln -sf %{jredir}/plugin/i386/ns610/libjavaplugin_oji.so \
 	$RPM_BUILD_ROOT%{mozilladir}/plugins
+install jre/plugin/i386/ns610-gcc32/libjavaplugin_oji.so \
+	$RPM_BUILD_ROOT%{jredir}/plugin/i386/ns610-gcc32
+ln -sf %{jredir}/plugin/i386/ns610-gcc32/libjavaplugin_oji.so \
+	$RPM_BUILD_ROOT%{mozilladir}/plugins/libjavaplugin_oji-gcc32.so
 
 # these binaries are in %{jredir}/bin - not needed in %{javadir}/bin?
 rm -f $RPM_BUILD_ROOT%{javadir}/bin/{ControlPanel,keytool,kinit,klist,ktab,orbd,policytool,rmid,rmiregistry,servertool,tnameserv}
+
+ln -sf %{jredir}/lib/jsse.jar $RPM_BUILD_ROOT/%{_javalibdir}/jsse.jar
+ln -sf %{jredir}/lib/jsse.jar $RPM_BUILD_ROOT/%{_javalibdir}/jcert.jar
+ln -sf %{jredir}/lib/jsse.jar $RPM_BUILD_ROOT/%{_javalibdir}/jnet.jar
+ln -sf %{jredir}/lib/jce.jar $RPM_BUILD_ROOT/%{_javalibdir}/jce.jar
+ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT/%{_javalibdir}/jndi.jar
+ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT/%{_javalibdir}/jndi-ldap.jar
+ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT/%{_javalibdir}/jndi-cos.jar
+ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT/%{_javalibdir}/jndi-rmi.jar
+ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT/%{_javalibdir}/jaas.jar
+ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT/%{_javalibdir}/jdbc-stdext.jar
+ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT/%{_javalibdir}/jdbc-stdext-3.0.jar
+
+install -d -m 755 $RPM_BUILD_ROOT%{jredir}/javaws
+cp -a jre/javaws/* $RPM_BUILD_ROOT%{jredir}/javaws
+perl -p -i -e 's#javaws\.cfg\.jre\.0\.path=.*#javaws\.cfg\.jre\.0\.path=%{jredir}/bin/java#' $RPM_BUILD_ROOT%{jredir}/javaws/javaws.cfg
+ln -sf %{jredir}/javaws/javaws.jar $RPM_BUILD_ROOT/%{_javalibdir}/javaws.jar
+ln -sf %{jredir}/javaws/javaws-l10n.jar $RPM_BUILD_ROOT/%{_javalibdir}/javaws-l10n.jar
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -231,6 +292,13 @@ fi
 %dir %{javadir}/lib
 %{javadir}/lib/*.jar
 %{javadir}/lib/*.idl
+%{_javalibdir}/jsse.jar
+%{_javalibdir}/jcert.jar
+%{_javalibdir}/jnet.jar
+%{_javalibdir}/jce.jar
+%{_javalibdir}/jndi*.jar
+%{_javalibdir}/jaas.jar
+%{_javalibdir}/jdbc-stdext*.jar
 %{_mandir}/man1/appletviewer.1*
 %{_mandir}/man1/extcheck.1*
 %{_mandir}/man1/idlj.1*
@@ -256,6 +324,10 @@ fi
 %lang(ja) %{_mandir}/ja/man1/native2ascii.1*
 #lang(ja) %{_mandir}/ja/man1/rmic.1*
 %lang(ja) %{_mandir}/ja/man1/serialver.1*
+
+%files jdbc
+%defattr(644,root,root,755)
+%attr(755,root,root) %{jredir}/lib/i386/libJdbcOdbc.so
 
 %files jre
 %defattr(644,root,root,755)
@@ -297,7 +369,12 @@ fi
 %{jredir}/lib/cmm
 %{jredir}/lib/ext
 %{jredir}/lib/fonts
-%attr(755,root,root) %{jredir}/lib/i386
+%attr(755,root,root) %{jredir}/lib/i386/client
+%attr(755,root,root) %{jredir}/lib/i386/native_threads
+%attr(755,root,root) %{jredir}/lib/i386/server
+%{jredir}/lib/i386/jvm.cfg
+%attr(755,root,root) %{jredir}/lib/i386/awt_robot
+%attr(755,root,root) %{jredir}/lib/i386/lib[acdfhijmnrvz]*.so
 %{jredir}/lib/im
 %{jredir}/lib/images
 %dir %{jredir}/lib/security
@@ -312,8 +389,10 @@ fi
 ##%lang(zh) %{jredir}/lib/*.properties.zh
 %dir %{jredir}/plugin
 %dir %{jredir}/plugin/i386
-%dir %{classdir}
+%dir %{_javalibdir}
+%{_javalibdir}/javaws*.jar
 %{_mandir}/man1/java.1*
+%{_mandir}/man1/javaws.1*
 %{_mandir}/man1/keytool.1*
 %{_mandir}/man1/orbd.1*
 %{_mandir}/man1/policytool.1*
@@ -321,6 +400,7 @@ fi
 %{_mandir}/man1/servertool.1*
 %{_mandir}/man1/tnameserv.1*
 %lang(ja) %{_mandir}/ja/man1/java.1*
+%lang(ja) %{_mandir}/ja/man1/javaws.1*
 %lang(ja) %{_mandir}/ja/man1/keytool.1*
 %lang(ja) %{_mandir}/ja/man1/orbd.1*
 %lang(ja) %{_mandir}/ja/man1/policytool.1*
@@ -328,6 +408,15 @@ fi
 #lang(ja) %{_mandir}/ja/man1/rmiregistry.1*
 %lang(ja) %{_mandir}/ja/man1/servertool.1*
 %lang(ja) %{_mandir}/ja/man1/tnameserv.1*
+%dir %{jredir}/javaws
+%{jredir}/javaws/resources
+%attr(755,root,root) %{jredir}/javaws/javaws
+%attr(755,root,root) %{jredir}/javaws/javawsbin
+%{jredir}/javaws/cacerts
+%{jredir}/javaws/*.gif
+%{jredir}/javaws/*.jar
+%{jredir}/javaws/*.policy
+%{jredir}/javaws/*.html
 
 %files demos
 %defattr(644,root,root,755)
@@ -345,7 +434,7 @@ fi
 
 %files -n netscape4-plugin-%{name}
 %defattr(644,root,root,755)
-%attr(755,root,root) %{netscape4dir}/plugins/javaplugin.so
+%attr(755,root,root) %{netscape4dir}/plugins/libjavaplugin.so
 %{netscape4dir}/java/classes/*
 %dir %{jredir}/lib/locale
 %lang(de) %{jredir}/lib/locale/de
@@ -366,3 +455,9 @@ fi
 %dir %{jredir}/plugin/i386/ns610
 %attr(755,root,root) %{jredir}/plugin/i386/ns610/libjavaplugin_oji.so
 %{mozilladir}/plugins/libjavaplugin_oji.so
+
+%files -n mozilla-plugin-gcc32-%{name}
+%defattr(644,root,root,755)
+%dir %{jredir}/plugin/i386/ns610-gcc32
+%attr(755,root,root) %{jredir}/plugin/i386/ns610-gcc32/libjavaplugin_oji.so
+%{mozilladir}/plugins/libjavaplugin_oji-gcc32.so
