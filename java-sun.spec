@@ -1,18 +1,21 @@
+%define		_ver	1.5.0.01
+%define		_src_ver	%(echo %{_ver}|tr . _)
+%define		_dir_ver	%(echo %{_ver}|sed 's/\\.\\(..\\)$/_\\1/')
 Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
-Version:	1.5.0
+Version:	%{_ver}
 Release:	1
 License:	restricted, non-distributable
 Group:		Development/Languages/Java
 # download directly from http://java.sun.com/j2se/1.5.0/download.jsp
 %ifarch %{ix86}
-Source0:	jdk-1_5_0-linux-i586.bin
-# NoSource0-md5: 81d0511feb32e7b7d61f7c07ee0b15e9
+Source0:	jdk-%{_src_ver}-linux-i586.bin
+# NoSource0-md5: 3e3aa7f89685a30c5c343f8f70966800
 %endif
 %ifarch amd64
-Source0:	jdk-1_5_0-linux-amd64.bin
-# NoSource0-md5: 70ba79bdbf8cd2ba62f0fb99058c0ee9
+Source0:	jdk-%{_src_ver}-linux-amd64.bin
+# NoSource0-md5: 99261de1c6c7774502eaa505cdfb1dec
 %endif
 NoSource:	0
 Patch0:		%{name}-ControlPanel-fix.patch
@@ -244,13 +247,13 @@ Java plugin for Mozilla Firefox compiled using gcc 3.
 Wtyczka z obs³ug± Javy dla Mozilli Firefox skompilowana przy u¿yciu gcc 3.
 
 %prep
-%setup -q -T -c -n jdk%{version}
+%setup -q -T -c -n jdk%{_dir_ver}
 cd ..
 export MORE=10000
 sh %{SOURCE0} <<EOF
 yes
 EOF
-cd jdk%{version}
+cd jdk%{_dir_ver}
 %ifnarch amd64
 %patch0 -p1
 %patch1 -p1
