@@ -1,12 +1,12 @@
 Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
-Version:	1.4.0
+Version:	1.4.0_01
 Release:	0.5
 License:	restricted, non-distributable
 Group:		Development/Languages/Java
 URL:		http://java.sun.com/linux/
-Source0:	ftp://128.167.104.34/pub/j2sdk/1.4.0/poiu4rfpo4/j2sdk-1_4_0-linux-i386.bin
+Source0:	ftp://128.167.104.34/pub/j2sdk/1.4.0/poiu4rfpo4/j2sdk-1_4_0_01-linux-i586.bin
 NoSource:	0
 Provides:	jdk = %{version}
 Requires:	java-sun-jre = %{version}
@@ -98,7 +98,7 @@ Plugin z obs³ug± Javy dla Mozilli.
 %setup -q -T -c -n j2sdk%{version}
 cd ..
 outname=install.sfx.$$
-tail +295 %{SOURCE0} >$outname
+tail +336 %{SOURCE0} >$outname
 chmod +x $outname
 ./$outname
 rm -f $outname
@@ -132,15 +132,15 @@ for i in HtmlConverter appletviewer extcheck idlj jar jarsigner java-rmi.cgi \
 done
 
 install -d $RPM_BUILD_ROOT%{netscape4dir}/{plugins,java/classes}
-install jre/plugin/i386/ns4/javaplugin140.so $RPM_BUILD_ROOT%{netscape4dir}/plugins
+install jre/plugin/i386/ns4/javaplugin.so $RPM_BUILD_ROOT%{netscape4dir}/plugins
 for i in javaplugin rt sunrsasign ; do
 	ln -sf %{jredir}/lib/$i.jar $RPM_BUILD_ROOT%{netscape4dir}/java/classes
 done
 
 install -d $RPM_BUILD_ROOT{%{mozilladir}/plugins,%{jredir}/plugin/i386/ns610}
-install jre/plugin/i386/ns610/libjavaplugin_oji140.so \
+install jre/plugin/i386/ns610/libjavaplugin_oji.so \
 	$RPM_BUILD_ROOT%{jredir}/plugin/i386/ns610
-ln -sf %{jredir}/plugin/i386/ns610/libjavaplugin_oji140.so \
+ln -sf %{jredir}/plugin/i386/ns610/libjavaplugin_oji.so \
 	$RPM_BUILD_ROOT%{mozilladir}/plugins
 
 gzip -9nf COPYRIGHT LICENSE README \
@@ -223,7 +223,7 @@ ln -sf %{jdkdir} %{_libdir}/java
 
 %files -n java-sun-nn4-plugin
 %defattr(644,root,root,755)
-%attr(755,root,root) %{netscape4dir}/plugins/javaplugin140.so
+%attr(755,root,root) %{netscape4dir}/plugins/javaplugin.so
 %{netscape4dir}/java/classes/*
 %dir %{jredir}/lib/locale
 %lang(de) %{jredir}/lib/locale/de
@@ -242,5 +242,5 @@ ln -sf %{jdkdir} %{_libdir}/java
 %files -n mozilla-plugin-%{name}
 %defattr(644,root,root,755)
 %dir %{jredir}/plugin/i386/ns610
-%attr(755,root,root) %{jredir}/plugin/i386/ns610/libjavaplugin_oji140.so
-%{mozilladir}/plugins/libjavaplugin_oji140.so
+%attr(755,root,root) %{jredir}/plugin/i386/ns610/libjavaplugin_oji.so
+%{mozilladir}/plugins/libjavaplugin_oji.so
