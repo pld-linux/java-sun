@@ -2,13 +2,13 @@ Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	1.5.0
-Release:	0.beta3.2
+Release:	0.beta3.3
 License:	restricted, non-distributable
 Group:		Development/Languages/Java
 # download directly from http://java.sun.com/j2se/1.5.0/snapshots/index.jsp
 %ifarch %{ix86}
-Source0:	jdk-1_5_0-beta3-bin-b57-linux-i586-23_jun_2004.bin
-# NoSource0-md5: ddbdcf7cde8d261f4ac975572e2b6d85
+Source0:	jdk-1_5_0-beta3-bin-b60-linux-i586-28_jul_2004.bin
+# NoSource0-md5: c0e25a0776a957a8872382c5b90ef9ca
 %endif
 %ifarch amd64
 Source0:	jdk-1_5_0-beta3-bin-b57-linux-amd64-23_jun_2004.bin
@@ -265,7 +265,8 @@ for i in ControlPanel java java_vm keytool ktab orbd policytool \
 done
 
 for i in HtmlConverter appletviewer extcheck idlj jar jarsigner java-rmi.cgi \
-         javac javadoc javah javap jdb native2ascii rmic serialver ; do
+         javac javadoc javah javap javaws jconsole jdb jinfo jmap jps \
+	 jsadebugd jstack jstat jstatd native2ascii rmic serialver ; do
 	ln -sf %{javadir}/bin/$i $RPM_BUILD_ROOT%{_bindir}/$i
 done
 
@@ -304,14 +305,13 @@ ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{_javadir}/jdbc-stdext-3.0.jar
 
 install -d -m 755 $RPM_BUILD_ROOT%{jredir}/javaws
 cp -a jre/javaws/* $RPM_BUILD_ROOT%{jredir}/javaws
-perl -p -i -e 's#javaws\.cfg\.jre\.0\.path=.*#javaws\.cfg\.jre\.0\.path=%{jredir}/bin/java#' $RPM_BUILD_ROOT%{jredir}/javaws/javaws.cfg
 ln -sf %{jredir}/lib/javaws.jar $RPM_BUILD_ROOT%{_javadir}/javaws.jar
-#ln -sf %{jredir}/javaws/javaws-l10n.jar $RPM_BUILD_ROOT%{_javadir}/javaws-l10n.jar
 mv -f $RPM_BUILD_ROOT{%{jredir}/lib,%{_datadir}}/locale
 
-# XXX: check
-mv -f %{_datadir}/locale/{zh,zh_CN}
-mv -f %{_datadir}/locale/{zh_HK.BIG5HK,zh_HK}
+# standardize dir names
+mv -f $RPM_BUILD_ROOT%{_datadir}/locale/{zh,zh_CN}
+mv -f $RPM_BUILD_ROOT%{_datadir}/locale/{zh_HK.BIG5HK,zh_HK}
+rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/{ko.UTF-8,zh.GBK,zh_TW.BIG5}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -338,10 +338,18 @@ fi
 %attr(755,root,root) %{_bindir}/javah
 %attr(755,root,root) %{_bindir}/javap
 %attr(755,root,root) %{_bindir}/jdb
+%attr(755,root,root) %{_bindir}/jinfo
+%attr(755,root,root) %{_bindir}/jmap
+%attr(755,root,root) %{_bindir}/jps
+%attr(755,root,root) %{_bindir}/jsadebugd
+%attr(755,root,root) %{_bindir}/jstack
+%attr(755,root,root) %{_bindir}/jstat
+%attr(755,root,root) %{_bindir}/jstatd
 %attr(755,root,root) %{_bindir}/native2ascii
 %attr(755,root,root) %{_bindir}/serialver
 %attr(755,root,root) %{javadir}/bin/HtmlConverter
 %attr(755,root,root) %{javadir}/bin/appletviewer
+%attr(755,root,root) %{javadir}/bin/apt
 %attr(755,root,root) %{javadir}/bin/extcheck
 %attr(755,root,root) %{javadir}/bin/idlj
 %attr(755,root,root) %{javadir}/bin/jarsigner
@@ -350,12 +358,9 @@ fi
 %attr(755,root,root) %{javadir}/bin/javadoc
 %attr(755,root,root) %{javadir}/bin/javah
 %attr(755,root,root) %{javadir}/bin/javap
-%attr(755,root,root) %{javadir}/bin/jdb
-%attr(755,root,root) %{javadir}/bin/native2ascii
-%attr(755,root,root) %{javadir}/bin/serialver
-%attr(755,root,root) %{javadir}/bin/apt
 %attr(755,root,root) %{javadir}/bin/javaws
 %attr(755,root,root) %{javadir}/bin/jconsole
+%attr(755,root,root) %{javadir}/bin/jdb
 %attr(755,root,root) %{javadir}/bin/jinfo
 %attr(755,root,root) %{javadir}/bin/jmap
 %attr(755,root,root) %{javadir}/bin/jps
@@ -363,11 +368,14 @@ fi
 %attr(755,root,root) %{javadir}/bin/jstack
 %attr(755,root,root) %{javadir}/bin/jstat
 %attr(755,root,root) %{javadir}/bin/jstatd
+%attr(755,root,root) %{javadir}/bin/native2ascii
+%attr(755,root,root) %{javadir}/bin/serialver
 %{javadir}/include
 %dir %{javadir}/lib
 %{javadir}/lib/*.jar
 %{javadir}/lib/*.idl
 %{_mandir}/man1/appletviewer.1*
+#%{_mandir}/man1/apt.1*
 %{_mandir}/man1/extcheck.1*
 %{_mandir}/man1/idlj.1*
 %{_mandir}/man1/jarsigner.1*
@@ -376,10 +384,18 @@ fi
 %{_mandir}/man1/javah.1*
 %{_mandir}/man1/javap.1*
 %{_mandir}/man1/jdb.1*
+%{_mandir}/man1/jinfo.1*
+%{_mandir}/man1/jmap.1*
+%{_mandir}/man1/jps.1*
+%{_mandir}/man1/jsadebugd.1*
+%{_mandir}/man1/jstack.1*
+%{_mandir}/man1/jstat.1*
+%{_mandir}/man1/jstatd.1*
 %{_mandir}/man1/native2ascii.1*
 %{_mandir}/man1/serialver.1*
 %{_mandir}/man1/jconsole.1*
 %lang(ja) %{_mandir}/ja/man1/appletviewer.1*
+#%lang(ja) %{_mandir}/ja/man1/apt.1*
 %lang(ja) %{_mandir}/ja/man1/extcheck.1*
 %lang(ja) %{_mandir}/ja/man1/idlj.1*
 %lang(ja) %{_mandir}/ja/man1/jarsigner.1*
@@ -388,6 +404,13 @@ fi
 %lang(ja) %{_mandir}/ja/man1/javah.1*
 %lang(ja) %{_mandir}/ja/man1/javap.1*
 %lang(ja) %{_mandir}/ja/man1/jdb.1*
+%lang(ja) %{_mandir}/ja/man1/jinfo.1*
+%lang(ja) %{_mandir}/ja/man1/jmap.1*
+%lang(ja) %{_mandir}/ja/man1/jps.1*
+%lang(ja) %{_mandir}/ja/man1/jsadebugd.1*
+%lang(ja) %{_mandir}/ja/man1/jstack.1*
+%lang(ja) %{_mandir}/ja/man1/jstat.1*
+%lang(ja) %{_mandir}/ja/man1/jstatd.1*
 %lang(ja) %{_mandir}/ja/man1/native2ascii.1*
 %lang(ja) %{_mandir}/ja/man1/serialver.1*
 %lang(ja) %{_mandir}/ja/man1/jconsole.1*
@@ -440,6 +463,7 @@ fi
 %{jredir}/lib/cmm
 %{jredir}/lib/ext
 %{jredir}/lib/fonts
+%dir %{jredir}/lib/i386
 %attr(755,root,root) %{jredir}/lib/i386/client
 %attr(755,root,root) %{jredir}/lib/i386/native_threads
 %attr(755,root,root) %{jredir}/lib/i386/server
@@ -497,6 +521,7 @@ fi
 %attr(755,root,root) %{jredir}/lib/i386/libunpack.so
 %attr(755,root,root) %{jredir}/lib/i386/motif21/libmawt.so
 %attr(755,root,root) %{jredir}/lib/i386/xawt/libmawt.so
+%dir %{jredir}/lib/javaws
 %{jredir}/lib/javaws/Java1.5.ico
 %{jredir}/lib/javaws/messages.properties
 %{jredir}/lib/javaws/messages_de.properties
@@ -515,16 +540,12 @@ fi
 %lang(fr) %{_datadir}/locale/fr/LC_MESSAGES/sunw_java_plugin.mo
 %lang(it) %{_datadir}/locale/it/LC_MESSAGES/sunw_java_plugin.mo
 %lang(ja) %{_datadir}/locale/ja/LC_MESSAGES/sunw_java_plugin.mo
-# ?
-#%lang(ko) %{_datadir}/locale/ko.UTF-8/LC_MESSAGES/sunw_java_plugin.mo
 %lang(ko) %{_datadir}/locale/ko/LC_MESSAGES/sunw_java_plugin.mo
 %lang(sv) %{_datadir}/locale/sv/LC_MESSAGES/sunw_java_plugin.mo
-# ?
-#%lang(zh_CN) %{_datadir}/locale/zh.GBK/LC_MESSAGES/sunw_java_plugin.mo
 %lang(zh_CN) %{_datadir}/locale/zh_CN/LC_MESSAGES/sunw_java_plugin.mo
 %lang(zh_HK) %{_datadir}/locale/zh_HK/LC_MESSAGES/sunw_java_plugin.mo
-#%lang(zh_TW) %{_datadir}/locale/zh_TW.BIG5/LC_MESSAGES/sunw_java_plugin.mo
 %lang(zh_TW) %{_datadir}/locale/zh_TW/LC_MESSAGES/sunw_java_plugin.mo
+%dir %{jredir}/lib/management
 %{jredir}/lib/management/jmxremote.access
 %{jredir}/lib/management/jmxremote.password.template
 %{jredir}/lib/management/management.properties
@@ -533,9 +554,9 @@ fi
 %{_pixmapsdir}/sun_java.png
 %{_mandir}/man1/java.1*
 %{_mandir}/man1/javaws.1*
-%{_mandir}/man1/keytool.1*
 %{_mandir}/man1/jkinit.1*
 %{_mandir}/man1/jklist.1*
+%{_mandir}/man1/keytool.1*
 %{_mandir}/man1/ktab.1*
 %{_mandir}/man1/orbd.1*
 %{_mandir}/man1/policytool.1*
@@ -546,9 +567,9 @@ fi
 %lang(ja) %{_mandir}/ja/man1/*pack200.1*
 %lang(ja) %{_mandir}/ja/man1/java.1*
 %lang(ja) %{_mandir}/ja/man1/javaws.1*
-%lang(ja) %{_mandir}/ja/man1/keytool.1*
 %lang(ja) %{_mandir}/ja/man1/jkinit.1*
 %lang(ja) %{_mandir}/ja/man1/jklist.1*
+%lang(ja) %{_mandir}/ja/man1/keytool.1*
 %lang(ja) %{_mandir}/ja/man1/ktab.1*
 %lang(ja) %{_mandir}/ja/man1/orbd.1*
 %lang(ja) %{_mandir}/ja/man1/policytool.1*
