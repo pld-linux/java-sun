@@ -48,6 +48,11 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 # don't depend on other JRE/JDK installed on build host
 %define		_noautoreqdep	libjava.so libjvm.so
 
+%ifarch amd64
+# don't depend on old glibc libs
+%define		_noautoreq	libthread_db.so.1(GLIBC_2.2.5)
+%endif
+
 %description
 Java Development Kit for Linux.
 
@@ -78,7 +83,9 @@ Requires:	java-jre-tools
 Provides:	java1.4
 Provides:	jre = %{version}
 Provides:	java
+%ifarch %{ix86}
 Provides:	javaws = %{version}
+%endif
 Provides:	jndi = %{version}
 Provides:	jndi-ldap = %{version}
 Provides:	jndi-cos = %{version}
@@ -244,8 +251,10 @@ sh %{SOURCE0} <<EOF
 yes
 EOF
 cd jdk%{version}
+%ifnarch amd64
 %patch0 -p1
 %patch1 -p1
+%endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -296,15 +305,19 @@ ln -sf %{jredir}/bin/java $RPM_BUILD_ROOT%{javadir}/bin/java
 #done
 
 install -d $RPM_BUILD_ROOT{%{mozilladir}/plugins,%{firefoxdir}/plugins,%{jredir}/plugin/i386/ns7{,-gcc29}}
+
+%ifnarch amd64
 install jre/plugin/i386/ns7/libjavaplugin_oji.so \
 	$RPM_BUILD_ROOT%{jredir}/plugin/i386/ns7
 ln -sf %{jredir}/plugin/i386/ns7/libjavaplugin_oji.so \
 	$RPM_BUILD_ROOT%{mozilladir}/plugins
 ln -sf %{jredir}/plugin/i386/ns7/libjavaplugin_oji.so \
 	$RPM_BUILD_ROOT%{firefoxdir}/plugins
+
 install  -d $RPM_BUILD_ROOT{%{_desktopdir},%{_pixmapsdir}}
 install jre/plugin/desktop/*.desktop $RPM_BUILD_ROOT%{_desktopdir}
 install jre/plugin/desktop/*.png $RPM_BUILD_ROOT%{_pixmapsdir}
+%endif
 
 # these binaries are in %{jredir}/bin - not needed in %{javadir}/bin?
 rm -f $RPM_BUILD_ROOT%{javadir}/bin/{ControlPanel,keytool,kinit,klist,ktab,orbd,policytool,rmid,rmiregistry,servertool,tnameserv}
@@ -321,6 +334,7 @@ ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{_javadir}/jaas.jar
 ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{_javadir}/jdbc-stdext.jar
 ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{_javadir}/jdbc-stdext-3.0.jar
 
+%ifnarch amd64
 install -d -m 755 $RPM_BUILD_ROOT%{jredir}/javaws
 cp -a jre/javaws/* $RPM_BUILD_ROOT%{jredir}/javaws
 ln -sf %{jredir}/lib/javaws.jar $RPM_BUILD_ROOT%{_javadir}/javaws.jar
@@ -330,6 +344,7 @@ mv -f $RPM_BUILD_ROOT{%{jredir}/lib,%{_datadir}}/locale
 mv -f $RPM_BUILD_ROOT%{_datadir}/locale/{zh,zh_CN}
 mv -f $RPM_BUILD_ROOT%{_datadir}/locale/{zh_HK.BIG5HK,zh_HK}
 rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/{ko.UTF-8,zh.GBK,zh_TW.BIG5}
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -345,12 +360,14 @@ fi
 %files
 %defattr(644,root,root,755)
 %doc COPYRIGHT LICENSE README.html
+%ifarch %{ix86}
 %attr(755,root,root) %{_bindir}/HtmlConverter
+%attr(755,root,root) %{_bindir}/java-rmi.cgi
+%endif
 %attr(755,root,root) %{_bindir}/appletviewer
 %attr(755,root,root) %{_bindir}/extcheck
 %attr(755,root,root) %{_bindir}/idlj
 %attr(755,root,root) %{_bindir}/jarsigner
-%attr(755,root,root) %{_bindir}/java-rmi.cgi
 %attr(755,root,root) %{_bindir}/javac
 %attr(755,root,root) %{_bindir}/javadoc
 %attr(755,root,root) %{_bindir}/javah
@@ -365,18 +382,20 @@ fi
 %attr(755,root,root) %{_bindir}/jstatd
 %attr(755,root,root) %{_bindir}/native2ascii
 %attr(755,root,root) %{_bindir}/serialver
+%ifarch %{ix86}
 %attr(755,root,root) %{javadir}/bin/HtmlConverter
+%attr(755,root,root) %{javadir}/bin/java-rmi.cgi
+%attr(755,root,root) %{javadir}/bin/javaws
+%endif
 %attr(755,root,root) %{javadir}/bin/appletviewer
 %attr(755,root,root) %{javadir}/bin/apt
 %attr(755,root,root) %{javadir}/bin/extcheck
 %attr(755,root,root) %{javadir}/bin/idlj
 %attr(755,root,root) %{javadir}/bin/jarsigner
-%attr(755,root,root) %{javadir}/bin/java-rmi.cgi
 %attr(755,root,root) %{javadir}/bin/javac
 %attr(755,root,root) %{javadir}/bin/javadoc
 %attr(755,root,root) %{javadir}/bin/javah
 %attr(755,root,root) %{javadir}/bin/javap
-%attr(755,root,root) %{javadir}/bin/javaws
 %attr(755,root,root) %{javadir}/bin/jconsole
 %attr(755,root,root) %{javadir}/bin/jdb
 %attr(755,root,root) %{javadir}/bin/jinfo
@@ -435,13 +454,21 @@ fi
 
 %files jre-jdbc
 %defattr(644,root,root,755)
+%ifarch %{ix86}
 %attr(755,root,root) %{jredir}/lib/i386/libJdbcOdbc.so
+%endif
+%ifarch amd64
+%attr(755,root,root) %{jredir}/lib/amd64/libJdbcOdbc.so
+%endif
 
 %files jre
 %defattr(644,root,root,755)
-%doc jre/{CHANGES,COPYRIGHT,LICENSE,README,Xusage*,*.txt}
+%doc jre/{CHANGES,COPYRIGHT,LICENSE,README,*.txt}
 %doc jre/Welcome.html
+%ifarch %{ix86}
+%doc jre/Xusage*
 %attr(755,root,root) %{_bindir}/ControlPanel
+%endif
 %attr(755,root,root) %{_bindir}/java
 %attr(755,root,root) %{_bindir}/java_vm
 %attr(755,root,root) %{_bindir}/keytool
@@ -453,7 +480,9 @@ fi
 %attr(755,root,root) %{_bindir}/rmid
 %attr(755,root,root) %{_bindir}/servertool
 %attr(755,root,root) %{_bindir}/tnameserv
+%ifarch %{ix86}
 %attr(755,root,root) %{jredir}/bin/javaws
+%endif
 %attr(755,root,root) %{jredir}/bin/pack200
 %attr(755,root,root) %{jredir}/bin/unpack200
 %attr(755,root,root) %{javadir}/bin/pack200
@@ -463,9 +492,11 @@ fi
 %attr(755,root,root) %{javadir}/bin/java
 %dir %{jredir}
 %dir %{jredir}/bin
+%ifarch %{ix86}
 %attr(755,root,root) %{jredir}/bin/ControlPanel
-%attr(755,root,root) %{jredir}/bin/java
 %attr(755,root,root) %{jredir}/bin/java_vm
+%endif
+%attr(755,root,root) %{jredir}/bin/java
 %attr(755,root,root) %{jredir}/bin/keytool
 %attr(755,root,root) %{jredir}/bin/kinit
 %attr(755,root,root) %{jredir}/bin/klist
@@ -481,6 +512,7 @@ fi
 %{jredir}/lib/cmm
 %{jredir}/lib/ext
 %{jredir}/lib/fonts
+%ifarch %{ix86}
 %dir %{jredir}/lib/i386
 %dir %{jredir}/lib/i386/xawt
 %dir %{jredir}/lib/i386/motif21
@@ -492,6 +524,20 @@ fi
 %attr(755,root,root) %{jredir}/lib/i386/awt_robot
 %attr(755,root,root) %{jredir}/lib/i386/lib[acdfhijmnrvz]*.so
 %exclude %{jredir}/lib/i386/libjsoundalsa.so
+%endif
+%ifarch amd64
+%dir %{jredir}/lib/amd64
+%attr(755,root,root) %dir %{jredir}/lib/amd64/xawt
+%attr(755,root,root) %dir %{jredir}/lib/amd64/motif21
+%attr(755,root,root) %dir %{jredir}/lib/amd64/headless
+#%attr(755,root,root) %{jredir}/lib/i386/client
+%attr(755,root,root) %{jredir}/lib/amd64/native_threads
+%attr(755,root,root) %{jredir}/lib/amd64/server
+%{jredir}/lib/amd64/jvm.cfg
+%attr(755,root,root) %{jredir}/lib/amd64/awt_robot
+%attr(755,root,root) %{jredir}/lib/amd64/lib[acdfhijmnrvz]*.so
+%exclude %{jredir}/lib/amd64/libjsoundalsa.so
+%endif
 %{jredir}/lib/im
 %{jredir}/lib/images
 %dir %{jredir}/lib/security
@@ -508,7 +554,9 @@ fi
 %dir %{jredir}/plugin/i386
 %dir %{_javadir}
 %{_javadir}/jaas.jar
+%ifarch %{ix86}
 %{_javadir}/javaws*.jar
+%endif
 %{_javadir}/jce.jar
 %{_javadir}/jcert.jar
 %{_javadir}/jdbc-stdext*.jar
@@ -536,6 +584,7 @@ fi
 %{jredir}/lib/fontconfig.Turbo.properties.src
 %{jredir}/lib/fontconfig.bfc
 %{jredir}/lib/fontconfig.properties.src
+%ifarch %{ix86}
 %attr(755,root,root) %{jredir}/lib/i386/gtkhelper
 %attr(755,root,root) %{jredir}/lib/i386/headless/libmawt.so
 %attr(755,root,root) %{jredir}/lib/i386/libsaproc.so
@@ -566,15 +615,26 @@ fi
 %lang(zh_CN) %{_datadir}/locale/zh_CN/LC_MESSAGES/sunw_java_plugin.mo
 %lang(zh_HK) %{_datadir}/locale/zh_HK/LC_MESSAGES/sunw_java_plugin.mo
 %lang(zh_TW) %{_datadir}/locale/zh_TW/LC_MESSAGES/sunw_java_plugin.mo
+%endif
+%ifarch amd64
+%attr(755,root,root) %{jredir}/lib/amd64/gtkhelper
+%attr(755,root,root) %{jredir}/lib/amd64/headless/libmawt.so
+%attr(755,root,root) %{jredir}/lib/amd64/libsaproc.so
+%attr(755,root,root) %{jredir}/lib/amd64/libunpack.so
+%attr(755,root,root) %{jredir}/lib/amd64/motif21/libmawt.so
+%attr(755,root,root) %{jredir}/lib/amd64/xawt/libmawt.so
+%endif
 %dir %{jredir}/lib/management
 %{jredir}/lib/management/jmxremote.access
 %{jredir}/lib/management/jmxremote.password.template
 %{jredir}/lib/management/management.properties
 %{jredir}/lib/management/snmp.acl.template
+%{_mandir}/man1/java.1*
+%ifarch %{ix86}
 %{_desktopdir}/sun_java.desktop
 %{_pixmapsdir}/sun_java.png
-%{_mandir}/man1/java.1*
 %{_mandir}/man1/javaws.1*
+%endif
 %{_mandir}/man1/jkinit.1*
 %{_mandir}/man1/jklist.1*
 %{_mandir}/man1/keytool.1*
@@ -587,7 +647,9 @@ fi
 %{_mandir}/man1/*pack200.1*
 %lang(ja) %{_mandir}/ja/man1/*pack200.1*
 %lang(ja) %{_mandir}/ja/man1/java.1*
+%ifarch %{ix86}
 %lang(ja) %{_mandir}/ja/man1/javaws.1*
+%endif
 %lang(ja) %{_mandir}/ja/man1/jkinit.1*
 %lang(ja) %{_mandir}/ja/man1/jklist.1*
 %lang(ja) %{_mandir}/ja/man1/keytool.1*
@@ -597,6 +659,7 @@ fi
 %lang(ja) %{_mandir}/ja/man1/rmid.1*
 %lang(ja) %{_mandir}/ja/man1/servertool.1*
 %lang(ja) %{_mandir}/ja/man1/tnameserv.1*
+%ifarch %{ix86}
 %dir %{jredir}/javaws
 ##%{jredir}/javaws/resources
 %attr(755,root,root) %{jredir}/javaws/javaws
@@ -606,10 +669,16 @@ fi
 ##%{jredir}/javaws/*.jar
 ##%{jredir}/javaws/*.policy
 ##%{jredir}/javaws/*.html
+%endif
 
 %files jre-alsa
 %defattr(644,root,root,755)
+%ifarch %{ix86}
 %attr(755,root,root) %{jredir}/lib/i386/libjsoundalsa.so
+%endif
+%ifarch amd64
+%attr(755,root,root) %{jredir}/lib/amd64/libjsoundalsa.so
+%endif
 
 %files demos
 %defattr(644,root,root,755)
@@ -633,6 +702,7 @@ fi
 %{_mandir}/man1/rmiregistry.1*
 %lang(ja) %{_mandir}/ja/man1/rmiregistry.1*
 
+%ifarch %{ix86}
 %files mozilla-plugin
 %defattr(644,root,root,755)
 %dir %{jredir}/plugin/i386/ns7
@@ -645,3 +715,4 @@ fi
 %files -n mozilla-firefox-plugin-%{name}
 %defattr(644,root,root,755)
 %attr(755,root,root) %{firefoxdir}/plugins/libjavaplugin_oji.so
+%endif
