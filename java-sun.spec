@@ -34,7 +34,6 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		javadir		%{_libdir}/java
 %define		jredir		%{_libdir}/java/jre
-%define		_javalibdir	%{_datadir}/java
 %define		netscape4dir	/usr/%{_lib}/netscape
 %define		mozilladir	/usr/%{_lib}/mozilla
 %define		firefoxdir	/usr/%{_lib}/mozilla-firefox
@@ -232,7 +231,7 @@ cd jdk%{version}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{jredir},%{_javalibdir},%{_bindir},%{_includedir}} \
+install -d $RPM_BUILD_ROOT{%{jredir},%{_javadir},%{_bindir},%{_includedir}} \
 	$RPM_BUILD_ROOT%{_mandir}/{,ja/}man1
 
 cp -rf bin demo include lib $RPM_BUILD_ROOT%{javadir}
@@ -291,23 +290,23 @@ install jre/plugin/desktop/*.png $RPM_BUILD_ROOT%{_pixmapsdir}
 # these binaries are in %{jredir}/bin - not needed in %{javadir}/bin?
 rm -f $RPM_BUILD_ROOT%{javadir}/bin/{ControlPanel,keytool,kinit,klist,ktab,orbd,policytool,rmid,rmiregistry,servertool,tnameserv}
 
-ln -sf %{jredir}/lib/jsse.jar $RPM_BUILD_ROOT%{_javalibdir}/jsse.jar
-ln -sf %{jredir}/lib/jsse.jar $RPM_BUILD_ROOT%{_javalibdir}/jcert.jar
-ln -sf %{jredir}/lib/jsse.jar $RPM_BUILD_ROOT%{_javalibdir}/jnet.jar
-ln -sf %{jredir}/lib/jce.jar $RPM_BUILD_ROOT%{_javalibdir}/jce.jar
-ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{_javalibdir}/jndi.jar
-ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{_javalibdir}/jndi-ldap.jar
-ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{_javalibdir}/jndi-cos.jar
-ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{_javalibdir}/jndi-rmi.jar
-ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{_javalibdir}/jaas.jar
-ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{_javalibdir}/jdbc-stdext.jar
-ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{_javalibdir}/jdbc-stdext-3.0.jar
+ln -sf %{jredir}/lib/jsse.jar $RPM_BUILD_ROOT%{_javadir}/jsse.jar
+ln -sf %{jredir}/lib/jsse.jar $RPM_BUILD_ROOT%{_javadir}/jcert.jar
+ln -sf %{jredir}/lib/jsse.jar $RPM_BUILD_ROOT%{_javadir}/jnet.jar
+ln -sf %{jredir}/lib/jce.jar $RPM_BUILD_ROOT%{_javadir}/jce.jar
+ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{_javadir}/jndi.jar
+ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{_javadir}/jndi-ldap.jar
+ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{_javadir}/jndi-cos.jar
+ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{_javadir}/jndi-rmi.jar
+ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{_javadir}/jaas.jar
+ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{_javadir}/jdbc-stdext.jar
+ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{_javadir}/jdbc-stdext-3.0.jar
 
 install -d -m 755 $RPM_BUILD_ROOT%{jredir}/javaws
 cp -a jre/javaws/* $RPM_BUILD_ROOT%{jredir}/javaws
 perl -p -i -e 's#javaws\.cfg\.jre\.0\.path=.*#javaws\.cfg\.jre\.0\.path=%{jredir}/bin/java#' $RPM_BUILD_ROOT%{jredir}/javaws/javaws.cfg
-ln -sf %{jredir}/lib/javaws.jar $RPM_BUILD_ROOT%{_javalibdir}/javaws.jar
-#ln -sf %{jredir}/javaws/javaws-l10n.jar $RPM_BUILD_ROOT%{_javalibdir}/javaws-l10n.jar
+ln -sf %{jredir}/lib/javaws.jar $RPM_BUILD_ROOT%{_javadir}/javaws.jar
+#ln -sf %{jredir}/javaws/javaws-l10n.jar $RPM_BUILD_ROOT%{_javadir}/javaws-l10n.jar
 mv -f $RPM_BUILD_ROOT{%{jredir}/lib,%{_datadir}}/locale
 
 %clean
@@ -459,15 +458,15 @@ fi
 ##%lang(zh) %{jredir}/lib/*.properties.zh
 %dir %{jredir}/plugin
 %dir %{jredir}/plugin/i386
-%dir %{_javalibdir}
-%{_javalibdir}/jaas.jar
-%{_javalibdir}/javaws*.jar
-%{_javalibdir}/jce.jar
-%{_javalibdir}/jcert.jar
-%{_javalibdir}/jdbc-stdext*.jar
-%{_javalibdir}/jndi*.jar
-%{_javalibdir}/jnet.jar
-%{_javalibdir}/jsse.jar
+%dir %{_javadir}
+%{_javadir}/jaas.jar
+%{_javadir}/javaws*.jar
+%{_javadir}/jce.jar
+%{_javadir}/jcert.jar
+%{_javadir}/jdbc-stdext*.jar
+%{_javadir}/jndi*.jar
+%{_javadir}/jnet.jar
+%{_javadir}/jsse.jar
 %{jredir}/lib/classlist
 %{jredir}/lib/fontconfig.RedHat.2.1.bfc
 %{jredir}/lib/fontconfig.RedHat.2.1.properties.src
