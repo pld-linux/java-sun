@@ -2,18 +2,17 @@ Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	1.5.0
-Release:	0.beta2.2
+Release:	0.beta3.1
 License:	restricted, non-distributable
 Group:		Development/Languages/Java
-# download through forms from http://java.sun.com/j2se/1.4.2/download.html
-# use wget-java
+# download directly from http://java.sun.com/j2se/1.5.0/download.jsp
 %ifarch %{ix86}
-Source0:	jdk-1_5_0-beta2-linux-i586.bin
-# NoSource0-md5: 93556887af8910d709de028ddb07f27d
+Source0:	jdk-1_5_0-beta3-bin-b57-linux-i586-23_jun_2004.bin
+# NoSource0-md5: ddbdcf7cde8d261f4ac975572e2b6d85
 %endif
 %ifarch amd64
-Source0:	jdk-1_5_0-beta2-linux-amd64.bin
-# NoSource0-md5: 04e7a35af0fd655e516f5ba3435cf632
+Source0:	jdk-1_5_0-beta3-bin-b57-linux-amd64-23_jun_2004.bin
+# NoSource0-md5: 70ba79bdbf8cd2ba62f0fb99058c0ee9
 %endif
 NoSource:	0
 Patch0:		%{name}-ControlPanel-fix.patch
@@ -30,7 +29,7 @@ Obsoletes:	java-blackdown
 Obsoletes:	jdk
 Obsoletes:	kaffe
 Conflicts:	netscape4-plugin-java-sun
-ExclusiveArch:	%{ix86}
+ExclusiveArch:	i586 i686 pentium3 pentium4 athlon amd64
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		javadir		%{_libdir}/java
