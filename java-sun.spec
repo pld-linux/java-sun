@@ -2,7 +2,7 @@ Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	1.4.0
-Release:	0.3
+Release:	0.4
 License:	restricted, non-distributable
 Group:		Development/Languages/Java
 URL:		http://java.sun.com/linux/
@@ -232,12 +232,12 @@ ln -sf %{jdkdir} %{_libdir}/java
 %lang(it) %{jredir}/lib/locale/it
 %lang(ja) %{jredir}/lib/locale/ja
 %lang(ko) %{jredir}/lib/locale/ko
-%lang(ko.UTF-8) %{jredir}/lib/locale/ko.UTF-8
+%lang(ko_KR.UTF-8) %{jredir}/lib/locale/ko.UTF-8
 %lang(sv) %{jredir}/lib/locale/sv
-%lang(zh) %{jredir}/lib/locale/zh
-%lang(zh.GBK) %{jredir}/lib/locale/zh.GBK
+%lang(zh_CN) %{jredir}/lib/locale/zh
+%lang(zh_CN.GBK) %{jredir}/lib/locale/zh.GBK
 %lang(zh_TW) %{jredir}/lib/locale/zh_TW
-%lang(zh_TW.BIG5) %{jredir}/lib/locale/zh_TW.BIG5
+%lang(zh_TW) %{jredir}/lib/locale/zh_TW.BIG5
 
 %files -n mozilla-plugin-%{name}
 %defattr(644,root,root,755)
