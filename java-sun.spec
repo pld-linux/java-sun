@@ -219,7 +219,7 @@ fi
 %attr(755,root,root) %{javadir}/bin/appletviewer
 %attr(755,root,root) %{javadir}/bin/extcheck
 %attr(755,root,root) %{javadir}/bin/idlj
-##%attr(755,root,root) %{javadir}/bin/jar
+%attr(755,root,root) %{javadir}/bin/jar
 %attr(755,root,root) %{javadir}/bin/jarsigner
 %attr(755,root,root) %{javadir}/bin/java-rmi.cgi
 %attr(755,root,root) %{javadir}/bin/javac
