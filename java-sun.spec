@@ -256,6 +256,10 @@ cd jdk%{version}
 %patch1 -p1
 %endif
 
+# these require libjava_crw_demo_g.so, which is not included
+rm -f demo/jvmti/heapTracker/lib/libheapTracker_g.so
+rm -f demo/jvmti/mtrace/lib/libmtrace_g.so
+
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{jredir},%{_javadir},%{_bindir},%{_includedir}} \
@@ -306,7 +310,7 @@ ln -sf %{jredir}/bin/java $RPM_BUILD_ROOT%{javadir}/bin/java
 
 install -d $RPM_BUILD_ROOT{%{mozilladir}/plugins,%{firefoxdir}/plugins,%{jredir}/plugin/i386/ns7{,-gcc29}}
 
-%ifnarch amd64
+%ifarch %{ix86}
 install jre/plugin/i386/ns7/libjavaplugin_oji.so \
 	$RPM_BUILD_ROOT%{jredir}/plugin/i386/ns7
 ln -sf %{jredir}/plugin/i386/ns7/libjavaplugin_oji.so \
@@ -682,7 +686,21 @@ fi
 
 %files demos
 %defattr(644,root,root,755)
-%{javadir}/demo
+%dir %{javadir}/demo
+%{javadir}/demo/applets
+%{javadir}/demo/jfc
+%{javadir}/demo/jpda
+%dir %{javadir}/demo/jvmti
+%dir %{javadir}/demo/jvmti/[!i]*
+%dir %{javadir}/demo/jvmti/*/lib
+%attr(755,root,root) %{javadir}/demo/jvmti/*/lib/*.so
+%{javadir}/demo/jvmti/*/src
+%{javadir}/demo/jvmti/*/README*
+%{javadir}/demo/jvmti/*/*.jar
+%{javadir}/demo/jvmti/index.html
+%{javadir}/demo/management
+%{javadir}/demo/plugin
+%{javadir}/demo/applets.html
 
 %files tools
 %defattr(644,root,root,755)
