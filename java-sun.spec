@@ -29,10 +29,10 @@ ExclusiveArch:	%{ix86}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		javadir		%{_libdir}/java
-%define		jredir		%{_libdir}/java/jre
+#%%define		jredir		%{_libdir}/java/jre
 %define		classdir	%{_datadir}/java
-%define		netscape4dir	/usr/lib/netscape
-%define		mozilladir	/usr/lib/mozilla
+#%%define		netscape4dir	/usr/lib/netscape
+#%%define		mozilladir	/usr/lib/mozilla
 
 # prevent wrong requires when building with another JRE
 %define		_noautoreqdep	libawt.so libjava.so libjvm.so libmlib_image.so libverify.so libnet.so
@@ -151,39 +151,39 @@ cd control/make
 export RPM_OPT_FLAGS
 make all DEV_ONLY=true \
         HOTSPOT_BUILD_JOBS=1 \
-        ALT_BOOTDIR=/usr \
-	MAKE_VERBOSE=y
+        ALT_BOOTDIR=/usr
  
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{jredir},%{classdir},%{_bindir},%{_includedir}} \
+install -d $RPM_BUILD_ROOT{%{javadir},%{classdir},%{_bindir},%{_includedir}} \
 	$RPM_BUILD_ROOT%{_mandir}/{,ja/}man1
 
 cp -rf control/build/linux-i586/j2sdk-image/{bin,demo,include,lib} $RPM_BUILD_ROOT%{javadir}
-#install man/man1/* $RPM_BUILD_ROOT%{_mandir}/man1
-#install man/ja/man1/* $RPM_BUILD_ROOT%{_mandir}/ja/man1
+cp -rf control/build/linux-i586/j2sdk-image/jre/lib $RPM_BUILD_ROOT%{javadir}
+install control/build/linux-i586/j2sdk-image/man/man1/* $RPM_BUILD_ROOT%{_mandir}/man1
+install control/build/linux-i586/j2sdk-image/man/ja/man1/* $RPM_BUILD_ROOT%{_mandir}/ja/man1
 
-## not needed now?
-##ln -sf %{jredir} $RPM_BUILD_ROOT/usr/lib/jre
-##ln -sf %{javadir}/include $RPM_BUILD_ROOT%{_includedir}/java
+# not needed now?
+#ln -sf %{jredir} $RPM_BUILD_ROOT/usr/lib/jre
+#ln -sf %{javadir}/include $RPM_BUILD_ROOT%{_includedir}/java
 
 #mv -f jre/lib/i386/client/Xusage.txt jre/Xusage.client
 #mv -f jre/lib/i386/server/Xusage.txt jre/Xusage.server
 #mv -f jre/lib/*.txt jre
-#mv jre/lib/font.properties{,.orig}
-#mv jre/lib/font.properties{.Redhat6.1,}
+mv $RPM_BUILD_ROOT%{javadir}/lib/font.properties{,.orig}
+mv $RPM_BUILD_ROOT%{javadir}/lib/font.properties{.Redhat6.1,}
 
 #cp -rf jre/{bin,lib} $RPM_BUILD_ROOT%{jredir}
 
-#for i in ControlPanel java java_vm keytool kinit klist ktab orbd policytool \
-#	rmid rmiregistry servertool tnameserv ; do
-#	ln -sf %{jredir}/bin/$i $RPM_BUILD_ROOT%{_bindir}/$i
-#done
+for i in java keytool kinit klist ktab orbd policytool \
+	rmid rmiregistry servertool tnameserv ; do
+	ln -sf %{javadir}/bin/$i $RPM_BUILD_ROOT%{_bindir}/$i
+done
 
-#for i in HtmlConverter appletviewer extcheck idlj jar jarsigner java-rmi.cgi \
-#         javac javadoc javah javap jdb native2ascii rmic serialver ; do
-#	ln -sf %{javadir}/bin/$i $RPM_BUILD_ROOT%{_bindir}/$i
-#done
+for i in appletviewer extcheck idlj jar jarsigner java-rmi.cgi \
+         javac javadoc javah javap jdb native2ascii rmic serialver ; do
+	ln -sf %{javadir}/bin/$i $RPM_BUILD_ROOT%{_bindir}/$i
+done
 
 #rm -f $RPM_BUILD_ROOT%{javadir}/bin/java
 #ln -sf %{jredir}/bin/java $RPM_BUILD_ROOT%{javadir}/bin/java
@@ -219,11 +219,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc COPYRIGHT LICENSE README README.html
-
-
-%if 0
-%attr(755,root,root) %{_bindir}/HtmlConverter
+#%%doc COPYRIGHT LICENSE README README.html
 %attr(755,root,root) %{_bindir}/appletviewer
 %attr(755,root,root) %{_bindir}/extcheck
 %attr(755,root,root) %{_bindir}/idlj
@@ -237,7 +233,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/native2ascii
 #attr(755,root,root) %{_bindir}/rmic
 %attr(755,root,root) %{_bindir}/serialver
-%attr(755,root,root) %{javadir}/bin/HtmlConverter
 %attr(755,root,root) %{javadir}/bin/appletviewer
 %attr(755,root,root) %{javadir}/bin/extcheck
 %attr(755,root,root) %{javadir}/bin/idlj
@@ -254,7 +249,6 @@ rm -rf $RPM_BUILD_ROOT
 %{javadir}/include
 #%%{_includedir}/jdk
 %dir %{javadir}/lib
-%{javadir}/lib/*.jar
 %{javadir}/lib/*.idl
 %{_mandir}/man1/appletviewer.1*
 %{_mandir}/man1/extcheck.1*
@@ -284,11 +278,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files jre
 %defattr(644,root,root,755)
-%doc jre/{CHANGES,COPYRIGHT,LICENSE,README,Xusage*,*.txt}
-%doc jre/Welcome.html jre/ControlPanel.html
-%attr(755,root,root) %{_bindir}/ControlPanel
 %attr(755,root,root) %{_bindir}/java
-%attr(755,root,root) %{_bindir}/java_vm
 %attr(755,root,root) %{_bindir}/keytool
 %attr(755,root,root) %{_bindir}/kinit
 %attr(755,root,root) %{_bindir}/klist
@@ -302,39 +292,34 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{javadir}
 %dir %{javadir}/bin
 %attr(755,root,root) %{javadir}/bin/java
-%dir %{jredir}
-%dir %{jredir}/bin
-%attr(755,root,root) %{jredir}/bin/ControlPanel
-%attr(755,root,root) %{jredir}/bin/java
-%attr(755,root,root) %{jredir}/bin/java_vm
-%attr(755,root,root) %{jredir}/bin/keytool
-%attr(755,root,root) %{jredir}/bin/kinit
-%attr(755,root,root) %{jredir}/bin/klist
-%attr(755,root,root) %{jredir}/bin/ktab
-%attr(755,root,root) %{jredir}/bin/orbd
-%attr(755,root,root) %{jredir}/bin/policytool
-%attr(755,root,root) %{jredir}/bin/rmid
-%attr(755,root,root) %{jredir}/bin/servertool
-%attr(755,root,root) %{jredir}/bin/tnameserv
-%dir %{jredir}/lib
-%{jredir}/lib/applet
-%{jredir}/lib/audio
-%{jredir}/lib/cmm
-%{jredir}/lib/ext
-%{jredir}/lib/fonts
-%attr(755,root,root) %{jredir}/lib/i386
-%{jredir}/lib/im
-%{jredir}/lib/images
-%{jredir}/lib/security
-%{jredir}/lib/zi
-%{jredir}/lib/*.jar
-%{jredir}/lib/*.properties
+%attr(755,root,root) %{javadir}/bin/keytool
+%attr(755,root,root) %{javadir}/bin/kinit
+%attr(755,root,root) %{javadir}/bin/klist
+%attr(755,root,root) %{javadir}/bin/ktab
+%attr(755,root,root) %{javadir}/bin/orbd
+%attr(755,root,root) %{javadir}/bin/policytool
+%attr(755,root,root) %{javadir}/bin/rmid
+%attr(755,root,root) %{javadir}/bin/servertool
+%attr(755,root,root) %{javadir}/bin/tnameserv
+%dir %{javadir}/lib
+%{javadir}/lib/applet
+%{javadir}/lib/audio
+%{javadir}/lib/cmm
+%{javadir}/lib/ext
+%{javadir}/lib/fonts
+%attr(755,root,root) %{javadir}/lib/i386
+%{javadir}/lib/im
+%{javadir}/lib/images
+%{javadir}/lib/security
+%{javadir}/lib/zi
+%{javadir}/lib/*.jar
+%{javadir}/lib/*.properties
 #%%{jredir}/lib/*.cfg
 #%%{jredir}/lib/tzmappings
-%lang(ja) %{jredir}/lib/*.properties.ja
+%lang(ja) %{javadir}/lib/*.properties.ja
 ##%lang(zh) %{jredir}/lib/*.properties.zh
-%dir %{jredir}/plugin
-%dir %{jredir}/plugin/i386
+#%dir %{javadir}/plugin
+#%dir %{javadir}/plugin/i386
 %dir %{classdir}
 %{_mandir}/man1/java.1*
 %{_mandir}/man1/keytool.1*
@@ -359,35 +344,33 @@ rm -rf $RPM_BUILD_ROOT
 %files tools
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/jar
-%attr(755,root,root) %{jredir}/bin/rmiregistry
+%attr(755,root,root) %{javadir}/bin/rmiregistry
 %attr(755,root,root) %{javadir}/bin/rmic
 %{_mandir}/man1/rmiregistry.1*
 %{_mandir}/man1/rmic.1*
 %lang(ja) %{_mandir}/ja/man1/rmiregistry.1*
 %lang(ja) %{_mandir}/ja/man1/rmic.1*
 
-%files -n netscape4-plugin-%{name}
-%defattr(644,root,root,755)
-%attr(755,root,root) %{netscape4dir}/plugins/javaplugin.so
-%{netscape4dir}/java/classes/*
-%dir %{jredir}/lib/locale
-%lang(de) %{jredir}/lib/locale/de
-%lang(es) %{jredir}/lib/locale/es
-%lang(fr) %{jredir}/lib/locale/fr
-%lang(it) %{jredir}/lib/locale/it
-%lang(ja) %{jredir}/lib/locale/ja
-%lang(ko) %{jredir}/lib/locale/ko
-%lang(ko_KR.UTF-8) %{jredir}/lib/locale/ko.UTF-8
-%lang(sv) %{jredir}/lib/locale/sv
-%lang(zh_CN) %{jredir}/lib/locale/zh
-%lang(zh_CN.GBK) %{jredir}/lib/locale/zh.GBK
-%lang(zh_TW) %{jredir}/lib/locale/zh_TW
-%lang(zh_TW) %{jredir}/lib/locale/zh_TW.BIG5
+#%files -n netscape4-plugin-%{name}
+#%defattr(644,root,root,755)
+#%attr(755,root,root) %{netscape4dir}/plugins/javaplugin.so
+#%{netscape4dir}/java/classes/*
+#%dir %{jredir}/lib/locale
+#%lang(de) %{jredir}/lib/locale/de
+#%lang(es) %{jredir}/lib/locale/es
+#%lang(fr) %{jredir}/lib/locale/fr
+#%lang(it) %{jredir}/lib/locale/it
+#%lang(ja) %{jredir}/lib/locale/ja
+#%lang(ko) %{jredir}/lib/locale/ko
+#%lang(ko_KR.UTF-8) %{jredir}/lib/locale/ko.UTF-8
+#%lang(sv) %{jredir}/lib/locale/sv
+#%lang(zh_CN) %{jredir}/lib/locale/zh
+#%lang(zh_CN.GBK) %{jredir}/lib/locale/zh.GBK
+#%lang(zh_TW) %{jredir}/lib/locale/zh_TW
+#%lang(zh_TW) %{jredir}/lib/locale/zh_TW.BIG5
 
-%files -n mozilla-plugin-%{name}
-%defattr(644,root,root,755)
-%dir %{jredir}/plugin/i386/ns610
-%attr(755,root,root) %{jredir}/plugin/i386/ns610/libjavaplugin_oji.so
-%{mozilladir}/plugins/libjavaplugin_oji.so
-
-%endif
+#%files -n mozilla-plugin-%{name}
+#%defattr(644,root,root,755)
+#%dir %{jredir}/plugin/i386/ns610
+#%attr(755,root,root) %{jredir}/plugin/i386/ns610/libjavaplugin_oji.so
+#%{mozilladir}/plugins/libjavaplugin_oji.so
