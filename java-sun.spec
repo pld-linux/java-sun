@@ -559,7 +559,7 @@ fi
 %dir %{_javadir}
 %{_javadir}/jaas.jar
 %ifarch %{ix86}
-%{_javadir}/javaws*.jar
+%{_javadir}/javaws.jar
 %endif
 %{_javadir}/jce.jar
 %{_javadir}/jcert.jar
