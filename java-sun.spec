@@ -554,10 +554,7 @@ fi
 %{jredir}/lib/zi
 %{jredir}/lib/*.jar
 %{jredir}/lib/*.properties
-#%%{jredir}/lib/*.cfg
-#%%{jredir}/lib/tzmappings
 %lang(ja) %{jredir}/lib/*.properties.ja
-##%lang(zh) %{jredir}/lib/*.properties.zh
 %dir %{jredir}/plugin
 %dir %{jredir}/plugin/i386
 %dir %{_javadir}
@@ -669,14 +666,7 @@ fi
 %lang(ja) %{_mandir}/ja/man1/tnameserv.1*
 %ifarch %{ix86}
 %dir %{jredir}/javaws
-##%{jredir}/javaws/resources
 %attr(755,root,root) %{jredir}/javaws/javaws
-##%attr(755,root,root) %{jredir}/javaws/javawsbin
-##%{jredir}/javaws/cacerts
-##%{jredir}/javaws/*.gif
-##%{jredir}/javaws/*.jar
-##%{jredir}/javaws/*.policy
-##%{jredir}/javaws/*.html
 %endif
 
 %files jre-alsa
@@ -703,8 +693,10 @@ fi
 %{javadir}/demo/jvmti/*/*.jar
 %{javadir}/demo/jvmti/index.html
 %{javadir}/demo/management
-#%{javadir}/demo/plugin
-#%{javadir}/demo/applets.html
+%ifarch %{ix86}
+%{javadir}/demo/plugin
+%{javadir}/demo/applets.html
+%endif
 
 %files tools
 %defattr(644,root,root,755)
