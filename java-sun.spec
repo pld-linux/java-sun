@@ -5,7 +5,7 @@ Version:	1.5.0
 Release:	0.beta3.1
 License:	restricted, non-distributable
 Group:		Development/Languages/Java
-# download directly from http://java.sun.com/j2se/1.5.0/download.jsp
+# download directly from http://java.sun.com/j2se/1.5.0/snapshots/index.jsp
 %ifarch %{ix86}
 Source0:	jdk-1_5_0-beta3-bin-b57-linux-i586-23_jun_2004.bin
 # NoSource0-md5: ddbdcf7cde8d261f4ac975572e2b6d85
