@@ -8,7 +8,6 @@ Group:		Development/Languages/Java
 # download through forms from http://java.sun.com/j2se/1.4.2/download.html
 Source0:	j2sdk-1_4_2_01-linux-i586.bin
 # Source0-md5:	07dbf14a3098b4e38cac57ad520ff474
-NoSource:	0
 Patch0:		%{name}-ControlPanel-fix.patch
 URL:		http://java.sun.com/linux/
 BuildRequires:	unzip
