@@ -2,20 +2,29 @@ Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	1.4.1_02
-Release:	1
+Release:	0.1
 License:	restricted, non-distributable
 Group:		Development/Languages/Java
-# download through forms from http://java.sun.com/j2se/1.4.1/download.html
-Source0:	j2sdk-1_4_1_02-linux-i586.bin
+# download through forms from http://java.sun.com/
+Source0:	j2sdk-1_4_1-src-scsl.zip
+Patch0:         %{name}-bash.patch
+Patch1:         %{name}-no_sanity.patch
+Patch2:         %{name}-cpp.patch
+Patch3:         %{name}-pthread.patch
+Patch4:         %{name}-motif.patch
+Patch5:         %{name}-fork.patch
+Patch6:         %{name}-no_plugins.patch
+Patch7:		%{name}-opt.patch
 NoSource:	0
 URL:		http://java.sun.com/linux/
-Requires:	java-sun-jre = %{version}
+#Requires:	java-sun-jre = %{version}
 Provides:	jdk = %{version}
 Obsoletes:	blackdown-java-sdk
 Obsoletes:	ibm-java
 Obsoletes:	java-blackdown
 Obsoletes:	jdk
 Obsoletes:	kaffe
+BuildREquires:	bash
 BuildRequires:	unzip
 ExclusiveArch:	%{ix86}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -127,80 +136,95 @@ Java plugin for Mozilla.
 Wtyczka z obs³ug± Javy dla Mozilli.
 
 %prep
-%setup -q -T -c -n j2sdk%{version}
-cd ..
-outname=install.sfx.$$
-tail +430 %{SOURCE0} >$outname
-chmod +x $outname
-./$outname
-rm -f $outname
+%setup -q -c
+%patch0 -p1
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
+%patch6 -p1
+%patch7 -p1
 
+%build
+
+cd control/make
+
+export RPM_OPT_FLAGS
+make all DEV_ONLY=true \
+        HOTSPOT_BUILD_JOBS=1 \
+        ALT_BOOTDIR=/usr \
+	MAKE_VERBOSE=y
+ 
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{jredir},%{classdir},%{_bindir},%{_includedir}} \
 	$RPM_BUILD_ROOT%{_mandir}/{,ja/}man1
 
-cp -rf bin demo include lib $RPM_BUILD_ROOT%{javadir}
-install man/man1/* $RPM_BUILD_ROOT%{_mandir}/man1
-install man/ja/man1/* $RPM_BUILD_ROOT%{_mandir}/ja/man1
+cp -rf control/build/linux-i586/j2sdk-image/{bin,demo,include,lib} $RPM_BUILD_ROOT%{javadir}
+#install man/man1/* $RPM_BUILD_ROOT%{_mandir}/man1
+#install man/ja/man1/* $RPM_BUILD_ROOT%{_mandir}/ja/man1
 
-# not needed now?
-#ln -sf %{jredir} $RPM_BUILD_ROOT/usr/lib/jre
-#ln -sf %{javadir}/include $RPM_BUILD_ROOT%{_includedir}/java
+## not needed now?
+##ln -sf %{jredir} $RPM_BUILD_ROOT/usr/lib/jre
+##ln -sf %{javadir}/include $RPM_BUILD_ROOT%{_includedir}/java
 
-mv -f jre/lib/i386/client/Xusage.txt jre/Xusage.client
-mv -f jre/lib/i386/server/Xusage.txt jre/Xusage.server
-mv -f jre/lib/*.txt jre
-mv jre/lib/font.properties{,.orig}
-mv jre/lib/font.properties{.Redhat6.1,}
+#mv -f jre/lib/i386/client/Xusage.txt jre/Xusage.client
+#mv -f jre/lib/i386/server/Xusage.txt jre/Xusage.server
+#mv -f jre/lib/*.txt jre
+#mv jre/lib/font.properties{,.orig}
+#mv jre/lib/font.properties{.Redhat6.1,}
 
-cp -rf jre/{bin,lib} $RPM_BUILD_ROOT%{jredir}
+#cp -rf jre/{bin,lib} $RPM_BUILD_ROOT%{jredir}
 
-for i in ControlPanel java java_vm keytool kinit klist ktab orbd policytool \
-	rmid rmiregistry servertool tnameserv ; do
-	ln -sf %{jredir}/bin/$i $RPM_BUILD_ROOT%{_bindir}/$i
-done
+#for i in ControlPanel java java_vm keytool kinit klist ktab orbd policytool \
+#	rmid rmiregistry servertool tnameserv ; do
+#	ln -sf %{jredir}/bin/$i $RPM_BUILD_ROOT%{_bindir}/$i
+#done
 
-for i in HtmlConverter appletviewer extcheck idlj jar jarsigner java-rmi.cgi \
-         javac javadoc javah javap jdb native2ascii rmic serialver ; do
-	ln -sf %{javadir}/bin/$i $RPM_BUILD_ROOT%{_bindir}/$i
-done
+#for i in HtmlConverter appletviewer extcheck idlj jar jarsigner java-rmi.cgi \
+#         javac javadoc javah javap jdb native2ascii rmic serialver ; do
+#	ln -sf %{javadir}/bin/$i $RPM_BUILD_ROOT%{_bindir}/$i
+#done
 
-rm -f $RPM_BUILD_ROOT%{javadir}/bin/java
-ln -sf %{jredir}/bin/java $RPM_BUILD_ROOT%{javadir}/bin/java
+#rm -f $RPM_BUILD_ROOT%{javadir}/bin/java
+#ln -sf %{jredir}/bin/java $RPM_BUILD_ROOT%{javadir}/bin/java
 
-install -d $RPM_BUILD_ROOT%{netscape4dir}/{plugins,java/classes}
-install jre/plugin/i386/ns4/javaplugin.so $RPM_BUILD_ROOT%{netscape4dir}/plugins
-for i in javaplugin rt sunrsasign ; do
-	ln -sf %{jredir}/lib/$i.jar $RPM_BUILD_ROOT%{netscape4dir}/java/classes
-done
+#install -d $RPM_BUILD_ROOT%{netscape4dir}/{plugins,java/classes}
+#install jre/plugin/i386/ns4/javaplugin.so $RPM_BUILD_ROOT%{netscape4dir}/plugins
+#for i in javaplugin rt sunrsasign ; do
+#	ln -sf %{jredir}/lib/$i.jar $RPM_BUILD_ROOT%{netscape4dir}/java/classes
+#done
 
-install -d $RPM_BUILD_ROOT{%{mozilladir}/plugins,%{jredir}/plugin/i386/ns610}
-install jre/plugin/i386/ns610/libjavaplugin_oji.so \
-	$RPM_BUILD_ROOT%{jredir}/plugin/i386/ns610
-ln -sf %{jredir}/plugin/i386/ns610/libjavaplugin_oji.so \
-	$RPM_BUILD_ROOT%{mozilladir}/plugins
+#install -d $RPM_BUILD_ROOT{%{mozilladir}/plugins,%{jredir}/plugin/i386/ns610}
+#install jre/plugin/i386/ns610/libjavaplugin_oji.so \
+#	$RPM_BUILD_ROOT%{jredir}/plugin/i386/ns610
+#ln -sf %{jredir}/plugin/i386/ns610/libjavaplugin_oji.so \
+#	$RPM_BUILD_ROOT%{mozilladir}/plugins
 
-# these binaries are in %{jredir}/bin - not needed in %{javadir}/bin?
-rm -f $RPM_BUILD_ROOT%{javadir}/bin/{ControlPanel,keytool,kinit,klist,ktab,orbd,policytool,rmid,rmiregistry,servertool,tnameserv}
+## these binaries are in %{jredir}/bin - not needed in %{javadir}/bin?
+#rm -f $RPM_BUILD_ROOT%{javadir}/bin/{ControlPanel,keytool,kinit,klist,ktab,orbd,policytool,rmid,rmiregistry,servertool,tnameserv}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%pre jre
-if [ -L %{jredir} ]; then
-	rm -f %{jredir}
-fi
-if [ -L %{javadir} ]; then
-	rm -f %{javadir}
-fi
+#%pre jre
+#if [ -L %{jredir} ]; then
+#	rm -f %{jredir}
+#fi
+#if [ -L %{javadir} ]; then
+#	rm -f %{javadir}
+#fi
 
-%post jre
-/sbin/ldconfig -n %{jredir}/lib/i386
+#%post jre
+#/sbin/ldconfig -n %{jredir}/lib/i386
 
 %files
 %defattr(644,root,root,755)
 %doc COPYRIGHT LICENSE README README.html
+
+
+%if 0
 %attr(755,root,root) %{_bindir}/HtmlConverter
 %attr(755,root,root) %{_bindir}/appletviewer
 %attr(755,root,root) %{_bindir}/extcheck
@@ -367,3 +391,5 @@ fi
 %dir %{jredir}/plugin/i386/ns610
 %attr(755,root,root) %{jredir}/plugin/i386/ns610/libjavaplugin_oji.so
 %{mozilladir}/plugins/libjavaplugin_oji.so
+
+%endif
