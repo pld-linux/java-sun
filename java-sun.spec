@@ -8,9 +8,11 @@ Group:		Development/Languages/Java
 URL:		http://java.sun.com/linux/
 Source0:	j2sdk-1_4_1_01-linux-i586.bin
 NoSource:	0
-Provides:	jdk = %{version}
 Requires:	java-sun-jre = %{version}
+Provides:	jdk = %{version}
+Obsoletes:	blackdown-java-sdk
 Obsoletes:	ibm-java
+Obsoletes:	java-blackdown
 Obsoletes:	jdk
 Obsoletes:	kaffe
 BuildRequires:	unzip
@@ -34,7 +36,7 @@ Java Development Kit for Linux.
 %description -l pl
 ¦rodowisko programistyczne Javy dla Linuksa.
 
-%package -n java-sun-jre
+%package jre
 Summary:	Sun JRE (Java Runtime Environment) for Linux
 Summary(pl):	Sun JRE - ¶rodowisko uruchomieniowe Javy dla Linuksa
 Group:		Development/Languages/Java
@@ -43,36 +45,40 @@ Provides:	jre = %{version}
 Provides:	jar
 Provides:	java
 Obsoletes:	jre
+Obsoletes:	java-blackdown-jre
 Requires:	XFree86-libs
 Requires:	libstdc++-compat
 
-%description -n java-sun-jre
+%description jre
 Java Runtime Environment for Linux.
 
-%description -n java-sun-jre -l pl
+%description jre -l pl
 ¦rodowisko uruchomieniowe Javy dla Linuksa.
 
-%package -n java-sun-demos
+%package demos
 Summary:	JDK demonstration programs
 Summary(pl):	Programy demonstracyjne do JDK
 Group:		Development/Languages/Java
 Requires:	%{name}-jre = %{version}
+Obsoletes:	java-blackdown-demos
 Obsoletes:	jdk-demos
 
-%description -n java-sun-demos
+%description demos
 JDK demonstration programs.
 
-%description -n java-sun-demos -l pl
+%description demos -l pl
 Programy demonstracyjne do JDK.
 
 %package -n netscape4-plugin-%{name}
 Summary:	Netscape 4.x Java plugin
-Summary(pl):	Plugin Javy do Netscape 4.x
+Summary(pl):	Wtyczka Javy do Netscape 4.x
 Group:		Development/Languages/Java
-Requires:	jre = %{version}
+Requires:	%{name}-jre = %{version}
 Requires:	netscape-common >= 4.0
-Obsoletes:	jre-netscape4-plugin
+Obsoletes:	blackdown-java-sdk-netscape4-plugin
+Obsoletes:	netscape4-plugin-java-blackdown
 Obsoletes:	java-sun-nn4-plugin
+Obsoletes:	jre-netscape4-plugin
 
 %description -n netscape4-plugin-%{name}
 Java plugin for Netscape 4.x.
@@ -82,12 +88,15 @@ Wtyczka z obs³ug± Javy dla Netscape 4.x.
 
 %package -n mozilla-plugin-%{name}
 Summary:	Mozilla Java plugin
-Summary(pl):	Plugin Javy do Mozilli
+Summary(pl):	Wtyczka Javy do Mozilli
 Group:		Development/Languages/Java
 Requires:	jre = %{version}
 Prereq:		mozilla-embedded
-Obsoletes:	jre-mozilla-plugin
+Obsoletes:	blackdown-java-sdk-mozilla-plugin
 Obsoletes:	java-sun-moz-plugin
+Obsoletes:	jre-mozilla-plugin
+Obsoletes:	mozilla-plugin-blackdown-java-sdk
+Obsoletes:	mozilla-plugin-java-blackdown
 
 %description -n mozilla-plugin-%{name}
 Java plugin for Mozilla.
@@ -156,7 +165,7 @@ rm -f $RPM_BUILD_ROOT%{javadir}/bin/{ControlPanel,keytool,kinit,klist,ktab,orbd,
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%pre -n java-sun-jre
+%pre jre
 if [ -L %{jredir} ]; then
 	rm -f %{jredir}
 fi
@@ -164,7 +173,7 @@ if [ -L %{javadir} ]; then
 	rm -f %{javadir}
 fi
 
-%post -n java-sun-jre
+%post jre
 /sbin/ldconfig -n %{jredir}/lib/i386
 
 %files
@@ -232,7 +241,7 @@ fi
 %lang(ja) %{_mandir}/ja/man1/rmic.1*
 %lang(ja) %{_mandir}/ja/man1/serialver.1*
 
-%files -n java-sun-jre
+%files jre
 %defattr(644,root,root,755)
 %doc jre/{CHANGES,COPYRIGHT,LICENSE,README,Xusage*,*.txt}
 %doc jre/Welcome.html jre/ControlPanel.html
@@ -304,7 +313,7 @@ fi
 %lang(ja) %{_mandir}/ja/man1/servertool.1*
 %lang(ja) %{_mandir}/ja/man1/tnameserv.1*
 
-%files -n java-sun-demos
+%files demos
 %defattr(644,root,root,755)
 %{javadir}/demo
 
