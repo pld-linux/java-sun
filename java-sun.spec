@@ -20,8 +20,8 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		javadir		%{_libdir}/java
 %define		jredir		%{_libdir}/java/jre
 %define		classdir	%{_datadir}/java
-%define		netscape4dir	/usr/lib/netscape
-%define		mozilladir	/usr/lib/mozilla
+%define		netscape4dir	/usr/X11R6/lib/netscape
+%define		mozilladir	/usr/X11R6/lib/mozilla
 
 # prevent wrong requires when building with another JRE
 %define		_noautoreqdep	libawt.so libjava.so libjvm.so libmlib_image.so libverify.so libnet.so
