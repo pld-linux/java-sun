@@ -263,7 +263,7 @@ rm -f demo/jvmti/mtrace/lib/libmtrace_g.so
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{jredir},%{_javadir},%{_bindir},%{_includedir}} \
-	$RPM_BUILD_ROOT%{_mandir}/{,ja/}man1
+	$RPM_BUILD_ROOT{%{_mandir}/{,ja/}man1,/etc/env.d}
 
 cp -rf bin demo include lib $RPM_BUILD_ROOT%{javadir}
 install man/man1/* $RPM_BUILD_ROOT%{_mandir}/man1
@@ -349,6 +349,10 @@ mv -f $RPM_BUILD_ROOT%{_datadir}/locale/{zh,zh_CN}
 mv -f $RPM_BUILD_ROOT%{_datadir}/locale/{zh_HK.BIG5HK,zh_HK}
 rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/{ko.UTF-8,zh.GBK,zh_TW.BIG5}
 %endif
+
+cat << EOF >$RPM_BUILD_ROOT/etc/env.d/JAVA_HOME
+JAVA_HOME="/usr"
+EOF
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -473,6 +477,7 @@ fi
 %doc jre/Xusage*
 %attr(755,root,root) %{_bindir}/ControlPanel
 %endif
+%attr(644,root,root) %config(noreplace,missingok) %verify(not md5 size mtime) /etc/env.d/*
 %attr(755,root,root) %{_bindir}/java
 %attr(755,root,root) %{_bindir}/java_vm
 %attr(755,root,root) %{_bindir}/keytool
