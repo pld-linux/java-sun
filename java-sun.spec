@@ -9,6 +9,7 @@ Group:		Development/Languages/Java
 Source0:	j2sdk-1_4_1_02-linux-i586.bin
 NoSource:	0
 URL:		http://java.sun.com/linux/
+BuildRequires:	unzip
 Requires:	java-sun-jre = %{version}
 Provides:	jdk = %{version}
 Obsoletes:	blackdown-java-sdk
@@ -16,7 +17,6 @@ Obsoletes:	ibm-java
 Obsoletes:	java-blackdown
 Obsoletes:	jdk
 Obsoletes:	kaffe
-BuildRequires:	unzip
 ExclusiveArch:	%{ix86}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -77,7 +77,6 @@ jak rmic czy jar.
 
 
 %package demos
-
 Summary:	JDK demonstration programs
 Summary(pl):	Programy demonstracyjne do JDK
 Group:		Development/Languages/Java
@@ -112,8 +111,8 @@ Wtyczka z obs³ug± Javy dla Netscape 4.x.
 Summary:	Mozilla Java plugin
 Summary(pl):	Wtyczka Javy do Mozilli
 Group:		Development/Languages/Java
+PreReq:		mozilla-embedded
 Requires:	jre = %{version}
-Prereq:		mozilla-embedded
 Obsoletes:	blackdown-java-sdk-mozilla-plugin
 Obsoletes:	java-sun-moz-plugin
 Obsoletes:	jre-mozilla-plugin
@@ -194,9 +193,6 @@ fi
 if [ -L %{javadir} ]; then
 	rm -f %{javadir}
 fi
-
-%post jre
-/sbin/ldconfig -n %{jredir}/lib/i386
 
 %files
 %defattr(644,root,root,755)
