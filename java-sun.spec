@@ -51,11 +51,6 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 # don't depend on other JRE/JDK installed on build host
 %define		_noautoreqdep	libjava.so libjvm.so
 
-%ifarch amd64
-# don't depend on old glibc libs
-%define		_noautoreq	libthread_db.so.1(GLIBC_2.2.5)
-%endif
-
 %description
 Java Development Kit for Linux.
 
