@@ -1,0 +1,16 @@
+--- jdk1.5.0/jre/plugin/desktop/sun_java.desktop.orig	2004-05-13 14:02:37.000000000 +0200
++++ jdk1.5.0/jre/plugin/desktop/sun_java.desktop	2004-06-27 15:30:12.733090520 +0200
+@@ -1,8 +1,8 @@
+ [Desktop Entry]
+-Name=Java
++Name=Java Ciontrol Panel
+ Comment=Java Control Panel
+-Exec=INSTALL_DIR/JRE_NAME_VERSION/bin/ControlPanel
+-Icon=INSTALL_DIR/JRE_NAME_VERSION/plugin/desktop/sun_java.png
+-Terminal=0
++Exec=ControlPanel
++Icon=sun_java.png
++Terminal=false
+ Type=Application
+-Categories=Application;Settings;X-Sun-Supported;X-Red-Hat-Base;
++Categories=Settings;X-Sun-Supported;
