@@ -310,8 +310,6 @@ ln -sf %{jredir}/javaws/javaws.jar $RPM_BUILD_ROOT%{_javalibdir}/javaws.jar
 ln -sf %{jredir}/javaws/javaws-l10n.jar $RPM_BUILD_ROOT%{_javalibdir}/javaws-l10n.jar
 mv -f $RPM_BUILD_ROOT{%{jredir}/lib,%{_datadir}}/locale
 
-%find_lang sunw_java_plugin --all-name
-
 %clean
 rm -rf $RPM_BUILD_ROOT
 
