@@ -1,27 +1,34 @@
+%define		ver		1.4.1_01
+%define		pkgver		1_4_1_01
+%define 	halfname	sun-java
+
 Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
-Name:		java-sun
-Version:	1.4.1_01
-Release:	2
+Name:		%{halfname}-%{ver}
+Version:	0
+Release:	1
 License:	restricted, non-distributable
 Group:		Development/Languages/Java
 URL:		http://java.sun.com/linux/
-Source0:	j2sdk-1_4_1_01-linux-i586.bin
+Source0:	j2sdk-%{pkgver}-linux-i586.bin
 NoSource:	0
-Provides:	jdk = %{version}
-Requires:	java-sun-jre = %{version}
-Obsoletes:	ibm-java
-Obsoletes:	jdk
-Obsoletes:	kaffe
+Provides:	jdk = %{ver}
+# jre MUST be installed before jdk and deinstalled after jdk
+PreReq:		%{name}-jre
+Requires(postun): %{name}-jre
+PreReq:		java-env
+Requires:	java-env
+Requires(post,preun,postun): java-env
+BuildRequires:	java-env
 BuildRequires:	unzip
 ExclusiveArch:	%{ix86}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		javadir		%{_libdir}/java
-%define		jredir		%{_libdir}/java/jre
-%define		classdir	%{_datadir}/java
-%define		netscape4dir	/usr/lib/netscape
-%define		mozilladir	/usr/lib/mozilla
+%define		javadir		%{_libdir}/%{name}
+%define		jredir		%{_libdir}/%{name}/jre
+%define		netscape4dir	%{_libdir}/netscape
+%define		mozilladir	%{_libdir}/mozilla
+%define		javacfgdir	/etc/sysconfig/java
 
 # prevent wrong requires when building with another JRE
 %define		_noautoreqdep	libawt.so libjava.so libjvm.so libmlib_image.so libverify.so libnet.so
@@ -34,69 +41,95 @@ Java Development Kit for Linux.
 %description -l pl
 ¦rodowisko programistyczne Javy dla Linuksa.
 
-%package -n java-sun-jre
+%package jre
 Summary:	Sun JRE (Java Runtime Environment) for Linux
 Summary(pl):	Sun JRE - ¶rodowisko uruchomieniowe Javy dla Linuksa
 Group:		Development/Languages/Java
 Provides:	java1.4
-Provides:	jre = %{version}
+Provides:	jre = %{ver}
 Provides:	jar
 Provides:	java
-Obsoletes:	jre
 Requires:	XFree86-libs
 Requires:	libstdc++-compat
+Requires:	java-env
+PreReq:		java-env
+Requires(post,preun,postun): java-env
 
-%description -n java-sun-jre
+
+%description jre
 Java Runtime Environment for Linux.
 
-%description -n java-sun-jre -l pl
+%description jre -l pl
 ¦rodowisko uruchomieniowe Javy dla Linuksa.
 
-%package -n java-sun-demos
+%package demos
 Summary:	JDK demonstration programs
 Summary(pl):	Programy demonstracyjne do JDK
 Group:		Development/Languages/Java
-Requires:	%{name}-jre = %{version}
+Requires:	%{name}-jre
 Obsoletes:	jdk-demos
 
-%description -n java-sun-demos
+%description demos
 JDK demonstration programs.
 
-%description -n java-sun-demos -l pl
+%description demos -l pl
 Programy demonstracyjne do JDK.
 
-%package -n netscape4-plugin-%{name}
+%package netscape4-plugin
 Summary:	Netscape 4.x Java plugin
 Summary(pl):	Plugin Javy do Netscape 4.x
 Group:		Development/Languages/Java
-Requires:	jre = %{version}
+Requires:	%{name}-jre
 Requires:	netscape-common >= 4.0
 Obsoletes:	jre-netscape4-plugin
 Obsoletes:	java-sun-nn4-plugin
 
-%description -n netscape4-plugin-%{name}
+%description netscape4-plugin
 Java plugin for Netscape 4.x.
 
-%description -n netscape4-plugin-%{name} -l pl
+%description netscape4-plugin -l pl
 Wtyczka z obs³ug± Javy dla Netscape 4.x.
 
-%package -n mozilla-plugin-%{name}
+%package mozilla-plugin
 Summary:	Mozilla Java plugin
 Summary(pl):	Plugin Javy do Mozilli
 Group:		Development/Languages/Java
-Requires:	jre = %{version}
-Prereq:		mozilla-embedded
+Requires:	%{name}-jre
+PreReq:		mozilla-embedded
 Obsoletes:	jre-mozilla-plugin
 Obsoletes:	java-sun-moz-plugin
 
-%description -n mozilla-plugin-%{name}
+%description mozilla-plugin
 Java plugin for Mozilla.
 
-%description -n mozilla-plugin-%{name} -l pl
+%description mozilla-plugin -l pl
 Wtyczka z obs³ug± Javy dla Mozilli.
 
+%package man-jdk
+Summary:	Java manual pages.
+Summary(pl):	Podreczniki do Javy.
+Group:		Documentation
+Requires:	%{name}-man-jre
+
+%description man-jdk
+Java manula pages.
+
+%description man-jdk -l pl
+Podreczniki do Javy.
+
+%package man-jre
+Summary:	Java manual pages.
+Summary(pl):	Podreczniki do Javy.
+Group:		Documentation
+
+%description man-jre
+Java manula pages.
+
+%description man-jre -l pl
+Podreczniki do Javy.
+
 %prep
-%setup -q -T -c -n j2sdk%{version}
+%setup -q -T -c -n j2sdk%{ver}
 cd ..
 outname=install.sfx.$$
 tail +436 %{SOURCE0} >$outname
@@ -106,16 +139,16 @@ rm -f $outname
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{jredir},%{classdir},%{_bindir},%{_includedir}} \
-	$RPM_BUILD_ROOT%{_mandir}/{,ja/}man1
+install -d \
+	$RPM_BUILD_ROOT%{jredir} \
+	$RPM_BUILD_ROOT%{_mandir}/{,ja/}man1 \
+	$RPM_BUILD_ROOT%{javacfgdir} \
+	$RPM_BUILD_ROOT%{_examplesdir}/%{name}
 
-cp -rf bin demo include lib $RPM_BUILD_ROOT%{javadir}
+cp -a bin include lib $RPM_BUILD_ROOT%{javadir}
+cp -a demo $RPM_BUILD_ROOT%{_examplesdir}/%{name}
 install man/man1/* $RPM_BUILD_ROOT%{_mandir}/man1
 install man/ja/man1/* $RPM_BUILD_ROOT%{_mandir}/ja/man1
-
-# not needed now?
-#ln -sf %{jredir} $RPM_BUILD_ROOT/usr/lib/jre
-#ln -sf %{javadir}/include $RPM_BUILD_ROOT%{_includedir}/java
 
 mv -f jre/lib/i386/client/Xusage.txt jre/Xusage.client
 mv -f jre/lib/i386/server/Xusage.txt jre/Xusage.server
@@ -123,20 +156,16 @@ mv -f jre/lib/*.txt jre
 mv jre/lib/font.properties{,.orig}
 mv jre/lib/font.properties{.Redhat6.1,}
 
-cp -rf jre/{bin,lib} $RPM_BUILD_ROOT%{jredir}
+cp -a jre/{bin,lib} $RPM_BUILD_ROOT%{jredir}
 
-for i in ControlPanel java java_vm keytool kinit klist ktab orbd policytool \
-	rmid rmiregistry servertool tnameserv ; do
-	ln -sf %{jredir}/bin/$i $RPM_BUILD_ROOT%{_bindir}/$i
+# these binaries are in %{jredir}/bin - not needed in %{javadir}/bin?
+# rm -f $RPM_BUILD_ROOT%{javadir}/bin/{ControlPanel,keytool,kinit,klist,ktab,orbd,policytool,rmid,rmiregistry,servertool,tnameserv}
+for i in `ls $RPM_BUILD_ROOT%{jredir}/bin`
+do
+    FILE=`basename $i`
+    rm -f $RPM_BUILD_ROOT%{javadir}/bin/$FILE
+    ln -sf %{jredir}/bin/$FILE $RPM_BUILD_ROOT%{javadir}/bin/$FILE
 done
-
-for i in HtmlConverter appletviewer extcheck idlj jar jarsigner java-rmi.cgi \
-         javac javadoc javah javap jdb native2ascii rmic serialver ; do
-	ln -sf %{javadir}/bin/$i $RPM_BUILD_ROOT%{_bindir}/$i
-done
-
-rm -f $RPM_BUILD_ROOT%{javadir}/bin/java
-ln -sf %{jredir}/bin/java $RPM_BUILD_ROOT%{javadir}/bin/java
 
 install -d $RPM_BUILD_ROOT%{netscape4dir}/{plugins,java/classes}
 install jre/plugin/i386/ns4/javaplugin.so $RPM_BUILD_ROOT%{netscape4dir}/plugins
@@ -150,41 +179,65 @@ install jre/plugin/i386/ns610/libjavaplugin_oji.so \
 ln -sf %{jredir}/plugin/i386/ns610/libjavaplugin_oji.so \
 	$RPM_BUILD_ROOT%{mozilladir}/plugins
 
-# these binaries are in %{jredir}/bin - not needed in %{javadir}/bin?
-rm -f $RPM_BUILD_ROOT%{javadir}/bin/{ControlPanel,keytool,kinit,klist,ktab,orbd,policytool,rmid,rmiregistry,servertool,tnameserv}
+# create some config files
+echo "MAINDIR=%{name}" > $RPM_BUILD_ROOT%{javacfgdir}/jdk.%{name}
+echo "MAINDIR=%{name}" > $RPM_BUILD_ROOT%{javacfgdir}/jre.%{name}
+
+%define	jdklnfile	$RPM_BUILD_ROOT%{javacfgdir}/links.jdk.%{name}
+%define	jrelnfile	$RPM_BUILD_ROOT%{javacfgdir}/links.jre.%{name}
+
+# common links for jdk and jre
+echo "%{javadir} %{_libdir}/java" 		>> %{jrelnfile}
+echo "%{javadir} %{_libdir}/java-jre" 		>> %{jrelnfile}
+
+for i in ControlPanel java java_vm keytool kinit klist ktab orbd policytool \
+	rmid rmiregistry servertool tnameserv ; do
+	echo "%{jredir}/bin/$i %{_bindir}/$i"	>> %{jrelnfile}
+done
+
+# jdk specific
+cp %{jrelnfile} %{jdklnfile}
+echo "%{javadir}/include %{_includedir}/jdk" 	>> %{jdklnfile}
+echo "%{javadir} %{_libdir}/java-sdk" 		>> %{jdklnfile}
+
+for i in HtmlConverter appletviewer extcheck idlj jar jarsigner java-rmi.cgi \
+         javac javadoc javah javap jdb native2ascii rmic serialver ; do
+	echo "%{javadir}/bin/$i %{_bindir}/$i"	>> %{jdklnfile}
+done
+
+# cp files
+javacpmgr --findjars $RPM_BUILD_ROOT > cp.jars
+grep examples cp.jars > $RPM_BUILD_ROOT%{javacfgdir}/cp.jdk.%{name}-examples
+grep "%{name}/lib" cp.jars > $RPM_BUILD_ROOT%{javacfgdir}/cp.jdk.%{name}
+grep "%{name}/jre" cp.jars > $RPM_BUILD_ROOT%{javacfgdir}/cp.jre.%{name}
+# end of config files creation
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%pre -n java-sun-jre
-if [ -L %{jredir} ]; then
-	rm -f %{jredir}
-fi
-if [ -L %{javadir} ]; then
-	rm -f %{javadir}
-fi
+%post
+javaenv --erasejavaif "jre.%{name}"
+javaenv --setjava
 
-%post -n java-sun-jre
+%preun
+javaenv --erasejavaif "jdk.%{name}"
+
+%postun
+javaenv --setjava
+
+%post jre
 /sbin/ldconfig -n %{jredir}/lib/i386
+javaenv --setjava
+
+%preun jre
+javaenv --erasejavaif "jre.%{name}"
+
+%postun jre
+javaenv --setjava
 
 %files
 %defattr(644,root,root,755)
 %doc COPYRIGHT LICENSE README README.html
-%attr(755,root,root) %{_bindir}/HtmlConverter
-%attr(755,root,root) %{_bindir}/appletviewer
-%attr(755,root,root) %{_bindir}/extcheck
-%attr(755,root,root) %{_bindir}/idlj
-%attr(755,root,root) %{_bindir}/jar
-%attr(755,root,root) %{_bindir}/jarsigner
-%attr(755,root,root) %{_bindir}/java-rmi.cgi
-%attr(755,root,root) %{_bindir}/javac
-%attr(755,root,root) %{_bindir}/javadoc
-%attr(755,root,root) %{_bindir}/javah
-%attr(755,root,root) %{_bindir}/javap
-%attr(755,root,root) %{_bindir}/jdb
-%attr(755,root,root) %{_bindir}/native2ascii
-%attr(755,root,root) %{_bindir}/rmic
-%attr(755,root,root) %{_bindir}/serialver
 %attr(755,root,root) %{javadir}/bin/HtmlConverter
 %attr(755,root,root) %{javadir}/bin/appletviewer
 %attr(755,root,root) %{javadir}/bin/extcheck
@@ -200,55 +253,18 @@ fi
 %attr(755,root,root) %{javadir}/bin/native2ascii
 %attr(755,root,root) %{javadir}/bin/rmic
 %attr(755,root,root) %{javadir}/bin/serialver
-%{javadir}/include
-#%{_includedir}/jdk
 %dir %{javadir}/lib
+%{javadir}/include
 %{javadir}/lib/*.jar
 %{javadir}/lib/*.idl
-%{_mandir}/man1/appletviewer.1*
-%{_mandir}/man1/extcheck.1*
-%{_mandir}/man1/idlj.1*
-%{_mandir}/man1/jar.1*
-%{_mandir}/man1/jarsigner.1*
-%{_mandir}/man1/javac.1*
-%{_mandir}/man1/javadoc.1*
-%{_mandir}/man1/javah.1*
-%{_mandir}/man1/javap.1*
-%{_mandir}/man1/jdb.1*
-%{_mandir}/man1/native2ascii.1*
-%{_mandir}/man1/rmic.1*
-%{_mandir}/man1/serialver.1*
-%lang(ja) %{_mandir}/ja/man1/appletviewer.1*
-%lang(ja) %{_mandir}/ja/man1/extcheck.1*
-%lang(ja) %{_mandir}/ja/man1/idlj.1*
-%lang(ja) %{_mandir}/ja/man1/jar.1*
-%lang(ja) %{_mandir}/ja/man1/jarsigner.1*
-%lang(ja) %{_mandir}/ja/man1/javac.1*
-%lang(ja) %{_mandir}/ja/man1/javadoc.1*
-%lang(ja) %{_mandir}/ja/man1/javah.1*
-%lang(ja) %{_mandir}/ja/man1/javap.1*
-%lang(ja) %{_mandir}/ja/man1/jdb.1*
-%lang(ja) %{_mandir}/ja/man1/native2ascii.1*
-%lang(ja) %{_mandir}/ja/man1/rmic.1*
-%lang(ja) %{_mandir}/ja/man1/serialver.1*
+%{javacfgdir}/jdk.%{name}
+%{javacfgdir}/links.jdk.%{name}
+%config(noreplace) %verify(not size mtime md5) %{javacfgdir}/cp.jdk.%{name}
 
-%files -n java-sun-jre
+%files jre
 %defattr(644,root,root,755)
 %doc jre/{CHANGES,COPYRIGHT,LICENSE,README,Xusage*,*.txt}
 %doc jre/Welcome.html jre/ControlPanel.html
-%attr(755,root,root) %{_bindir}/ControlPanel
-%attr(755,root,root) %{_bindir}/java
-%attr(755,root,root) %{_bindir}/java_vm
-%attr(755,root,root) %{_bindir}/keytool
-%attr(755,root,root) %{_bindir}/kinit
-%attr(755,root,root) %{_bindir}/klist
-%attr(755,root,root) %{_bindir}/ktab
-%attr(755,root,root) %{_bindir}/orbd
-%attr(755,root,root) %{_bindir}/policytool
-%attr(755,root,root) %{_bindir}/rmid
-%attr(755,root,root) %{_bindir}/rmiregistry
-%attr(755,root,root) %{_bindir}/servertool
-%attr(755,root,root) %{_bindir}/tnameserv
 %dir %{javadir}
 %dir %{javadir}/bin
 %attr(755,root,root) %{javadir}/bin/java
@@ -286,29 +302,16 @@ fi
 #%lang(zh) %{jredir}/lib/*.properties.zh
 %dir %{jredir}/plugin
 %dir %{jredir}/plugin/i386
-%dir %{classdir}
-%{_mandir}/man1/java.1*
-%{_mandir}/man1/keytool.1*
-%{_mandir}/man1/orbd.1*
-%{_mandir}/man1/policytool.1*
-%{_mandir}/man1/rmid.1*
-%{_mandir}/man1/rmiregistry.1*
-%{_mandir}/man1/servertool.1*
-%{_mandir}/man1/tnameserv.1*
-%lang(ja) %{_mandir}/ja/man1/java.1*
-%lang(ja) %{_mandir}/ja/man1/keytool.1*
-%lang(ja) %{_mandir}/ja/man1/orbd.1*
-%lang(ja) %{_mandir}/ja/man1/policytool.1*
-%lang(ja) %{_mandir}/ja/man1/rmid.1*
-%lang(ja) %{_mandir}/ja/man1/rmiregistry.1*
-%lang(ja) %{_mandir}/ja/man1/servertool.1*
-%lang(ja) %{_mandir}/ja/man1/tnameserv.1*
+%{javacfgdir}/jre.%{name}
+%{javacfgdir}/links.jre.%{name}
+%config(noreplace) %verify(not size mtime md5) %{javacfgdir}/cp.jre.%{name}
 
-%files -n java-sun-demos
+%files demos
 %defattr(644,root,root,755)
-%{javadir}/demo
+%{_examplesdir}/%{name}
+%config(noreplace) %verify(not size mtime md5) %{javacfgdir}/cp.jdk.%{name}-examples
 
-%files -n netscape4-plugin-%{name}
+%files netscape4-plugin
 %defattr(644,root,root,755)
 %attr(755,root,root) %{netscape4dir}/plugins/javaplugin.so
 %{netscape4dir}/java/classes/*
@@ -326,8 +329,56 @@ fi
 %lang(zh_TW) %{jredir}/lib/locale/zh_TW
 %lang(zh_TW) %{jredir}/lib/locale/zh_TW.BIG5
 
-%files -n mozilla-plugin-%{name}
+%files mozilla-plugin
 %defattr(644,root,root,755)
 %dir %{jredir}/plugin/i386/ns610
 %attr(755,root,root) %{jredir}/plugin/i386/ns610/libjavaplugin_oji.so
 %{mozilladir}/plugins/libjavaplugin_oji.so
+
+%files man-jdk
+%defattr(644,root,root,755)
+%{_mandir}/man1/appletviewer.1*
+%{_mandir}/man1/extcheck.1*
+%{_mandir}/man1/idlj.1*
+%{_mandir}/man1/jar.1*
+%{_mandir}/man1/jarsigner.1*
+%{_mandir}/man1/javac.1*
+%{_mandir}/man1/javadoc.1*
+%{_mandir}/man1/javah.1*
+%{_mandir}/man1/javap.1*
+%{_mandir}/man1/jdb.1*
+%{_mandir}/man1/native2ascii.1*
+%{_mandir}/man1/rmic.1*
+%{_mandir}/man1/serialver.1*
+%lang(ja) %{_mandir}/ja/man1/appletviewer.1*
+%lang(ja) %{_mandir}/ja/man1/extcheck.1*
+%lang(ja) %{_mandir}/ja/man1/idlj.1*
+%lang(ja) %{_mandir}/ja/man1/jar.1*
+%lang(ja) %{_mandir}/ja/man1/jarsigner.1*
+%lang(ja) %{_mandir}/ja/man1/javac.1*
+%lang(ja) %{_mandir}/ja/man1/javadoc.1*
+%lang(ja) %{_mandir}/ja/man1/javah.1*
+%lang(ja) %{_mandir}/ja/man1/javap.1*
+%lang(ja) %{_mandir}/ja/man1/jdb.1*
+%lang(ja) %{_mandir}/ja/man1/native2ascii.1*
+%lang(ja) %{_mandir}/ja/man1/rmic.1*
+%lang(ja) %{_mandir}/ja/man1/serialver.1*
+
+%files man-jre
+%defattr(644,root,root,755)
+%{_mandir}/man1/java.1*
+%{_mandir}/man1/keytool.1*
+%{_mandir}/man1/orbd.1*
+%{_mandir}/man1/policytool.1*
+%{_mandir}/man1/rmid.1*
+%{_mandir}/man1/rmiregistry.1*
+%{_mandir}/man1/servertool.1*
+%{_mandir}/man1/tnameserv.1*
+%lang(ja) %{_mandir}/ja/man1/java.1*
+%lang(ja) %{_mandir}/ja/man1/keytool.1*
+%lang(ja) %{_mandir}/ja/man1/orbd.1*
+%lang(ja) %{_mandir}/ja/man1/policytool.1*
+%lang(ja) %{_mandir}/ja/man1/rmid.1*
+%lang(ja) %{_mandir}/ja/man1/rmiregistry.1*
+%lang(ja) %{_mandir}/ja/man1/servertool.1*
+%lang(ja) %{_mandir}/ja/man1/tnameserv.1*
