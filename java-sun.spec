@@ -457,10 +457,10 @@ fi
 %lang(it) %{jredir}/lib/locale/it
 %lang(ja) %{jredir}/lib/locale/ja
 %lang(ko) %{jredir}/lib/locale/ko
-%lang(ko_KR.UTF-8) %{jredir}/lib/locale/ko.UTF-8
+%lang(ko_KR) %{jredir}/lib/locale/ko.UTF-8
 %lang(sv) %{jredir}/lib/locale/sv
 %lang(zh_CN) %{jredir}/lib/locale/zh
-%lang(zh_CN.GBK) %{jredir}/lib/locale/zh.GBK
+%lang(zh_CN) %{jredir}/lib/locale/zh.GBK
 %lang(zh_TW) %{jredir}/lib/locale/zh_TW
 %lang(zh_TW) %{jredir}/lib/locale/zh_TW.BIG5
 
