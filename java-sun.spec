@@ -85,26 +85,28 @@ Provides:	java
 %ifarch %{ix86}
 Provides:	javaws = %{version}
 %endif
-Provides:	jndi = %{version}
-Provides:	jndi-ldap = %{version}
-Provides:	jndi-cos = %{version}
-Provides:	jndi-rmi = %{version}
-Provides:	jndi-dns = %{version}
 Provides:	jaas = %{version}
-Provides:	jsse = %{version}
+Provides:	jaxp = 1.3
 Provides:	jce = %{version}
+Provides:	jndi = %{version}
+Provides:	jndi-cos = %{version}
+Provides:	jndi-dns = %{version}
+Provides:	jndi-ldap = %{version}
+Provides:	jndi-rmi = %{version}
+Provides:	jsse = %{version}
 Provides:	jdbc-stdext = 3.0
 Provides:	jdbc-stdext = %{version}
-Obsoletes:	jre
 Obsoletes:	java-blackdown-jre
-Obsoletes:	jndi
-Obsoletes:	jndi-provider-ldap
-Obsoletes:	jndi-provider-cosnaming
-Obsoletes:	jndi-provider-rmiregistry
-Obsoletes:	jndi-provider-dns
-Obsoletes:	jaas
-Obsoletes:	jsse
+Obsoletes:	jaxp
 Obsoletes:	jce
+Obsoletes:	jndi
+Obsoletes:	jndi-provider-cosnaming
+Obsoletes:	jndi-provider-dns
+Obsoletes:	jndi-provider-ldap
+Obsoletes:	jndi-provider-rmiregistry
+Obsoletes:	jaas
+Obsoletes:	jre
+Obsoletes:	jsse
 Obsoletes:	jdbc-stdext
 
 %description jre
