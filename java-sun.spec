@@ -8,6 +8,7 @@ Group:		Development/Languages/Java
 # download through forms from http://java.sun.com/j2se/1.4.2/download.html
 Source0:	j2sdk-1_4_2-linux-i586.bin
 NoSource:	0
+Patch0:		%{name}-ControlPanel-fix.patch
 URL:		http://java.sun.com/linux/
 BuildRequires:	unzip
 Requires:	java-sun-jre = %{version}
@@ -186,6 +187,7 @@ export MORE=10000
 sh %{SOURCE0} <<EOF
 yes
 EOF
+%patch -p0
 
 %install
 rm -rf $RPM_BUILD_ROOT
