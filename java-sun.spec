@@ -95,18 +95,18 @@ Provides:	jndi-rmi = %{version}
 Provides:	jsse = %{version}
 Provides:	jdbc-stdext = 3.0
 Provides:	jdbc-stdext = %{version}
+Obsoletes:	jaas
 Obsoletes:	java-blackdown-jre
 Obsoletes:	jaxp
 Obsoletes:	jce
+Obsoletes:	jdbc-stdext
 Obsoletes:	jndi
 Obsoletes:	jndi-provider-cosnaming
 Obsoletes:	jndi-provider-dns
 Obsoletes:	jndi-provider-ldap
 Obsoletes:	jndi-provider-rmiregistry
-Obsoletes:	jaas
 Obsoletes:	jre
 Obsoletes:	jsse
-Obsoletes:	jdbc-stdext
 
 %description jre
 Java Runtime Environment for Linux.
@@ -136,10 +136,10 @@ Requires:	%{name}-jre = %{version}-%{release}
 Provides:	jar
 Provides:	java-shared
 Provides:	java-jre-tools
-Obsoletes:	java-shared
-Obsoletes:	java-jre-tools
-Obsoletes:	jar
 Obsoletes:	fastjar
+Obsoletes:	jar
+Obsoletes:	java-jre-tools
+Obsoletes:	java-shared
 
 %description tools
 This package contains tools that are common for every Java(TM)
@@ -170,9 +170,9 @@ Group:		Development/Languages/Java
 Requires:	%{name}-jre = %{version}-%{release}
 Requires:	netscape-common >= 4.0
 Obsoletes:	blackdown-java-sdk-netscape4-plugin
-Obsoletes:	netscape4-plugin-java-blackdown
 Obsoletes:	java-sun-nn4-plugin
 Obsoletes:	jre-netscape4-plugin
+Obsoletes:	netscape4-plugin-java-blackdown
 
 %description -n netscape4-plugin-%{name}
 Java plugin for Netscape 4.x.
@@ -203,11 +203,11 @@ Obsoletes:	blackdown-java-sdk-mozilla-plugin
 Obsoletes:	java-sun-moz-plugin
 Obsoletes:	jre-mozilla-plugin
 Obsoletes:	mozilla-plugin-blackdown-java-sdk
-Obsoletes:	mozilla-plugin-java-blackdown
-Obsoletes:	mozilla-plugin-java-sun
 Obsoletes:	mozilla-plugin-gcc2-java-sun
 Obsoletes:	mozilla-plugin-gcc3-java-sun
 Obsoletes:	mozilla-plugin-gcc32-java-sun
+Obsoletes:	mozilla-plugin-java-blackdown
+Obsoletes:	mozilla-plugin-java-sun
 
 %description -n mozilla-plugin-%{name}
 Java plugin for Mozilla compiled using gcc 3.
@@ -221,9 +221,9 @@ Summary(pl):	Wtyczka Javy do Mozilli Firefox
 Group:		Development/Languages/Java
 PreReq:		mozilla-firefox
 Requires:	%{name}-mozilla-plugin = %{version}-%{release}
-Obsoletes:	mozilla-firefox-plugin-java-blackdown
 Obsoletes:	mozilla-firefox-plugin-gcc2-java-sun
 Obsoletes:	mozilla-firefox-plugin-gcc3-java-sun
+Obsoletes:	mozilla-firefox-plugin-java-blackdown
 
 %description -n mozilla-firefox-plugin-%{name}
 Java plugin for Mozilla Firefox compiled using gcc 3.
