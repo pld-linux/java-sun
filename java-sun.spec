@@ -23,6 +23,8 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		netscape4dir	/usr/X11R6/lib/netscape
 %define		mozilladir	/usr/X11R6/lib/mozilla
 
+# prevent wrong requires when building with another JRE
+%define		_noautoreqdep	libawt.so libjava.so libjvm.so libmlib_image.so libverify.so libnet.so
 # ??? unixODBC-devel?
 %define		_noautoreq	libodbcinst.so libodbc.so
 
@@ -82,7 +84,7 @@ Summary:	Mozilla Java plugin
 Summary(pl):	Plugin Javy do Mozilli
 Group:		Development/Languages/Java
 Requires:	jre = %{version}
-Requires:	mozilla
+Requires:	mozilla-embedded
 Obsoletes:	jre-mozilla-plugin
 
 %description -n java-sun-moz-plugin
