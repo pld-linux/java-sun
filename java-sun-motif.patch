@@ -1,0 +1,12 @@
+diff -Nru j2sdk.orig/motif/lib/Xm/Makefile j2sdk/motif/lib/Xm/Makefile
+--- j2sdk.orig/motif/lib/Xm/Makefile	Fri Sep  6 09:05:35 2002
++++ j2sdk/motif/lib/Xm/Makefile	Wed Mar 26 23:18:51 2003
+@@ -1139,7 +1139,7 @@
+ 
+ Xm.cat:XmMsgCatI.h
+ 	$(RM) Xm.cat
+-	$(GENCAT) Xm.cat $(MWIDGETSRC)/Xm.msg
++	-$(GENCAT) Xm.cat $(MWIDGETSRC)/Xm.msg
+ 
+ includes:: Xm.cat XmMsgCatI.h
+ depend:: Xm.cat XmMsgCatI.h

@@ -1,0 +1,12 @@
+diff -Nru j2sdk-1.4.1.orig/control/make/sanity-rules.gmk j2sdk-1.4.1/control/make/sanity-rules.gmk
+--- j2sdk-1.4.1.orig/control/make/sanity-rules.gmk	Fri Sep  6 09:00:16 2002
++++ j2sdk-1.4.1/control/make/sanity-rules.gmk	Fri Mar 21 12:39:56 2003
+@@ -9,7 +9,7 @@
+ # SANITY
+ ################################################################
+ 
+-sanity: pre-sanity settings insane environment hotspot-sanity motif-sanity  j2se-sanity cobundle-sanity patch-sanity post-sanity
++sanity: pre-sanity settings insane environment hotspot-sanity motif-sanity  j2se-sanity cobundle-sanity patch-sanity
+ 
+ pre-sanity: 
+ 	@$(RM) $(ERROR_FILE) $(WARNING_FILE) $(MESSAGE_FILE)
