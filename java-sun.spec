@@ -2,7 +2,7 @@ Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	1.4.2_02
-Release:	1.1
+Release:	1
 License:	restricted, non-distributable
 Group:		Development/Languages/Java
 # download through forms from http://java.sun.com/j2se/1.4.2/download.html
@@ -11,6 +11,7 @@ Source0:	j2sdk-1_4_2_02-linux-i586.bin
 NoSource:       0
 Patch0:		%{name}-ControlPanel-fix.patch
 URL:		http://java.sun.com/linux/
+BuildRequires:	rpm-build >= 4.3-0.20030610.21
 BuildRequires:	unzip
 Requires:	java-sun-jre = %{version}
 Provides:	jdk = %{version}
@@ -29,6 +30,14 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		netscape4dir	/usr/lib/netscape
 %define		mozilladir	/usr/lib/mozilla
 
+# rpm doesn't like strange version definitions provided by Sun's libs
+%define		_noautoprov	'\\.\\./.*' '/usr/re/.*'
+# these with SUNWprivate.* are found as required, but not provided
+# the rest is because -jdbc wants unixODBC-devel(?)
+%define		_noautoreq	'libjava.so(SUNWprivate_1.1)' 'libnet.so(SUNWprivate_1.1)' 'libverify.so(SUNWprivate_1.1)' libodbcinst.so libodbc.so
+# don't depend on other JRE/JDK installed on build host
+%define		_noautoreqdep	libjava.so libjvm.so
+
 %description
 Java Development Kit for Linux.
 
@@ -40,7 +49,6 @@ Summary:	JDBC files for Sun Java
 Summary(pl):	Pliki JDBC dla Javy Suna
 Group:		Development/Libraries/Java
 Requires:	%{name} = %{version}-%{release}
-AutoReqProv:	no
 Requires:	libodbc.so.1
 Requires:	libodbcinst.so.1
 
@@ -70,9 +78,6 @@ Provides:	jsse = %{version}
 Provides:	jce = %{version}
 Provides:	jdbc-stdext = 3.0
 Provides:	jdbc-stdext = %{version}
-Provides:	libjava.so(SUNWprivate_1.1)
-Provides:	libnet.so(SUNWprivate_1.1)
-Provides:	libverify.so(SUNWprivate_1.1)
 Obsoletes:	jre
 Obsoletes:	java-blackdown-jre
 Obsoletes:	jndi
@@ -90,6 +95,18 @@ Java Runtime Environment for Linux.
 
 %description jre -l pl
 ¦rodowisko uruchomieniowe Javy dla Linuksa.
+
+%package alsa
+Summary:	JRE module for ALSA sound support
+Summary(pl):	Modu³ JRE do obs³ugi d¼wiêku poprzez ALSA
+Group:		Development/Languages/Java
+Requires:	%{name}-jre = %{version}
+
+%description alsa
+JRE module for ALSA sound support.
+
+%description alsa -l pl
+Modu³ JRE do obs³ugi d¼wiêku poprzez ALSA.
 
 %package tools
 Summary:	Shared Java tools
@@ -381,6 +398,7 @@ fi
 %{jredir}/lib/i386/jvm.cfg
 %attr(755,root,root) %{jredir}/lib/i386/awt_robot
 %attr(755,root,root) %{jredir}/lib/i386/lib[acdfhijmnrvz]*.so
+%exclude %{jredir}/lib/i386/libjsoundalsa.so
 %{jredir}/lib/im
 %{jredir}/lib/images
 %dir %{jredir}/lib/security
@@ -436,6 +454,10 @@ fi
 %{jredir}/javaws/*.policy
 %{jredir}/javaws/*.html
 
+%files alsa
+%defattr(644,root,root,755)
+%attr(755,root,root) %{jredir}/lib/i386/libjsoundalsa.so
+
 %files demos
 %defattr(644,root,root,755)
 %{javadir}/demo
@@ -444,15 +466,16 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/jar
 %attr(755,root,root) %{_bindir}/rmic
+%attr(755,root,root) %{_bindir}/rmiregistry
 %attr(755,root,root) %{jredir}/bin/rmiregistry
 %attr(755,root,root) %{javadir}/bin/jar
 %attr(755,root,root) %{javadir}/bin/rmic
 %{_mandir}/man1/jar.1*
-%{_mandir}/man1/rmiregistry.1*
 %{_mandir}/man1/rmic.1*
+%{_mandir}/man1/rmiregistry.1*
 %lang(ja) %{_mandir}/ja/man1/jar.1*
-%lang(ja) %{_mandir}/ja/man1/rmiregistry.1*
 %lang(ja) %{_mandir}/ja/man1/rmic.1*
+%lang(ja) %{_mandir}/ja/man1/rmiregistry.1*
 
 %files -n netscape4-plugin-%{name}
 %defattr(644,root,root,755)
