@@ -464,6 +464,9 @@ fi
 %{jredir}/lib/ext
 %{jredir}/lib/fonts
 %dir %{jredir}/lib/i386
+%dir %{jredir}/lib/i386/xawt
+%dir %{jredir}/lib/i386/motif21
+%dir %{jredir}/lib/i386/headless
 %attr(755,root,root) %{jredir}/lib/i386/client
 %attr(755,root,root) %{jredir}/lib/i386/native_threads
 %attr(755,root,root) %{jredir}/lib/i386/server
