@@ -5,7 +5,7 @@ Version:	1.5.0
 Release:	0.rc.1
 License:	restricted, non-distributable
 Group:		Development/Languages/Java
-# download directly from http://java.sun.com/j2se/1.5.0/snapshots/index.jsp
+# download directly from http://java.sun.com/j2se/1.5.0/download.jsp
 %ifarch %{ix86}
 Source0:	jdk-1_5_0-rc-linux-i586.bin
 # NoSource0-md5: c0e25a0776a957a8872382c5b90ef9ca
