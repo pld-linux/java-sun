@@ -2,7 +2,7 @@ Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	1.4.1
-Release:	rc_0.1
+Release:	rc_0.2
 License:	restricted, non-distributable
 Group:		Development/Languages/Java
 URL:		http://java.sun.com/linux/
@@ -118,6 +118,8 @@ ln -sf ../../include/jdk $RPM_BUILD_ROOT%{jdkdir}/include
 mv -f jre/lib/i386/client/Xusage.txt jre/Xusage.client
 mv -f jre/lib/i386/server/Xusage.txt jre/Xusage.server
 mv -f jre/lib/*.txt jre
+mv jre/lib/font.properties{,.orig}
+mv jre/lib/font.properties{.Redhat6.1,}
 
 cp -rf jre/{bin,lib} $RPM_BUILD_ROOT%{jredir}
 
@@ -150,6 +152,7 @@ gzip -9nf COPYRIGHT LICENSE README \
 rm -rf $RPM_BUILD_ROOT
 
 %post
+rm %{jdkdir}
 ln -sf %{jdkdir} %{_libdir}/java
 
 %post -n java-sun-jre
