@@ -304,6 +304,8 @@ fi
 %{jredir}/lib/im
 %{jredir}/lib/images
 %{jredir}/lib/security
+%exclude %{jredir}/lib/security/cacerts
+%verify(not md5 size mtime) %config(noreplace) %{jredir}/lib/security/cacerts
 %{jredir}/lib/zi
 %{jredir}/lib/*.jar
 %{jredir}/lib/*.properties
