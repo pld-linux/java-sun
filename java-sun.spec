@@ -351,7 +351,7 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/{ko.UTF-8,zh.GBK,zh_TW.BIG5}
 %endif
 
 cat << EOF >$RPM_BUILD_ROOT/etc/env.d/JAVA_HOME
-JAVA_HOME="/usr/lib/java"
+JAVA_HOME="%{javadir}"
 EOF
 
 %clean
