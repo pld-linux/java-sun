@@ -53,18 +53,19 @@ Java Development Kit for Linux.
 %description -l pl
 ¦rodowisko programistyczne Javy dla Linuksa.
 
-%package jdbc
+%package jre-jdbc
 Summary:	JDBC files for Sun Java
 Summary(pl):	Pliki JDBC dla Javy Suna
 Group:		Development/Languages/Java
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name}-jre = %{version}-%{release}
+Provides:	%{name}-jdbc
 Requires:	libodbc.so.1
 Requires:	libodbcinst.so.1
 
-%description jdbc
+%description jre-jdbc
 This package contains JDBC files for Sun Java.
 
-%description jdbc -l pl
+%description jre-jdbc -l pl
 Ten pakiet zawiera pliki JDBC dla Javy Suna.
 
 %package jre
@@ -73,6 +74,7 @@ Summary(pl):	Sun JRE - ¶rodowisko uruchomieniowe Javy dla Linuksa
 Group:		Development/Languages/Java
 Requires:	XFree86-libs
 Requires:	java-shared
+Requires:	java-jre-tools
 Provides:	java1.4
 Provides:	jre = %{version}
 Provides:	java
@@ -105,16 +107,17 @@ Java Runtime Environment for Linux.
 %description jre -l pl
 ¦rodowisko uruchomieniowe Javy dla Linuksa.
 
-%package alsa
+%package jre-alsa
 Summary:	JRE module for ALSA sound support
 Summary(pl):	Modu³ JRE do obs³ugi d¼wiêku poprzez ALSA
 Group:		Development/Languages/Java
 Requires:	%{name}-jre = %{version}-%{release}
+Provides:	%{name}-alsa
 
-%description alsa
+%description jre-alsa
 JRE module for ALSA sound support.
 
-%description alsa -l pl
+%description jre-alsa -l pl
 Modu³ JRE do obs³ugi d¼wiêku poprzez ALSA.
 
 %package tools
@@ -133,6 +136,21 @@ This package contains tools that are common for every Java(TM)
 implementation, such as rmic or jar.
 
 %description tools -l pl
+Pakiet ten zawiera narzêdzia wspólne dla ka¿dej implementacji
+Javy(TM), takie jak rmic czy jar.
+
+%package jre-tools
+Summary:	Shared Java tools
+Summary(pl):	Wspó³dzielone narzêdzia Javy
+Group:		Development/Languages/Java
+Requires:	%{name}-jre = %{version}-%{release}
+Provides:	java-jre-tools
+
+%description jre-tools
+This package contains tools that are common for every Java(TM)
+implementation, such as rmic or jar.
+
+%description jre-tools -l pl
 Pakiet ten zawiera narzêdzia wspólne dla ka¿dej implementacji
 Javy(TM), takie jak rmic czy jar.
 
@@ -415,7 +433,7 @@ fi
 %lang(ja) %{_mandir}/ja/man1/serialver.1*
 %lang(ja) %{_mandir}/ja/man1/jconsole.1*
 
-%files jdbc
+%files jre-jdbc
 %defattr(644,root,root,755)
 %attr(755,root,root) %{jredir}/lib/i386/libJdbcOdbc.so
 
@@ -589,7 +607,7 @@ fi
 ##%{jredir}/javaws/*.policy
 ##%{jredir}/javaws/*.html
 
-%files alsa
+%files jre-alsa
 %defattr(644,root,root,755)
 %attr(755,root,root) %{jredir}/lib/i386/libjsoundalsa.so
 
@@ -602,14 +620,17 @@ fi
 %attr(755,root,root) %{_bindir}/jar
 %attr(755,root,root) %{_bindir}/rmic
 %attr(755,root,root) %{_bindir}/rmiregistry
-%attr(755,root,root) %{jredir}/bin/rmiregistry
 %attr(755,root,root) %{javadir}/bin/jar
 %attr(755,root,root) %{javadir}/bin/rmic
 %{_mandir}/man1/jar.1*
 %{_mandir}/man1/rmic.1*
-%{_mandir}/man1/rmiregistry.1*
 %lang(ja) %{_mandir}/ja/man1/jar.1*
 %lang(ja) %{_mandir}/ja/man1/rmic.1*
+
+%files jre-tools
+%defattr(644,root,root,755)
+%attr(755,root,root) %{jredir}/bin/rmiregistry
+%{_mandir}/man1/rmiregistry.1*
 %lang(ja) %{_mandir}/ja/man1/rmiregistry.1*
 
 %files mozilla-plugin
