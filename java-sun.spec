@@ -17,6 +17,7 @@ Source0:	jdk-1_5_0-beta2-linux-amd64.bin
 %endif
 NoSource:	0
 Patch0:		%{name}-ControlPanel-fix.patch
+Patch1:		%{name}-desktop.patch
 URL:		http://java.sun.com/linux/
 BuildRequires:	rpm-build >= 4.3-0.20040107.21
 BuildRequires:	unzip
@@ -216,7 +217,8 @@ sh %{SOURCE0} <<EOF
 yes
 EOF
 cd jdk%{version}
-%patch -p1
+%patch0 -p1
+%patch1 -p1
 
 %install
 rm -rf $RPM_BUILD_ROOT
