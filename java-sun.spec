@@ -2,7 +2,7 @@ Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	1.5.0
-Release:	0.beta3.1
+Release:	0.beta3.2
 License:	restricted, non-distributable
 Group:		Development/Languages/Java
 # download directly from http://java.sun.com/j2se/1.5.0/snapshots/index.jsp
@@ -306,8 +306,8 @@ ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{_javalibdir}/jdbc-stdext-3.0.jar
 install -d -m 755 $RPM_BUILD_ROOT%{jredir}/javaws
 cp -a jre/javaws/* $RPM_BUILD_ROOT%{jredir}/javaws
 perl -p -i -e 's#javaws\.cfg\.jre\.0\.path=.*#javaws\.cfg\.jre\.0\.path=%{jredir}/bin/java#' $RPM_BUILD_ROOT%{jredir}/javaws/javaws.cfg
-ln -sf %{jredir}/javaws/javaws.jar $RPM_BUILD_ROOT%{_javalibdir}/javaws.jar
-ln -sf %{jredir}/javaws/javaws-l10n.jar $RPM_BUILD_ROOT%{_javalibdir}/javaws-l10n.jar
+ln -sf %{jredir}/lib/javaws.jar $RPM_BUILD_ROOT%{_javalibdir}/javaws.jar
+#ln -sf %{jredir}/javaws/javaws-l10n.jar $RPM_BUILD_ROOT%{_javalibdir}/javaws-l10n.jar
 mv -f $RPM_BUILD_ROOT{%{jredir}/lib,%{_datadir}}/locale
 
 %clean
