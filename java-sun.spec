@@ -42,7 +42,6 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		mozilladir	/usr/%{_lib}/mozilla
 %define		firefoxdir	/usr/%{_lib}/mozilla-firefox
 
-
 # rpm doesn't like strange version definitions provided by Sun's libs
 %define		_noautoprov	'\\.\\./.*' '/export/.*'
 # these with SUNWprivate.* are found as required, but not provided
@@ -138,6 +137,7 @@ Provides:	jar
 Provides:	java-shared
 Provides:	java-jre-tools
 Obsoletes:	java-shared
+Obsoletes:	java-sun-jre-tools
 Obsoletes:	jar
 Obsoletes:	fastjar
 
