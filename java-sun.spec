@@ -2,7 +2,7 @@ Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	1.4.0
-Release:	0.1
+Release:	0.2
 License:	restricted, non-distributable
 Group:		Development/Languages/Java
 URL:		http://java.sun.com/linux/
@@ -14,6 +14,7 @@ Obsoletes:	ibm-java
 Obsoletes:	jdk
 Obsoletes:	kaffe
 BuildRequires:	unzip
+BuildConflicts: ibm-java
 ExclusiveArch:	%{ix86}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
