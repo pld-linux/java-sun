@@ -1,0 +1,12 @@
+diff -Nru j2sdk.orig/control/make/j2se-rules.gmk j2sdk/control/make/j2se-rules.gmk
+--- j2sdk.orig/control/make/j2se-rules.gmk	Fri Sep  6 09:00:15 2002
++++ j2sdk/control/make/j2se-rules.gmk	Thu Mar 27 09:21:31 2003
+@@ -49,7 +49,7 @@
+ ifndef DEV_ONLY
+   J2SE_BUILD_TARGETS = sanity all $(PLUGIN_TARGET) $(DOCS_TARGET) images binaries bundles
+ else
+-  J2SE_BUILD_TARGETS = sanity all $(PLUGIN_TARGET) $(IMAGES_TARGET)
++  J2SE_BUILD_TARGETS = sanity all $(IMAGES_TARGET)
+ endif
+ J2SE_CLOBBER_TARGETS = $(PLUGIN_CLOBBER_TARGET) clobber
+ 

@@ -1,0 +1,45 @@
+diff -Nru j2sdk.orig/hotspot/build/linux/makefiles/gcc.make j2sdk/hotspot/build/linux/makefiles/gcc.make
+--- j2sdk.orig/hotspot/build/linux/makefiles/gcc.make	Fri Sep  6 09:01:22 2002
++++ j2sdk/hotspot/build/linux/makefiles/gcc.make	Mon Mar 24 12:27:50 2003
+@@ -60,7 +60,7 @@
+ # unlike g++, gcc statically links libstdc++ (add 83K in filesize), so people 
+ # without gcc/2.91 (or whatever version we use to build the binaries) can 
+ # run java without installing the compatibility libstdc++
+-CPP = gcc
++CPP = g++
+ CC  = gcc
+ endif
+ 
+diff -Nru j2sdk.orig/hotspot/src/share/vm/c1/c1_FrameMap.hpp j2sdk/hotspot/src/share/vm/c1/c1_FrameMap.hpp
+--- j2sdk.orig/hotspot/src/share/vm/c1/c1_FrameMap.hpp	Fri Sep  6 09:03:41 2002
++++ j2sdk/hotspot/src/share/vm/c1/c1_FrameMap.hpp	Mon Mar 24 14:43:29 2003
+@@ -196,7 +196,7 @@
+ //--------------------------------------------------------
+ 
+ class ArgumentLocation VALUE_OBJ_CLASS_SPEC {
+-  friend CallingConvention;
++  friend class CallingConvention;
+  private:
+   int _n;         // either a register number 0-5 (I0-I5 or O0-O5), or an offset (in words) from SP/FP
+ 
+@@ -246,7 +246,7 @@
+ //--------------------------------------------------------
+ 
+ class CallingConvention: public ResourceObj {
+-  friend FrameMap;
++  friend class FrameMap;
+ 
+  private:
+   intStack* _args;
+diff -Nru j2sdk.orig/hotspot/src/share/vm/opto/loopnode.hpp j2sdk/hotspot/src/share/vm/opto/loopnode.hpp
+--- j2sdk.orig/hotspot/src/share/vm/opto/loopnode.hpp	Fri Sep  6 09:04:33 2002
++++ j2sdk/hotspot/src/share/vm/opto/loopnode.hpp	Mon Mar 24 11:27:48 2003
+@@ -308,7 +308,7 @@
+ // Computes the mapping from Nodes to IdealLoopTrees.  Organizes IdealLoopTrees into a
+ // loop tree.  Drives the loop-based transformations on the ideal graph.
+ class PhaseIdealLoop : public PhaseTransform {
+-  friend IdealLoopTree;
++  friend class IdealLoopTree;
+   // Pre-computed def-use info
+   PhaseIterGVN &_igvn;
+ 

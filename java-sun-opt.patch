@@ -1,0 +1,50 @@
+diff -Nru j2sdk.orig/control/make/Makefile j2sdk/control/make/Makefile
+--- j2sdk.orig/control/make/Makefile	Fri Sep  6 09:00:15 2002
++++ j2sdk/control/make/Makefile	Thu Mar 27 11:27:08 2003
+@@ -13,6 +13,7 @@
+ 
+ all::
+ 	@$(ECHO) $(PLATFORM) $(ARCH) $(RELEASE) build started: $(shell $(DATE) '+%y-%m-%d %H:%M')
++	@$(ECHO) RPM_OPT_FLAGS=$(RPM_OPT_FLAGS)
+ 
+ include $(BUILDDIR)/sanity-rules.gmk
+ include $(BUILDDIR)/hotspot-rules.gmk
+diff -Nru j2sdk.orig/hotspot/build/linux/makefiles/gcc.make j2sdk/hotspot/build/linux/makefiles/gcc.make
+--- j2sdk.orig/hotspot/build/linux/makefiles/gcc.make	Fri Sep  6 09:01:22 2002
++++ j2sdk/hotspot/build/linux/makefiles/gcc.make	Thu Mar 27 11:31:27 2003
+@@ -38,9 +38,9 @@
+ CFLAGS += $(GCC_SAVE_TEMPS)
+ 
+ # The flags to use for an Optimized g++ build
+-OPT_CFLAGS += -O3 
++OPT_CFLAGS += $(RPM_OPT_FLAGS)
+ # Hotspot uses very unstrict aliasing turn this optimization off
+-OPT_CFLAGS += -fno-strict-aliasing
++#OPT_CFLAGS += -fno-strict-aliasing
+ 
+ # The gcc compiler segv's on ia64 when compiling cInterpreter.cpp 
+ # if we use expensive-optimizations 
+diff -Nru j2sdk.orig/j2se/make/common/Defs.gmk j2sdk/j2se/make/common/Defs.gmk
+--- j2sdk.orig/j2se/make/common/Defs.gmk	Fri Sep  6 09:07:14 2002
++++ j2sdk/j2se/make/common/Defs.gmk	Thu Mar 27 11:51:49 2003
+@@ -531,7 +531,7 @@
+ #
+ # Tool flags
+ #
+-CFLAGS          = $(CFLAGS_$(VARIANT)) $(CFLAGS_COMMON) $(OTHER_CFLAGS)
++CFLAGS          = $(CFLAGS_$(VARIANT)) $(CFLAGS_COMMON) $(OTHER_CFLAGS) $(RPM_OPT_FLAGS)
+ CXXFLAGS        = $(CXXFLAGS_$(VARIANT)) $(CXXFLAGS_COMMON) $(OTHER_CXXFLAGS)
+ LCFLAGS         = $(CFLAGS_$(VARIANT)) $(LCFLAGS_COMMON) $(OTHER_CFLAGS)
+ CPPFLAGS        = $(CPPFLAGS_$(VARIANT)) $(CPPFLAGS_COMMON) $(OTHER_CPPFLAGS) \
+diff -Nru j2sdk.orig/motif/lib/Xm/Makefile j2sdk/motif/lib/Xm/Makefile
+--- j2sdk.orig/motif/lib/Xm/Makefile	Fri Sep  6 09:05:35 2002
++++ j2sdk/motif/lib/Xm/Makefile	Thu Mar 27 11:52:57 2003
+@@ -236,7 +236,7 @@
+ 
+       ALLINCLUDES = $(INCLUDES) $(EXTRA_INCLUDES) $(TOP_INCLUDES) $(STD_INCLUDES)
+        ALLDEFINES = $(ALLINCLUDES) $(STD_DEFINES) $(EXTRA_DEFINES) $(PROTO_DEFINES) $(THREADS_DEFINES) $(DEFINES)
+-           CFLAGS = $(CDEBUGFLAGS) $(CCOPTIONS) $(THREADS_CFLAGS) $(ALLDEFINES)
++           CFLAGS = $(CDEBUGFLAGS) $(CCOPTIONS) $(THREADS_CFLAGS) $(ALLDEFINES) $(RPM_OPT_FLAGS)
+         LINTFLAGS = $(LINTOPTS) -DLINT $(ALLDEFINES) $(DEPEND_DEFINES)
+          LDPRELIB = -L$(BUILDLIBDIR)
+         LDPOSTLIB =
