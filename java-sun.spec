@@ -15,7 +15,7 @@ Source0:	jdk-%{_src_ver}-linux-i586.bin
 %endif
 %ifarch amd64
 Source0:	jdk-%{_src_ver}-linux-amd64.bin
-# NoSource0-md5: 99261de1c6c7774502eaa505cdfb1dec
+# NoSource0-md5: db0d14713854fb3be9350fd68bf2674f
 %endif
 NoSource:	0
 Patch0:		%{name}-ControlPanel-fix.patch
