@@ -1,12 +1,12 @@
 Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
-Version:	1.4.1_01
-Release:	3
+Version:	1.4.1_02
+Release:	1
 License:	restricted, non-distributable
 Group:		Development/Languages/Java
 URL:		http://java.sun.com/linux/
-Source0:	j2sdk-1_4_1_01-linux-i586.bin
+Source0:	j2sdk-1_4_1_02-linux-i586.bin
 NoSource:	0
 Requires:	java-sun-jre = %{version}
 Provides:	jdk = %{version}
@@ -129,7 +129,7 @@ Wtyczka z obs³ug± Javy dla Mozilli.
 %setup -q -T -c -n j2sdk%{version}
 cd ..
 outname=install.sfx.$$
-tail +436 %{SOURCE0} >$outname
+tail +430 %{SOURCE0} >$outname
 chmod +x $outname
 ./$outname
 rm -f $outname
@@ -317,7 +317,7 @@ fi
 %{_mandir}/man1/keytool.1*
 %{_mandir}/man1/orbd.1*
 %{_mandir}/man1/policytool.1*
-#{_mandir}/man1/rmid.1*
+%{_mandir}/man1/rmid.1*
 %{_mandir}/man1/servertool.1*
 %{_mandir}/man1/tnameserv.1*
 %lang(ja) %{_mandir}/ja/man1/java.1*
