@@ -303,8 +303,8 @@ fi
 %attr(755,root,root) %{jredir}/lib/i386
 %{jredir}/lib/im
 %{jredir}/lib/images
-%{jredir}/lib/security
-%exclude %{jredir}/lib/security/cacerts
+%dir %{jredir}/lib/security
+%{jredir}/lib/security/*.*
 %verify(not md5 size mtime) %config(noreplace) %{jredir}/lib/security/cacerts
 %{jredir}/lib/zi
 %{jredir}/lib/*.jar
