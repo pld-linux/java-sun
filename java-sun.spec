@@ -5,8 +5,6 @@ Version:	1.4.0
 Release:	0.1
 License:	restricted, non-distributable
 Group:		Development/Languages/Java
-Group(de):	Entwicklung/Sprachen/Java
-Group(pl):	Programowanie/Jêzyki/Java
 URL:		http://java.sun.com/linux/
 Source0:	ftp://128.167.104.34/pub/j2sdk/1.4.0/poiu4rfpo4/j2sdk-1_4_0-linux-i386.bin
 NoSource:	0
@@ -37,8 +35,6 @@ Java Development Kit for Linux.
 Summary:	Sun JRE (Java Runtime Environment) for Linux
 Summary(pl):	Sun JRE - ¶rodowisko uruchomieniowe Javy dla Linuksa
 Group:		Development/Languages/Java
-Group(de):	Entwicklung/Sprachen/Java
-Group(pl):	Programowanie/Jêzyki/Java
 Provides:	java1.4
 Provides:	jre
 Provides:	jar
@@ -57,8 +53,6 @@ Java Runtime Environment for Linux.
 Summary:	JDK demonstration programs
 Summary(pl):	Programy demonstracyjne do JDK
 Group:		Development/Languages/Java
-Group(de):	Entwicklung/Sprachen/Java
-Group(pl):	Programowanie/Jêzyki/Java
 Requires:	%{name} = %{version}
 Obsoletes:	jdk-demos
 
@@ -72,8 +66,6 @@ Programy demonstracyjne do JDK.
 Summary:	Netscape 4.x Java plugin
 Summary(pl):	Plugin Javy do Netscape 4.x
 Group:		Development/Languages/Java
-Group(de):	Entwicklung/Sprachen/Java
-Group(pl):	Programowanie/Jêzyki/Java
 Requires:	jre = %{version}
 Requires:	netscape-common >= 4.0
 Obsoletes:	jre-netscape4-plugin
@@ -88,8 +80,6 @@ Plugin z obs³ug± Javy dla Netscape 4.x.
 Summary:	Mozilla Java plugin
 Summary(pl):	Plugin Javy do Mozilli
 Group:		Development/Languages/Java
-Group(de):	Entwicklung/Sprachen/Java
-Group(pl):	Programowanie/Jêzyki/Java
 Requires:	jre = %{version}
 Requires:	mozilla
 Obsoletes:	jre-mozilla-plugin
