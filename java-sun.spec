@@ -47,7 +47,8 @@ Java Development Kit for Linux.
 ¦rodowisko programistyczne Javy dla Linuksa.
 
 %package jdbc
-Summary:	JDBC files for %{name}
+Summary:	JDBC files for Sun Java
+Summary(pl):	Pliki JDBC dla Javy Suna
 Group:		Development/Libraries/Java
 Requires:	%{name} = %{version}-%{release}
 AutoReqProv:    no
@@ -55,7 +56,10 @@ Requires:	libodbc.so.1
 Requires:	libodbcinst.so.1
 
 %description jdbc
-This package contains JDBC files for %{name}.
+This package contains JDBC files for Sun Java.
+
+%description jdbc -l pl
+Ten pakiet zawiera pliki JDBC dla Javy Suna.
 
 %package jre
 Summary:	Sun JRE (Java Runtime Environment) for Linux
@@ -78,8 +82,8 @@ Java Runtime Environment for Linux.
 ¦rodowisko uruchomieniowe Javy dla Linuksa.
 
 %package tools
-Summary:        Shared java tools
-Summary(pl):    Wspó³dzielone narzêdzia javy
+Summary:        Shared Java tools
+Summary(pl):    Wspó³dzielone narzêdzia Javy
 Group:          Development/Languages/Java
 Provides:       jar
 Provides:       java-shared
@@ -88,13 +92,12 @@ Obsoletes:	jar
 Obsoletes:      fastjar
 
 %description tools
-This package contains tools that are common for every Java(tm) implementation,
-such as rmic or jar.
+This package contains tools that are common for every Java(TM)
+implementation, such as rmic or jar.
 
 %description tools -l pl
-Pakiet ten zawiera narzêdzia wspólne dla ka¿dej implementacji Javy(tm), takie
-jak rmic czy jar.
-
+Pakiet ten zawiera narzêdzia wspólne dla ka¿dej implementacji
+Javy(TM), takie jak rmic czy jar.
 
 %package demos
 Summary:	JDK demonstration programs
@@ -160,11 +163,10 @@ Obsoletes:	mozilla-plugin-java-blackdown
 Obsoletes:	mozilla-plugin-%{name}
 
 %description -n mozilla-plugin-gcc32-%{name}
-Java plugin for Mozilla.
+Java plugin for Mozilla compiled using gcc 3.2.
 
 %description -n mozilla-plugin-gcc32-%{name} -l pl
-Wtyczka z obs³ug± Javy dla Mozilli.
-
+Wtyczka z obs³ug± Javy dla Mozilli skompilowana przy u¿yciu gcc 3.2.
 
 %prep
 %setup -q -T -c -n j2sdk%{version}
