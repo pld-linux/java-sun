@@ -2,7 +2,7 @@ Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	1.4.2_01
-Release:	1
+Release:	1.1
 License:	restricted, non-distributable
 Group:		Development/Languages/Java
 # download through forms from http://java.sun.com/j2se/1.4.2/download.html
@@ -206,7 +206,14 @@ mv jre/lib/font.properties{.Redhat6.1,}
 
 cp -rf jre/{bin,lib} $RPM_BUILD_ROOT%{jredir}
 
-for i in ControlPanel java java_vm keytool kinit klist ktab orbd policytool \
+# conflict with heimdal
+for i in kinit klist ; do
+	ln -sf %{jredir}/bin/$i $RPM_BUILD_ROOT%{_bindir}/j$i
+	mv -f $RPM_BUILD_ROOT%{_mandir}/man1/${i}.1 $RPM_BUILD_ROOT%{_mandir}/man1/j${i}.1
+	mv -f $RPM_BUILD_ROOT%{_mandir}/ja/man1/${i}.1 $RPM_BUILD_ROOT%{_mandir}/ja/man1/j${i}.1
+done
+
+for i in ControlPanel java java_vm keytool ktab orbd policytool \
 	rmid rmiregistry servertool tnameserv ; do
 	ln -sf %{jredir}/bin/$i $RPM_BUILD_ROOT%{_bindir}/$i
 done
@@ -335,13 +342,12 @@ fi
 %attr(755,root,root) %{_bindir}/java
 %attr(755,root,root) %{_bindir}/java_vm
 %attr(755,root,root) %{_bindir}/keytool
-%attr(755,root,root) %{_bindir}/kinit
-%attr(755,root,root) %{_bindir}/klist
+%attr(755,root,root) %{_bindir}/jkinit
+%attr(755,root,root) %{_bindir}/jklist
 %attr(755,root,root) %{_bindir}/ktab
 %attr(755,root,root) %{_bindir}/orbd
 %attr(755,root,root) %{_bindir}/policytool
 %attr(755,root,root) %{_bindir}/rmid
-%attr(755,root,root) %{_bindir}/rmiregistry
 %attr(755,root,root) %{_bindir}/servertool
 %attr(755,root,root) %{_bindir}/tnameserv
 %dir %{javadir}
@@ -399,8 +405,8 @@ fi
 %{_mandir}/man1/java.1*
 %{_mandir}/man1/javaws.1*
 %{_mandir}/man1/keytool.1*
-%{_mandir}/man1/kinit.1*
-%{_mandir}/man1/klist.1*
+%{_mandir}/man1/jkinit.1*
+%{_mandir}/man1/jklist.1*
 %{_mandir}/man1/ktab.1*
 %{_mandir}/man1/orbd.1*
 %{_mandir}/man1/policytool.1*
@@ -410,8 +416,8 @@ fi
 %lang(ja) %{_mandir}/ja/man1/java.1*
 %lang(ja) %{_mandir}/ja/man1/javaws.1*
 %lang(ja) %{_mandir}/ja/man1/keytool.1*
-%lang(ja) %{_mandir}/ja/man1/kinit.1*
-%lang(ja) %{_mandir}/ja/man1/klist.1*
+%lang(ja) %{_mandir}/ja/man1/jkinit.1*
+%lang(ja) %{_mandir}/ja/man1/jklist.1*
 %lang(ja) %{_mandir}/ja/man1/ktab.1*
 %lang(ja) %{_mandir}/ja/man1/orbd.1*
 %lang(ja) %{_mandir}/ja/man1/policytool.1*
