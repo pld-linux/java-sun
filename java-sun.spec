@@ -229,7 +229,7 @@ fi
 %attr(755,root,root) %{javadir}/bin/native2ascii
 %attr(755,root,root) %{javadir}/bin/serialver
 %{javadir}/include
-#%{_includedir}/jdk
+#%%{_includedir}/jdk
 %dir %{javadir}/lib
 %{javadir}/lib/*.jar
 %{javadir}/lib/*.idl
@@ -306,8 +306,8 @@ fi
 %{jredir}/lib/zi
 %{jredir}/lib/*.jar
 %{jredir}/lib/*.properties
-##%{jredir}/lib/*.cfg
-##%{jredir}/lib/tzmappings
+#%%{jredir}/lib/*.cfg
+#%%{jredir}/lib/tzmappings
 %lang(ja) %{jredir}/lib/*.properties.ja
 ##%lang(zh) %{jredir}/lib/*.properties.zh
 %dir %{jredir}/plugin
