@@ -38,6 +38,8 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_javalibdir	%{_datadir}/java
 %define		netscape4dir	/usr/%{_lib}/netscape
 %define		mozilladir	/usr/%{_lib}/mozilla
+%define		firefoxdir	/usr/%{_lib}/mozilla-firefox
+
 
 # rpm doesn't like strange version definitions provided by Sun's libs
 %define		_noautoprov	'\\.\\./.*' '/export/.*'
@@ -167,12 +169,25 @@ Java plugin for Netscape 4.x.
 %description -n netscape4-plugin-%{name} -l pl
 Wtyczka z obs³ug± Javy dla Netscape 4.x.
 
+%package mozilla-plugin
+Summary:	Mozilla Java plugin file
+Summary(pl):	Plik wtyczki Javy do Mozilli
+Group:		Development/Languages/Java
+Requires:	jre = %{version}
+Obsoletes:	java-blackdown-mozilla-plugin
+
+%description mozilla-plugin
+Java plugin file for Mozilla.
+
+%description mozilla-plugin -l pl
+Plik wtyczki z obs³ug± Javy dla Mozilli.
+
 %package -n mozilla-plugin-gcc2-%{name}
 Summary:	Mozilla Java plugin
 Summary(pl):	Wtyczka Javy do Mozilli
 Group:		Development/Languages/Java
 PreReq:		mozilla-embedded
-Requires:	jre = %{version}-%{release}
+Requires:	%{name}-mozilla-plugin = %{version}-%{release}
 Obsoletes:	blackdown-java-sdk-mozilla-plugin
 Obsoletes:	java-sun-moz-plugin
 Obsoletes:	jre-mozilla-plugin
@@ -192,7 +207,7 @@ Summary:	Mozilla Java plugin
 Summary(pl):	Wtyczka Javy do Mozilli
 Group:		Development/Languages/Java
 PreReq:		mozilla-embedded
-Requires:	jre = %{version}-%{release}
+Requires:	%{name}-mozilla-plugin = %{version}-%{release}
 Obsoletes:	blackdown-java-sdk-mozilla-plugin
 Obsoletes:	java-sun-moz-plugin
 Obsoletes:	jre-mozilla-plugin
@@ -202,12 +217,39 @@ Obsoletes:	mozilla-plugin-java-sun
 Obsoletes:	mozilla-plugin-gcc2-java-sun
 Obsoletes:	mozilla-plugin-gcc32-java-sun
 
-
 %description -n mozilla-plugin-gcc3-%{name}
 Java plugin for Mozilla compiled using gcc 3.
 
 %description -n mozilla-plugin-gcc3-%{name} -l pl
 Wtyczka z obs³ug± Javy dla Mozilli skompilowana przy u¿yciu gcc 3.
+
+%package -n mozilla-firefox-plugin-gcc2-%{name}
+Summary:	Mozilla Firefox Java plugin
+Summary(pl):	Wtyczka Javy do Mozilli Firefox
+Group:		Development/Languages/Java
+PreReq:		mozilla-firefox
+Requires:	%{name}-mozilla-plugin = %{version}-%{release}
+Obsoletes:	mozilla-firefox-plugin-blackdown
+
+%description -n mozilla-firefox-plugin-gcc2-%{name}
+Java plugin for Mozilla Firefox compiled using gcc 2.9x.
+
+%description -n mozilla-firefox-plugin-gcc2-%{name} -l pl
+Wtyczka z obs³ug± Javy dla Mozilli Firefox skompilowana przy u¿yciu gcc 2.9x.
+
+%package -n mozilla-firefox-plugin-gcc3-%{name}
+Summary:	Mozilla Firefox Java plugin
+Summary(pl):	Wtyczka Javy do Mozilli Firefox
+Group:		Development/Languages/Java
+PreReq:		mozilla-firefox
+Requires:	%{name}-mozilla-plugin = %{version}-%{release}
+Obsoletes:	mozilla-firefox-plugin-blackdown-java
+
+%description -n mozilla-firefox-plugin-gcc3-%{name}
+Java plugin for Mozilla Firefox compiled using gcc 3.
+
+%description -n mozilla-firefox-plugin-gcc3-%{name} -l pl
+Wtyczka z obs³ug± Javy dla Mozilli Firefox skompilowana przy u¿yciu gcc 3.
 
 %prep
 %setup -q -T -c -n jdk%{version}
@@ -267,15 +309,19 @@ ln -sf %{jredir}/bin/java $RPM_BUILD_ROOT%{javadir}/bin/java
 #	ln -sf %{jredir}/lib/$i.jar $RPM_BUILD_ROOT%{netscape4dir}/java/classes
 #done
 
-install -d $RPM_BUILD_ROOT{%{mozilladir}/plugins,%{jredir}/plugin/i386/ns7{,-gcc29}}
+install -d $RPM_BUILD_ROOT{%{mozilladir}/plugins,%{firefoxdir}/plugins,%{jredir}/plugin/i386/ns7{,-gcc29}}
 install jre/plugin/i386/ns7/libjavaplugin_oji.so \
 	$RPM_BUILD_ROOT%{jredir}/plugin/i386/ns7
 ln -sf %{jredir}/plugin/i386/ns7/libjavaplugin_oji.so \
 	$RPM_BUILD_ROOT%{mozilladir}/plugins
+ln -sf %{jredir}/plugin/i386/ns7/libjavaplugin_oji.so \
+	$RPM_BUILD_ROOT%{firefoxdir}/plugins
 install jre/plugin/i386/ns7-gcc29/libjavaplugin_oji.so \
 	$RPM_BUILD_ROOT%{jredir}/plugin/i386/ns7-gcc29
 ln -sf %{jredir}/plugin/i386/ns7-gcc29/libjavaplugin_oji.so \
 	$RPM_BUILD_ROOT%{mozilladir}/plugins/libjavaplugin_oji-gcc29.so
+ln -sf %{jredir}/plugin/i386/ns7-gcc29/libjavaplugin_oji.so \
+	$RPM_BUILD_ROOT%{firefoxdir}/plugins/libjavaplugin_oji-gcc29.so
 install  -d $RPM_BUILD_ROOT{%{_desktopdir},%{_pixmapsdir}}
 install jre/plugin/desktop/*.desktop $RPM_BUILD_ROOT%{_desktopdir}
 install jre/plugin/desktop/*.png $RPM_BUILD_ROOT%{_pixmapsdir}
@@ -575,14 +621,25 @@ fi
 %lang(ja) %{_mandir}/ja/man1/rmic.1*
 %lang(ja) %{_mandir}/ja/man1/rmiregistry.1*
 
-%files -n mozilla-plugin-gcc2-%{name}
+%files mozilla-plugin
 %defattr(644,root,root,755)
 %dir %{jredir}/plugin/i386/ns7-gcc29
 %attr(755,root,root) %{jredir}/plugin/i386/ns7-gcc29/libjavaplugin_oji.so
+%dir %{jredir}/plugin/i386/ns7
+%attr(755,root,root) %{jredir}/plugin/i386/ns7/libjavaplugin_oji.so
+
+%files -n mozilla-plugin-gcc2-%{name}
+%defattr(644,root,root,755)
 %{mozilladir}/plugins/libjavaplugin_oji-gcc29.so
 
 %files -n mozilla-plugin-gcc3-%{name}
 %defattr(644,root,root,755)
-%dir %{jredir}/plugin/i386/ns7
-%attr(755,root,root) %{jredir}/plugin/i386/ns7/libjavaplugin_oji.so
 %{mozilladir}/plugins/libjavaplugin_oji.so
+
+%files -n mozilla-firefox-plugin-gcc2-%{name}
+%defattr(644,root,root,755)
+%{firefoxdir}/plugins/libjavaplugin_oji-gcc29.so
+
+%files -n mozilla-firefox-plugin-gcc3-%{name}
+%defattr(644,root,root,755)
+%{firefoxdir}/plugins/libjavaplugin_oji.so
