@@ -21,6 +21,7 @@ URL:		http://java.sun.com/linux/
 BuildRequires:	rpm-build >= 4.3-0.20040107.21
 BuildRequires:	unzip
 Requires:	%{name}-jre = %{version}-%{release}
+Requires:	java-shared
 Provides:	jdk = %{version}
 Provides:	j2sdk = %{version}
 Obsoletes:	blackdown-java-sdk
@@ -73,7 +74,6 @@ Summary:	Sun JRE (Java Runtime Environment) for Linux
 Summary(pl):	Sun JRE - ¶rodowisko uruchomieniowe Javy dla Linuksa
 Group:		Development/Languages/Java
 Requires:	XFree86-libs
-Requires:	java-shared
 Requires:	java-jre-tools
 Provides:	java1.4
 Provides:	jre = %{version}
