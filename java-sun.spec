@@ -11,9 +11,9 @@ Source0:        j2sdk-1_4_2_04-linux-i586.bin
 NoSource:       0
 Patch0:		%{name}-ControlPanel-fix.patch
 URL:		http://java.sun.com/linux/
-BuildRequires:	rpm-build >= 4.3-0.20030610.21
+BuildRequires:	rpm-build >= 4.3-0.20040107.21
 BuildRequires:	unzip
-Requires:	java-sun-jre = %{version}
+Requires:	java-sun-jre = %{version}-%{release}
 Provides:	jdk = %{version}
 Provides:	j2sdk = %{version}
 Obsoletes:	blackdown-java-sdk
@@ -27,14 +27,14 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		javadir		%{_libdir}/java
 %define		jredir		%{_libdir}/java/jre
 %define		_javalibdir	%{_datadir}/java
-%define		netscape4dir	/usr/lib/netscape
-%define		mozilladir	/usr/lib/mozilla
+%define		netscape4dir	/usr/%{_lib}/netscape
+%define		mozilladir	/usr/%{_lib}/mozilla
 
 # rpm doesn't like strange version definitions provided by Sun's libs
-%define		_noautoprov	'\\.\\./.*' '/usr/re/.*'
+%define		_noautoprov	'\\.\\./.*' '/export/.*'
 # these with SUNWprivate.* are found as required, but not provided
 # the rest is because -jdbc wants unixODBC-devel(?)
-%define		_noautoreq	'libjava.so(SUNWprivate_1.1)' 'libnet.so(SUNWprivate_1.1)' 'libverify.so(SUNWprivate_1.1)' libodbcinst.so libodbc.so
+%define		_noautoreq	'libjava.so(SUNWprivate_1.1)' 'libnet.so(SUNWprivate_1.1)' 'libverify.so(SUNWprivate_1.1)' 'libodbcinst.so' 'libodbc.so'
 # don't depend on other JRE/JDK installed on build host
 %define		_noautoreqdep	libjava.so libjvm.so
 
@@ -100,7 +100,7 @@ Java Runtime Environment for Linux.
 Summary:	JRE module for ALSA sound support
 Summary(pl):	Modu³ JRE do obs³ugi d¼wiêku poprzez ALSA
 Group:		Development/Languages/Java
-Requires:	%{name}-jre = %{version}
+Requires:	%{name}-jre = %{version}-%{release}
 
 %description alsa
 JRE module for ALSA sound support.
@@ -112,7 +112,7 @@ Modu³ JRE do obs³ugi d¼wiêku poprzez ALSA.
 Summary:	Shared Java tools
 Summary(pl):	Wspó³dzielone narzêdzia Javy
 Group:		Development/Languages/Java
-Requires:	%{name}-jre = %{version}
+Requires:	%{name}-jre = %{version}-%{release}
 Provides:	jar
 Provides:	java-shared
 Obsoletes:	java-shared
@@ -131,7 +131,7 @@ Javy(TM), takie jak rmic czy jar.
 Summary:	JDK demonstration programs
 Summary(pl):	Programy demonstracyjne do JDK
 Group:		Development/Languages/Java
-Requires:	%{name}-jre = %{version}
+Requires:	%{name}-jre = %{version}-%{release}
 Obsoletes:	java-blackdown-demos
 Obsoletes:	jdk-demos
 
@@ -145,7 +145,7 @@ Programy demonstracyjne do JDK.
 Summary:	Netscape 4.x Java plugin
 Summary(pl):	Wtyczka Javy do Netscape 4.x
 Group:		Development/Languages/Java
-Requires:	%{name}-jre = %{version}
+Requires:	%{name}-jre = %{version}-%{release}
 Requires:	netscape-common >= 4.0
 Obsoletes:	blackdown-java-sdk-netscape4-plugin
 Obsoletes:	netscape4-plugin-java-blackdown
@@ -163,7 +163,7 @@ Summary:	Mozilla Java plugin
 Summary(pl):	Wtyczka Javy do Mozilli
 Group:		Development/Languages/Java
 PreReq:		mozilla-embedded
-Requires:	jre = %{version}
+Requires:	jre = %{version}-%{release}
 Obsoletes:	blackdown-java-sdk-mozilla-plugin
 Obsoletes:	java-sun-moz-plugin
 Obsoletes:	jre-mozilla-plugin
@@ -183,7 +183,7 @@ Summary:	Mozilla Java plugin
 Summary(pl):	Wtyczka Javy do Mozilli
 Group:		Development/Languages/Java
 PreReq:		mozilla-embedded
-Requires:	jre = %{version}
+Requires:	jre = %{version}-%{release}
 Obsoletes:	blackdown-java-sdk-mozilla-plugin
 Obsoletes:	java-sun-moz-plugin
 Obsoletes:	jre-mozilla-plugin
