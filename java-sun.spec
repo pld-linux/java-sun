@@ -5,7 +5,8 @@ Version:	1.4.1_02
 Release:	0.1
 License:	restricted, non-distributable
 Group:		Development/Languages/Java
-# download through forms from http://java.sun.com/
+# download through forms from http://wwws.sun.com/software/java2/download.html
+# (requires registration)
 Source0:	j2sdk-1_4_1-src-scsl.zip
 Patch0:         %{name}-bash.patch
 Patch1:         %{name}-no_sanity.patch
