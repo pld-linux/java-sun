@@ -309,6 +309,9 @@ perl -p -i -e 's#javaws\.cfg\.jre\.0\.path=.*#javaws\.cfg\.jre\.0\.path=%{jredir
 ln -sf %{jredir}/javaws/javaws.jar $RPM_BUILD_ROOT%{_javalibdir}/javaws.jar
 ln -sf %{jredir}/javaws/javaws-l10n.jar $RPM_BUILD_ROOT%{_javalibdir}/javaws-l10n.jar
 mv -f $RPM_BUILD_ROOT{%{jredir}/lib,%{_datadir}}/locale
+
+%find_lang sunw_java_plugin --all-name
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -507,19 +510,19 @@ fi
 %{jredir}/lib/javaws/messages_zh_HK.properties
 %{jredir}/lib/javaws/messages_zh_TW.properties
 %{jredir}/lib/javaws/miniSplash.jpg
-%{_datadir}/locale/de/LC_MESSAGES/sunw_java_plugin.mo
-%{_datadir}/locale/es/LC_MESSAGES/sunw_java_plugin.mo
-%{_datadir}/locale/fr/LC_MESSAGES/sunw_java_plugin.mo
-%{_datadir}/locale/it/LC_MESSAGES/sunw_java_plugin.mo
-%{_datadir}/locale/ja/LC_MESSAGES/sunw_java_plugin.mo
-%{_datadir}/locale/ko.UTF-8/LC_MESSAGES/sunw_java_plugin.mo
-%{_datadir}/locale/ko/LC_MESSAGES/sunw_java_plugin.mo
-%{_datadir}/locale/sv/LC_MESSAGES/sunw_java_plugin.mo
-%{_datadir}/locale/zh.GBK/LC_MESSAGES/sunw_java_plugin.mo
-%{_datadir}/locale/zh/LC_MESSAGES/sunw_java_plugin.mo
-%{_datadir}/locale/zh_HK.BIG5HK/LC_MESSAGES/sunw_java_plugin.mo
-%{_datadir}/locale/zh_TW.BIG5/LC_MESSAGES/sunw_java_plugin.mo
-%{_datadir}/locale/zh_TW/LC_MESSAGES/sunw_java_plugin.mo
+%lang(de) %{_datadir}/locale/de/LC_MESSAGES/sunw_java_plugin.mo
+%lang(es) %{_datadir}/locale/es/LC_MESSAGES/sunw_java_plugin.mo
+%lang(fr) %{_datadir}/locale/fr/LC_MESSAGES/sunw_java_plugin.mo
+%lang(it) %{_datadir}/locale/it/LC_MESSAGES/sunw_java_plugin.mo
+%lang(ja) %{_datadir}/locale/ja/LC_MESSAGES/sunw_java_plugin.mo
+%lang(ko.UTF-8) %{_datadir}/locale/ko.UTF-8/LC_MESSAGES/sunw_java_plugin.mo
+%lang(ko) %{_datadir}/locale/ko/LC_MESSAGES/sunw_java_plugin.mo
+%lang(sv) %{_datadir}/locale/sv/LC_MESSAGES/sunw_java_plugin.mo
+%lang(zh.GBK) %{_datadir}/locale/zh.GBK/LC_MESSAGES/sunw_java_plugin.mo
+%lang(zh) %{_datadir}/locale/zh/LC_MESSAGES/sunw_java_plugin.mo
+%lang(zh) %{_datadir}/locale/zh_HK.BIG5HK/LC_MESSAGES/sunw_java_plugin.mo
+%lang(zh) %{_datadir}/locale/zh_TW.BIG5/LC_MESSAGES/sunw_java_plugin.mo
+%lang(zh) %{_datadir}/locale/zh_TW/LC_MESSAGES/sunw_java_plugin.mo
 %{jredir}/lib/management/jmxremote.access
 %{jredir}/lib/management/jmxremote.password.template
 %{jredir}/lib/management/management.properties
