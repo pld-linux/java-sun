@@ -8,10 +8,10 @@ Version:	%{_ver}
 Release:	1
 License:	restricted, non-distributable
 Group:		Development/Languages/Java
-# download directly from http://java.sun.com/j2se/1.5.0/download.jsp
+# download through forms from http://java.sun.com/j2se/1.5.0/download.jsp
 %ifarch %{ix86}
 Source0:	jdk-%{_src_ver}-linux-i586.bin
-# NoSource0-md5: 3e3aa7f89685a30c5c343f8f70966800
+# NoSource0-md5: 562d9797af801bfbe2b5e44417d8ccc4
 %endif
 %ifarch amd64
 Source0:	jdk-%{_src_ver}-linux-amd64.bin
