@@ -20,7 +20,7 @@ Patch1:		%{name}-desktop.patch
 URL:		http://java.sun.com/linux/
 BuildRequires:	rpm-build >= 4.3-0.20040107.21
 BuildRequires:	unzip
-Requires:	java-sun-jre = %{version}-%{release}
+Requires:	%{name}-jre = %{version}-%{release}
 Provides:	jdk = %{version}
 Provides:	j2sdk = %{version}
 Obsoletes:	blackdown-java-sdk
@@ -171,7 +171,7 @@ Wtyczka z obs³ug± Javy dla Netscape 4.x.
 Summary:	Mozilla Java plugin file
 Summary(pl):	Plik wtyczki Javy do Mozilli
 Group:		Development/Languages/Java
-Requires:	jre = %{version}
+Requires:	%{name}-jre = %{version}-%{release}
 Obsoletes:	java-blackdown-mozilla-plugin
 
 %description mozilla-plugin
@@ -309,6 +309,10 @@ ln -sf %{jredir}/lib/javaws.jar $RPM_BUILD_ROOT%{_javadir}/javaws.jar
 #ln -sf %{jredir}/javaws/javaws-l10n.jar $RPM_BUILD_ROOT%{_javadir}/javaws-l10n.jar
 mv -f $RPM_BUILD_ROOT{%{jredir}/lib,%{_datadir}}/locale
 
+# XXX: check
+mv -f %{_datadir}/locale/{zh,zh_CN}
+mv -f %{_datadir}/locale/{zh_HK.BIG5HK,zh_HK}
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -387,7 +391,6 @@ fi
 %lang(ja) %{_mandir}/ja/man1/native2ascii.1*
 %lang(ja) %{_mandir}/ja/man1/serialver.1*
 %lang(ja) %{_mandir}/ja/man1/jconsole.1*
-
 
 %files jdbc
 %defattr(644,root,root,755)
@@ -512,14 +515,16 @@ fi
 %lang(fr) %{_datadir}/locale/fr/LC_MESSAGES/sunw_java_plugin.mo
 %lang(it) %{_datadir}/locale/it/LC_MESSAGES/sunw_java_plugin.mo
 %lang(ja) %{_datadir}/locale/ja/LC_MESSAGES/sunw_java_plugin.mo
-%lang(ko.UTF-8) %{_datadir}/locale/ko.UTF-8/LC_MESSAGES/sunw_java_plugin.mo
+# ?
+#%lang(ko) %{_datadir}/locale/ko.UTF-8/LC_MESSAGES/sunw_java_plugin.mo
 %lang(ko) %{_datadir}/locale/ko/LC_MESSAGES/sunw_java_plugin.mo
 %lang(sv) %{_datadir}/locale/sv/LC_MESSAGES/sunw_java_plugin.mo
-%lang(zh.GBK) %{_datadir}/locale/zh.GBK/LC_MESSAGES/sunw_java_plugin.mo
-%lang(zh) %{_datadir}/locale/zh/LC_MESSAGES/sunw_java_plugin.mo
-%lang(zh) %{_datadir}/locale/zh_HK.BIG5HK/LC_MESSAGES/sunw_java_plugin.mo
-%lang(zh) %{_datadir}/locale/zh_TW.BIG5/LC_MESSAGES/sunw_java_plugin.mo
-%lang(zh) %{_datadir}/locale/zh_TW/LC_MESSAGES/sunw_java_plugin.mo
+# ?
+#%lang(zh_CN) %{_datadir}/locale/zh.GBK/LC_MESSAGES/sunw_java_plugin.mo
+%lang(zh_CN) %{_datadir}/locale/zh_CN/LC_MESSAGES/sunw_java_plugin.mo
+%lang(zh_HK) %{_datadir}/locale/zh_HK.BIG5HK/LC_MESSAGES/sunw_java_plugin.mo
+#%lang(zh_TW) %{_datadir}/locale/zh_TW.BIG5/LC_MESSAGES/sunw_java_plugin.mo
+%lang(zh_TW) %{_datadir}/locale/zh_TW/LC_MESSAGES/sunw_java_plugin.mo
 %{jredir}/lib/management/jmxremote.access
 %{jredir}/lib/management/jmxremote.password.template
 %{jredir}/lib/management/management.properties
@@ -590,8 +595,8 @@ fi
 
 %files -n mozilla-plugin-%{name}
 %defattr(644,root,root,755)
-%{mozilladir}/plugins/libjavaplugin_oji.so
+%attr(755,root,root) %{mozilladir}/plugins/libjavaplugin_oji.so
 
 %files -n mozilla-firefox-plugin-%{name}
 %defattr(644,root,root,755)
-%{firefoxdir}/plugins/libjavaplugin_oji.so
+%attr(755,root,root) %{firefoxdir}/plugins/libjavaplugin_oji.so
