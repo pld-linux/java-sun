@@ -3,7 +3,7 @@
 @@ -1,8 +1,8 @@
  [Desktop Entry]
 -Name=Java
-+Name=Java Ciontrol Panel
++Name=Java Control Panel
  Comment=Java Control Panel
 -Exec=INSTALL_DIR/JRE_NAME_VERSION/bin/ControlPanel
 -Icon=INSTALL_DIR/JRE_NAME_VERSION/plugin/desktop/sun_java.png
