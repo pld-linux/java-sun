@@ -171,7 +171,7 @@ ln -sf %{jdkdir} %{_libdir}/java
 %attr(755,root,root) %{_bindir}/rmic
 %attr(755,root,root) %{_bindir}/serialver
 %attr(755,root,root) %{jdkdir}/bin
-%attr(755,root,root) %{jdkdir}
+%dir %{jdkdir}
 %{_includedir}/jdk
 %dir %{jdkdir}/lib
 %dir %{jdkdir}/lib/*.jar
@@ -194,8 +194,8 @@ ln -sf %{jdkdir} %{_libdir}/java
 %attr(755,root,root) %{_bindir}/servertool
 %attr(755,root,root) %{_bindir}/tnameserv
 %attr(755,root,root) %{jredir}/bin
-%attr(755,root,root) %{jredir}
-%dir %{jredir}/lib
+%dir %{jredir}
+%dir %dir %{jredir}/lib
 %{jredir}/lib/applet
 %{jredir}/lib/audio
 %{jredir}/lib/cmm
