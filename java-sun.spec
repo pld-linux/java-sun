@@ -2,7 +2,7 @@ Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	1.4.0_01
-Release:	0.5
+Release:	0.6
 License:	restricted, non-distributable
 Group:		Development/Languages/Java
 URL:		http://java.sun.com/linux/
@@ -116,7 +116,6 @@ install man/ja/man1/* $RPM_BUILD_ROOT%{_mandir}/ja/man1
 # not needed now?
 #ln -sf %{jredir} $RPM_BUILD_ROOT/usr/lib/jre
 #ln -sf %{javadir}/include $RPM_BUILD_ROOT%{_includedir}/java
-#ln -sf ../bin $RPM_BUILD_ROOT%{jredir}/bin
 
 mv -f jre/lib/i386/client/Xusage.txt jre/Xusage.client
 mv -f jre/lib/i386/server/Xusage.txt jre/Xusage.server
@@ -133,6 +132,9 @@ for i in HtmlConverter appletviewer extcheck idlj jar jarsigner java-rmi.cgi \
          javac javadoc javah javap jdb native2ascii rmic serialver ; do
 	ln -sf %{javadir}/bin/$i $RPM_BUILD_ROOT%{_bindir}/$i
 done
+
+rm -f $RPM_BUILD_ROOT%{javadir}/bin/java
+ln -sf %{jredir}/bin/java $RPM_BUILD_ROOT%{javadir}/bin/java
 
 install -d $RPM_BUILD_ROOT%{netscape4dir}/{plugins,java/classes}
 install jre/plugin/i386/ns4/javaplugin.so $RPM_BUILD_ROOT%{netscape4dir}/plugins
@@ -170,7 +172,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/native2ascii
 %attr(755,root,root) %{_bindir}/rmic
 %attr(755,root,root) %{_bindir}/serialver
-%dir %{javadir}/bin
 %attr(755,root,root) %{javadir}/bin/HtmlConverter
 %attr(755,root,root) %{javadir}/bin/appletviewer
 %attr(755,root,root) %{javadir}/bin/extcheck
@@ -234,6 +235,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/servertool
 %attr(755,root,root) %{_bindir}/tnameserv
 %dir %{javadir}
+%dir %{javadir}/bin
+%attr(755,root,root) %{javadir}/bin/java
 %dir %{jredir}
 %dir %{jredir}/bin
 %attr(755,root,root) %{jredir}/bin/ControlPanel
