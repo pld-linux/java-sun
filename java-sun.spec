@@ -1,13 +1,13 @@
 Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
-Version:	1.4.2_03
+Version:	1.4.2_04
 Release:	1
 License:	restricted, non-distributable
 Group:		Development/Languages/Java
 # download through forms from http://java.sun.com/j2se/1.4.2/download.html
-Source0:	j2sdk-1_4_2_03-linux-i586.bin
-# NoSource0-md5: 859aa6750161477acec83b7bb5d9998d
+Source0:        j2sdk-1_4_2_04-linux-i586.bin
+# NoSource0-md5: cc27ac6189062214c072cb5b4ae068fa
 NoSource:       0
 Patch0:		%{name}-ControlPanel-fix.patch
 URL:		http://java.sun.com/linux/
