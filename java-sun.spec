@@ -39,7 +39,7 @@ Summary:	JDBC files for Sun Java
 Summary(pl):	Pliki JDBC dla Javy Suna
 Group:		Development/Libraries/Java
 Requires:	%{name} = %{version}-%{release}
-AutoReqProv:    no
+AutoReqProv:	no
 Requires:	libodbc.so.1
 Requires:	libodbcinst.so.1
 
@@ -63,10 +63,10 @@ Provides:	jndi = %{version}
 Provides:	jndi-ldap = %{version}
 Provides:	jndi-cos = %{version}
 Provides:	jndi-rmi = %{version}
-Provides:       jndi-dns = %{version}
+Provides:	jndi-dns = %{version}
 Provides:	jaas = %{version}
-Provides:       jsse = %{version}
-Provides:       jce = %{version}
+Provides:	jsse = %{version}
+Provides:	jce = %{version}
 Provides:	jdbc-stdext = 3.0
 Provides:	jdbc-stdext = %{version}
 Provides:	libjava.so(SUNWprivate_1.1)
@@ -91,15 +91,15 @@ Java Runtime Environment for Linux.
 ¦rodowisko uruchomieniowe Javy dla Linuksa.
 
 %package tools
-Summary:        Shared Java tools
-Summary(pl):    Wspó³dzielone narzêdzia Javy
-Group:          Development/Languages/Java
+Summary:	Shared Java tools
+Summary(pl):	Wspó³dzielone narzêdzia Javy
+Group:		Development/Languages/Java
 Requires:	%{name}-jre = %{version}
-Provides:       jar
-Provides:       java-shared
+Provides:	jar
+Provides:	java-shared
 Obsoletes:	java-shared
 Obsoletes:	jar
-Obsoletes:      fastjar
+Obsoletes:	fastjar
 
 %description tools
 This package contains tools that are common for every Java(TM)
