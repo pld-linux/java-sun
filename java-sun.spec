@@ -522,7 +522,7 @@ fi
 # ?
 #%lang(zh_CN) %{_datadir}/locale/zh.GBK/LC_MESSAGES/sunw_java_plugin.mo
 %lang(zh_CN) %{_datadir}/locale/zh_CN/LC_MESSAGES/sunw_java_plugin.mo
-%lang(zh_HK) %{_datadir}/locale/zh_HK.BIG5HK/LC_MESSAGES/sunw_java_plugin.mo
+%lang(zh_HK) %{_datadir}/locale/zh_HK/LC_MESSAGES/sunw_java_plugin.mo
 #%lang(zh_TW) %{_datadir}/locale/zh_TW.BIG5/LC_MESSAGES/sunw_java_plugin.mo
 %lang(zh_TW) %{_datadir}/locale/zh_TW/LC_MESSAGES/sunw_java_plugin.mo
 %{jredir}/lib/management/jmxremote.access
