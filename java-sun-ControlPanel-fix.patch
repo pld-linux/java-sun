@@ -1,5 +1,5 @@
---- j2sdk1.4.2/jre/bin/ControlPanel.orig	2003-06-20 11:35:34.000000000 +0200
-+++ j2sdk1.4.2/jre/bin/ControlPanel	2003-07-07 22:20:29.000000000 +0200
+--- j2sdk1.4.2_01/jre/bin/ControlPanel.orig	2003-06-20 11:35:34.000000000 +0200
++++ j2sdk1.4.2_01/jre/bin/ControlPanel	2003-07-07 22:20:29.000000000 +0200
 @@ -93,9 +93,9 @@
  
  # Resolve symlinks. See 4152645.
