@@ -14,7 +14,6 @@ Patch3:         %{name}-pthread.patch
 Patch4:         %{name}-motif.patch
 Patch5:         %{name}-fork.patch
 Patch6:         %{name}-no_plugins.patch
-Patch7:		%{name}-opt.patch
 NoSource:	0
 URL:		http://java.sun.com/linux/
 #Requires:	java-sun-jre = %{version}
@@ -144,7 +143,6 @@ Wtyczka z obs³ug± Javy dla Mozilli.
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
-%patch7 -p1
 
 %build
 
