@@ -145,7 +145,7 @@ gzip -9nf COPYRIGHT LICENSE README \
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post -n java-sun-jre 
+%post -n java-sun-jre
 /sbin/ldconfig -n %{jredir}/lib/i386
 
 %files
