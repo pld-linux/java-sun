@@ -137,7 +137,7 @@ Provides:	jar
 Provides:	java-shared
 Provides:	java-jre-tools
 Obsoletes:	java-shared
-Obsoletes:	java-sun-jre-tools
+Obsoletes:	java-jre-tools
 Obsoletes:	jar
 Obsoletes:	fastjar
 
