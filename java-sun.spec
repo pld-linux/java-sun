@@ -1,11 +1,11 @@
-%define		_ver	1.5.0.01
+%define		_ver	1.5.0.02
 %define		_src_ver	%(echo %{_ver}|tr . _)
 %define		_dir_ver	%(echo %{_ver}|sed 's/\\.\\(..\\)$/_\\1/')
 Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	%{_ver}
-Release:	2
+Release:	1
 License:	restricted, non-distributable
 Group:		Development/Languages/Java
 # download directly from http://java.sun.com/j2se/1.5.0/download.jsp
