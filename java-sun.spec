@@ -39,7 +39,7 @@ Summary(pl):	Sun JRE - ¶rodowisko uruchomieniowe Javy dla Linuksa
 Group:		Development/Languages/Java
 Group(de):	Entwicklung/Sprachen/Java
 Group(pl):	Programowanie/Jêzyki/Java
-Provides:	java1.3
+Provides:	java1.4
 Provides:	jar
 Provides:	java
 Requires:	XFree86-libs
@@ -62,7 +62,7 @@ Requires:	%{name} = %{version}
 %description java-sun-demos
 JDK demonstration programs.
 
-%description demos -l pl
+%description java-sun-demos -l pl
 Programy demonstracyjne do JDK.
 
 %package -n java-sun-nn4-plugin
@@ -96,10 +96,10 @@ Java plugin for Mozilla.
 Plugin z obs³ug± Javy dla Mozilli.
 
 %prep
-%setup -q -T -c -n %{name}%{version}
+%setup -q -T -c -n j2sdk%{version}
 cd ..
 outname=install.sfx.$$
-tail +289 %{SOURCE0} >$outname
+tail +295 %{SOURCE0} >$outname
 chmod +x $outname
 ./$outname
 rm $outname
