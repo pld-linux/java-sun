@@ -28,6 +28,7 @@ Obsoletes:	ibm-java
 Obsoletes:	java-blackdown
 Obsoletes:	jdk
 Obsoletes:	kaffe
+Conflicts:	netscape4-plugin-java-sun
 ExclusiveArch:	%{ix86}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -54,8 +55,7 @@ Java Development Kit for Linux.
 %package jdbc
 Summary:	JDBC files for Sun Java
 Summary(pl):	Pliki JDBC dla Javy Suna
-Group:		Development/Libraries/Java
-######		Unknown group!
+Group:		Development/Languages/Java
 Requires:	%{name} = %{version}-%{release}
 Requires:	libodbc.so.1
 Requires:	libodbcinst.so.1
