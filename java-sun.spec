@@ -519,6 +519,7 @@ fi
 %{jredir}/lib/cmm
 %{jredir}/lib/ext
 %{jredir}/lib/fonts
+%{jredir}/lib/oblique-fonts
 %ifarch %{ix86}
 %dir %{jredir}/lib/i386
 %dir %{jredir}/lib/i386/xawt
@@ -702,8 +703,8 @@ fi
 %{javadir}/demo/jvmti/*/*.jar
 %{javadir}/demo/jvmti/index.html
 %{javadir}/demo/management
-%{javadir}/demo/plugin
-%{javadir}/demo/applets.html
+#%{javadir}/demo/plugin
+#%{javadir}/demo/applets.html
 
 %files tools
 %defattr(644,root,root,755)
