@@ -416,7 +416,7 @@ fi
 %{javadir}/lib/*.jar
 %{javadir}/lib/*.idl
 %{_mandir}/man1/appletviewer.1*
-#%{_mandir}/man1/apt.1*
+%{_mandir}/man1/apt.1*
 %{_mandir}/man1/extcheck.1*
 %{_mandir}/man1/idlj.1*
 %{_mandir}/man1/jarsigner.1*
@@ -436,7 +436,7 @@ fi
 %{_mandir}/man1/serialver.1*
 %{_mandir}/man1/jconsole.1*
 %lang(ja) %{_mandir}/ja/man1/appletviewer.1*
-#%lang(ja) %{_mandir}/ja/man1/apt.1*
+%lang(ja) %{_mandir}/ja/man1/apt.1*
 %lang(ja) %{_mandir}/ja/man1/extcheck.1*
 %lang(ja) %{_mandir}/ja/man1/idlj.1*
 %lang(ja) %{_mandir}/ja/man1/jarsigner.1*
