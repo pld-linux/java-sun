@@ -5,9 +5,10 @@ Version:	1.4.1_02
 Release:	1
 License:	restricted, non-distributable
 Group:		Development/Languages/Java
-URL:		http://java.sun.com/linux/
+# download through forms from http://java.sun.com/j2se/1.4.1/download.html
 Source0:	j2sdk-1_4_1_02-linux-i586.bin
 NoSource:	0
+URL:		http://java.sun.com/linux/
 Requires:	java-sun-jre = %{version}
 Provides:	jdk = %{version}
 Obsoletes:	blackdown-java-sdk
