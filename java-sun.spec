@@ -67,9 +67,10 @@ Summary:	JDBC files for Sun Java
 Summary(pl):	Pliki JDBC dla Javy Suna
 Group:		Development/Languages/Java
 Requires:	%{name}-jre = %{version}-%{release}
-Provides:	%{name}-jdbc
 Requires:	libodbc.so.1
 Requires:	libodbcinst.so.1
+Provides:	%{name}-jdbc
+Obsoletes:	java-sun-jdbc
 
 %description jre-jdbc
 This package contains JDBC files for Sun Java.
@@ -123,6 +124,7 @@ Summary(pl):	Modu³ JRE do obs³ugi d¼wiêku poprzez ALSA
 Group:		Development/Languages/Java
 Requires:	%{name}-jre = %{version}-%{release}
 Provides:	%{name}-alsa
+Obsoletes:	java-sun-alsa
 
 %description jre-alsa
 JRE module for ALSA sound support.
