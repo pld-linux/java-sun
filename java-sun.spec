@@ -2,7 +2,7 @@ Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	1.5.0
-Release:	0.beta2.1
+Release:	0.beta2.2
 License:	restricted, non-distributable
 Group:		Development/Languages/Java
 # download through forms from http://java.sun.com/j2se/1.4.2/download.html
@@ -182,27 +182,7 @@ Java plugin file for Mozilla.
 %description mozilla-plugin -l pl
 Plik wtyczki z obs³ug± Javy dla Mozilli.
 
-%package -n mozilla-plugin-gcc2-%{name}
-Summary:	Mozilla Java plugin
-Summary(pl):	Wtyczka Javy do Mozilli
-Group:		Development/Languages/Java
-PreReq:		mozilla-embedded
-Requires:	%{name}-mozilla-plugin = %{version}-%{release}
-Obsoletes:	blackdown-java-sdk-mozilla-plugin
-Obsoletes:	java-sun-moz-plugin
-Obsoletes:	jre-mozilla-plugin
-Obsoletes:	mozilla-plugin-blackdown-java-sdk
-Obsoletes:	mozilla-plugin-java-blackdown
-Obsoletes:	mozilla-plugin-java-sun
-Obsoletes:	mozilla-plugin-gcc32-%{name}
-
-%description -n mozilla-plugin-gcc2-%{name}
-Java plugin for Mozilla compiled using gcc 2.9x.
-
-%description -n mozilla-plugin-gcc2-%{name} -l pl
-Wtyczka z obs³ug± Javy dla Mozilli skompilowana przy u¿yciu gcc 2.9x.
-
-%package -n mozilla-plugin-gcc3-%{name}
+%package -n mozilla-plugin-%{name}
 Summary:	Mozilla Java plugin
 Summary(pl):	Wtyczka Javy do Mozilli
 Group:		Development/Languages/Java
@@ -215,40 +195,29 @@ Obsoletes:	mozilla-plugin-blackdown-java-sdk
 Obsoletes:	mozilla-plugin-java-blackdown
 Obsoletes:	mozilla-plugin-java-sun
 Obsoletes:	mozilla-plugin-gcc2-java-sun
+Obsoletes:	mozilla-plugin-gcc3-java-sun
 Obsoletes:	mozilla-plugin-gcc32-java-sun
 
-%description -n mozilla-plugin-gcc3-%{name}
+%description -n mozilla-plugin-%{name}
 Java plugin for Mozilla compiled using gcc 3.
 
-%description -n mozilla-plugin-gcc3-%{name} -l pl
+%description -n mozilla-plugin-%{name} -l pl
 Wtyczka z obs³ug± Javy dla Mozilli skompilowana przy u¿yciu gcc 3.
 
-%package -n mozilla-firefox-plugin-gcc2-%{name}
+%package -n mozilla-firefox-plugin-%{name}
 Summary:	Mozilla Firefox Java plugin
 Summary(pl):	Wtyczka Javy do Mozilli Firefox
 Group:		Development/Languages/Java
 PreReq:		mozilla-firefox
 Requires:	%{name}-mozilla-plugin = %{version}-%{release}
-Obsoletes:	mozilla-firefox-plugin-blackdown
+Obsoletes:	mozilla-firefox-plugin-java-blackdown
+Obsoletes:	mozilla-firefox-plugin-gcc2-java-sun
+Obsoletes:	mozilla-firefox-plugin-gcc3-java-sun
 
-%description -n mozilla-firefox-plugin-gcc2-%{name}
-Java plugin for Mozilla Firefox compiled using gcc 2.9x.
-
-%description -n mozilla-firefox-plugin-gcc2-%{name} -l pl
-Wtyczka z obs³ug± Javy dla Mozilli Firefox skompilowana przy u¿yciu gcc 2.9x.
-
-%package -n mozilla-firefox-plugin-gcc3-%{name}
-Summary:	Mozilla Firefox Java plugin
-Summary(pl):	Wtyczka Javy do Mozilli Firefox
-Group:		Development/Languages/Java
-PreReq:		mozilla-firefox
-Requires:	%{name}-mozilla-plugin = %{version}-%{release}
-Obsoletes:	mozilla-firefox-plugin-blackdown-java
-
-%description -n mozilla-firefox-plugin-gcc3-%{name}
+%description -n mozilla-firefox-plugin-%{name}
 Java plugin for Mozilla Firefox compiled using gcc 3.
 
-%description -n mozilla-firefox-plugin-gcc3-%{name} -l pl
+%description -n mozilla-firefox-plugin-%{name} -l pl
 Wtyczka z obs³ug± Javy dla Mozilli Firefox skompilowana przy u¿yciu gcc 3.
 
 %prep
@@ -316,12 +285,6 @@ ln -sf %{jredir}/plugin/i386/ns7/libjavaplugin_oji.so \
 	$RPM_BUILD_ROOT%{mozilladir}/plugins
 ln -sf %{jredir}/plugin/i386/ns7/libjavaplugin_oji.so \
 	$RPM_BUILD_ROOT%{firefoxdir}/plugins
-install jre/plugin/i386/ns7-gcc29/libjavaplugin_oji.so \
-	$RPM_BUILD_ROOT%{jredir}/plugin/i386/ns7-gcc29
-ln -sf %{jredir}/plugin/i386/ns7-gcc29/libjavaplugin_oji.so \
-	$RPM_BUILD_ROOT%{mozilladir}/plugins/libjavaplugin_oji-gcc29.so
-ln -sf %{jredir}/plugin/i386/ns7-gcc29/libjavaplugin_oji.so \
-	$RPM_BUILD_ROOT%{firefoxdir}/plugins/libjavaplugin_oji-gcc29.so
 install  -d $RPM_BUILD_ROOT{%{_desktopdir},%{_pixmapsdir}}
 install jre/plugin/desktop/*.desktop $RPM_BUILD_ROOT%{_desktopdir}
 install jre/plugin/desktop/*.png $RPM_BUILD_ROOT%{_pixmapsdir}
@@ -623,23 +586,13 @@ fi
 
 %files mozilla-plugin
 %defattr(644,root,root,755)
-%dir %{jredir}/plugin/i386/ns7-gcc29
-%attr(755,root,root) %{jredir}/plugin/i386/ns7-gcc29/libjavaplugin_oji.so
 %dir %{jredir}/plugin/i386/ns7
 %attr(755,root,root) %{jredir}/plugin/i386/ns7/libjavaplugin_oji.so
 
-%files -n mozilla-plugin-gcc2-%{name}
-%defattr(644,root,root,755)
-%{mozilladir}/plugins/libjavaplugin_oji-gcc29.so
-
-%files -n mozilla-plugin-gcc3-%{name}
+%files -n mozilla-plugin-%{name}
 %defattr(644,root,root,755)
 %{mozilladir}/plugins/libjavaplugin_oji.so
 
-%files -n mozilla-firefox-plugin-gcc2-%{name}
-%defattr(644,root,root,755)
-%{firefoxdir}/plugins/libjavaplugin_oji-gcc29.so
-
-%files -n mozilla-firefox-plugin-gcc3-%{name}
+%files -n mozilla-firefox-plugin-%{name}
 %defattr(644,root,root,755)
 %{firefoxdir}/plugins/libjavaplugin_oji.so
