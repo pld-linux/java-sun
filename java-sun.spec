@@ -98,7 +98,7 @@ outname=install.sfx.$$
 tail +295 %{SOURCE0} >$outname
 chmod +x $outname
 ./$outname
-rm $outname
+rm -f $outname
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -195,7 +195,7 @@ ln -sf %{jdkdir} %{_libdir}/java
 %attr(755,root,root) %{_bindir}/tnameserv
 %attr(755,root,root) %{jredir}/bin
 %dir %{jredir}
-%dir %dir %{jredir}/lib
+%dir %{jredir}/lib
 %{jredir}/lib/applet
 %{jredir}/lib/audio
 %{jredir}/lib/cmm
