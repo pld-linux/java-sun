@@ -79,18 +79,19 @@ Java plugin for Netscape 4.x.
 %description -n java-sun-nn4-plugin -l pl
 Plugin z obs³ug± Javy dla Netscape 4.x.
 
-%package -n java-sun-moz-plugin
+%package -n mozilla-plugin-%{name}
 Summary:	Mozilla Java plugin
 Summary(pl):	Plugin Javy do Mozilli
 Group:		Development/Languages/Java
 Requires:	jre = %{version}
-Requires:	mozilla-embedded
+Prereq:		mozilla-embedded
 Obsoletes:	jre-mozilla-plugin
+Obsoletes:	java-sun-moz-plugin
 
-%description -n java-sun-moz-plugin
+%description -n mozilla-plugin-%{name}
 Java plugin for Mozilla.
 
-%description -n java-sun-moz-plugin -l pl
+%description -n mozilla-plugin-%{name} -l pl
 Plugin z obs³ug± Javy dla Mozilli.
 
 %prep
@@ -238,7 +239,7 @@ ln -sf %{jdkdir} %{_libdir}/java
 %lang(zh_TW) %{jredir}/lib/locale/zh_TW
 %lang(zh_TW.BIG5) %{jredir}/lib/locale/zh_TW.BIG5
 
-%files -n java-sun-moz-plugin
+%files -n mozilla-plugin-%{name}
 %defattr(644,root,root,755)
 %dir %{jredir}/plugin/i386/ns610
 %attr(755,root,root) %{jredir}/plugin/i386/ns610/libjavaplugin_oji140.so
