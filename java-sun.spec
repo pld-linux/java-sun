@@ -1,14 +1,21 @@
 Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
-Version:	1.4.2_04
-Release:	1
+Version:	1.5.0
+Release:	0.beta2.1
 License:	restricted, non-distributable
 Group:		Development/Languages/Java
 # download through forms from http://java.sun.com/j2se/1.4.2/download.html
-Source0:        j2sdk-1_4_2_04-linux-i586.bin
-# NoSource0-md5: cc27ac6189062214c072cb5b4ae068fa
-NoSource:       0
+# use wget-java
+%ifarch %{ix86}
+Source0:	jdk-1_5_0-beta2-linux-i586.bin
+# NoSource0-md5: 93556887af8910d709de028ddb07f27d
+%endif
+%ifarch amd64
+Source0:	jdk-1_5_0-beta2-linux-amd64.bin
+# NoSource0-md5: 04e7a35af0fd655e516f5ba3435cf632
+%endif
+NoSource:	0
 Patch0:		%{name}-ControlPanel-fix.patch
 URL:		http://java.sun.com/linux/
 BuildRequires:	rpm-build >= 4.3-0.20040107.21
@@ -48,6 +55,7 @@ Java Development Kit for Linux.
 Summary:	JDBC files for Sun Java
 Summary(pl):	Pliki JDBC dla Javy Suna
 Group:		Development/Libraries/Java
+######		Unknown group!
 Requires:	%{name} = %{version}-%{release}
 Requires:	libodbc.so.1
 Requires:	libodbcinst.so.1
@@ -178,7 +186,7 @@ Java plugin for Mozilla compiled using gcc 2.9x.
 %description -n mozilla-plugin-gcc2-%{name} -l pl
 Wtyczka z obs³ug± Javy dla Mozilli skompilowana przy u¿yciu gcc 2.9x.
 
-%package -n mozilla-plugin-gcc32-%{name}
+%package -n mozilla-plugin-gcc3-%{name}
 Summary:	Mozilla Java plugin
 Summary(pl):	Wtyczka Javy do Mozilli
 Group:		Development/Languages/Java
@@ -190,22 +198,24 @@ Obsoletes:	jre-mozilla-plugin
 Obsoletes:	mozilla-plugin-blackdown-java-sdk
 Obsoletes:	mozilla-plugin-java-blackdown
 Obsoletes:	mozilla-plugin-java-sun
-Obsoletes:	mozilla-plugin-gcc2-%{name}
+Obsoletes:	mozilla-plugin-gcc2-java-sun
+Obsoletes:	mozilla-plugin-gcc32-java-sun
 
-%description -n mozilla-plugin-gcc32-%{name}
-Java plugin for Mozilla compiled using gcc 3.2.
 
-%description -n mozilla-plugin-gcc32-%{name} -l pl
-Wtyczka z obs³ug± Javy dla Mozilli skompilowana przy u¿yciu gcc 3.2.
+%description -n mozilla-plugin-gcc3-%{name}
+Java plugin for Mozilla compiled using gcc 3.
+
+%description -n mozilla-plugin-gcc3-%{name} -l pl
+Wtyczka z obs³ug± Javy dla Mozilli skompilowana przy u¿yciu gcc 3.
 
 %prep
-%setup -q -T -c -n j2sdk%{version}
+%setup -q -T -c -n jdk%{version}
 cd ..
 export MORE=10000
 sh %{SOURCE0} <<EOF
 yes
 EOF
-cd j2sdk%{version}
+cd jdk%{version}
 %patch -p1
 
 %install
@@ -217,11 +227,17 @@ cp -rf bin demo include lib $RPM_BUILD_ROOT%{javadir}
 install man/man1/* $RPM_BUILD_ROOT%{_mandir}/man1
 install man/ja/man1/* $RPM_BUILD_ROOT%{_mandir}/ja/man1
 
+if test -f jre/lib/i386/client/Xusage.txt ; then
 mv -f jre/lib/i386/client/Xusage.txt jre/Xusage.client
+fi
+if test -f jre/lib/i386/server/Xusage.txt ; then
 mv -f jre/lib/i386/server/Xusage.txt jre/Xusage.server
+fi
+if test -f jre/lib/*.txt ; then
 mv -f jre/lib/*.txt jre
-mv jre/lib/font.properties{,.orig}
-mv jre/lib/font.properties{.Redhat6.1,}
+fi
+#mv jre/lib/font.properties{,.orig}
+#mv jre/lib/font.properties{.Redhat6.1,}
 
 cp -rf jre/{bin,lib} $RPM_BUILD_ROOT%{jredir}
 
@@ -245,21 +261,22 @@ done
 rm -f $RPM_BUILD_ROOT%{javadir}/bin/java
 ln -sf %{jredir}/bin/java $RPM_BUILD_ROOT%{javadir}/bin/java
 
-install -d $RPM_BUILD_ROOT%{netscape4dir}/{plugins,java/classes}
-install jre/plugin/i386/ns4/libjavaplugin.so $RPM_BUILD_ROOT%{netscape4dir}/plugins
-for i in javaplugin rt sunrsasign ; do
-	ln -sf %{jredir}/lib/$i.jar $RPM_BUILD_ROOT%{netscape4dir}/java/classes
-done
+#for i in javaplugin rt sunrsasign ; do
+#	ln -sf %{jredir}/lib/$i.jar $RPM_BUILD_ROOT%{netscape4dir}/java/classes
+#done
 
-install -d $RPM_BUILD_ROOT{%{mozilladir}/plugins,%{jredir}/plugin/i386/{ns610,ns610-gcc32}}
-install jre/plugin/i386/ns610/libjavaplugin_oji.so \
-	$RPM_BUILD_ROOT%{jredir}/plugin/i386/ns610
-ln -sf %{jredir}/plugin/i386/ns610/libjavaplugin_oji.so \
+install -d $RPM_BUILD_ROOT{%{mozilladir}/plugins,%{jredir}/plugin/i386/ns7{,-gcc29}}
+install jre/plugin/i386/ns7/libjavaplugin_oji.so \
+	$RPM_BUILD_ROOT%{jredir}/plugin/i386/ns7
+ln -sf %{jredir}/plugin/i386/ns7/libjavaplugin_oji.so \
 	$RPM_BUILD_ROOT%{mozilladir}/plugins
-install jre/plugin/i386/ns610-gcc32/libjavaplugin_oji.so \
-	$RPM_BUILD_ROOT%{jredir}/plugin/i386/ns610-gcc32
-ln -sf %{jredir}/plugin/i386/ns610-gcc32/libjavaplugin_oji.so \
-	$RPM_BUILD_ROOT%{mozilladir}/plugins/libjavaplugin_oji-gcc32.so
+install jre/plugin/i386/ns7-gcc29/libjavaplugin_oji.so \
+	$RPM_BUILD_ROOT%{jredir}/plugin/i386/ns7-gcc29
+ln -sf %{jredir}/plugin/i386/ns7-gcc29/libjavaplugin_oji.so \
+	$RPM_BUILD_ROOT%{mozilladir}/plugins/libjavaplugin_oji-gcc29.so
+install  -d $RPM_BUILD_ROOT{%{_desktopdir},%{_pixmapsdir}}
+install jre/plugin/desktop/*.desktop $RPM_BUILD_ROOT%{_desktopdir}
+install jre/plugin/desktop/*.png $RPM_BUILD_ROOT%{_pixmapsdir}
 
 # these binaries are in %{jredir}/bin - not needed in %{javadir}/bin?
 rm -f $RPM_BUILD_ROOT%{javadir}/bin/{ControlPanel,keytool,kinit,klist,ktab,orbd,policytool,rmid,rmiregistry,servertool,tnameserv}
@@ -281,7 +298,7 @@ cp -a jre/javaws/* $RPM_BUILD_ROOT%{jredir}/javaws
 perl -p -i -e 's#javaws\.cfg\.jre\.0\.path=.*#javaws\.cfg\.jre\.0\.path=%{jredir}/bin/java#' $RPM_BUILD_ROOT%{jredir}/javaws/javaws.cfg
 ln -sf %{jredir}/javaws/javaws.jar $RPM_BUILD_ROOT%{_javalibdir}/javaws.jar
 ln -sf %{jredir}/javaws/javaws-l10n.jar $RPM_BUILD_ROOT%{_javalibdir}/javaws-l10n.jar
-
+mv -f $RPM_BUILD_ROOT{%{jredir}/lib,%{_datadir}}/locale
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -295,7 +312,7 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc COPYRIGHT LICENSE README README.html
+%doc COPYRIGHT LICENSE README.html
 %attr(755,root,root) %{_bindir}/HtmlConverter
 %attr(755,root,root) %{_bindir}/appletviewer
 %attr(755,root,root) %{_bindir}/extcheck
@@ -322,6 +339,16 @@ fi
 %attr(755,root,root) %{javadir}/bin/jdb
 %attr(755,root,root) %{javadir}/bin/native2ascii
 %attr(755,root,root) %{javadir}/bin/serialver
+%attr(755,root,root) %{javadir}/bin/apt
+%attr(755,root,root) %{javadir}/bin/javaws
+%attr(755,root,root) %{javadir}/bin/jconsole
+%attr(755,root,root) %{javadir}/bin/jinfo
+%attr(755,root,root) %{javadir}/bin/jmap
+%attr(755,root,root) %{javadir}/bin/jps
+%attr(755,root,root) %{javadir}/bin/jsadebugd
+%attr(755,root,root) %{javadir}/bin/jstack
+%attr(755,root,root) %{javadir}/bin/jstat
+%attr(755,root,root) %{javadir}/bin/jstatd
 %{javadir}/include
 %dir %{javadir}/lib
 %{javadir}/lib/*.jar
@@ -337,6 +364,7 @@ fi
 %{_mandir}/man1/jdb.1*
 %{_mandir}/man1/native2ascii.1*
 %{_mandir}/man1/serialver.1*
+%{_mandir}/man1/jconsole.1*
 %lang(ja) %{_mandir}/ja/man1/appletviewer.1*
 %lang(ja) %{_mandir}/ja/man1/extcheck.1*
 %lang(ja) %{_mandir}/ja/man1/idlj.1*
@@ -348,6 +376,8 @@ fi
 %lang(ja) %{_mandir}/ja/man1/jdb.1*
 %lang(ja) %{_mandir}/ja/man1/native2ascii.1*
 %lang(ja) %{_mandir}/ja/man1/serialver.1*
+%lang(ja) %{_mandir}/ja/man1/jconsole.1*
+
 
 %files jdbc
 %defattr(644,root,root,755)
@@ -356,7 +386,7 @@ fi
 %files jre
 %defattr(644,root,root,755)
 %doc jre/{CHANGES,COPYRIGHT,LICENSE,README,Xusage*,*.txt}
-%doc jre/Welcome.html jre/ControlPanel.html
+%doc jre/Welcome.html
 %attr(755,root,root) %{_bindir}/ControlPanel
 %attr(755,root,root) %{_bindir}/java
 %attr(755,root,root) %{_bindir}/java_vm
@@ -369,6 +399,11 @@ fi
 %attr(755,root,root) %{_bindir}/rmid
 %attr(755,root,root) %{_bindir}/servertool
 %attr(755,root,root) %{_bindir}/tnameserv
+%attr(755,root,root) %{jredir}/bin/javaws
+%attr(755,root,root) %{jredir}/bin/pack200
+%attr(755,root,root) %{jredir}/bin/unpack200
+%attr(755,root,root) %{javadir}/bin/pack200
+%attr(755,root,root) %{javadir}/bin/unpack200
 %dir %{javadir}
 %dir %{javadir}/bin
 %attr(755,root,root) %{javadir}/bin/java
@@ -422,6 +457,65 @@ fi
 %{_javalibdir}/jndi*.jar
 %{_javalibdir}/jnet.jar
 %{_javalibdir}/jsse.jar
+%{jredir}/lib/classlist
+%{jredir}/lib/fontconfig.RedHat.2.1.bfc
+%{jredir}/lib/fontconfig.RedHat.2.1.properties.src
+%{jredir}/lib/fontconfig.RedHat.3.bfc
+%{jredir}/lib/fontconfig.RedHat.3.properties.src
+%{jredir}/lib/fontconfig.RedHat.8.0.bfc
+%{jredir}/lib/fontconfig.RedHat.8.0.properties.src
+%{jredir}/lib/fontconfig.RedHat.bfc
+%{jredir}/lib/fontconfig.RedHat.properties.src
+%{jredir}/lib/fontconfig.SuSE.bfc
+%{jredir}/lib/fontconfig.SuSE.properties.src
+%{jredir}/lib/fontconfig.Sun.2003.bfc
+%{jredir}/lib/fontconfig.Sun.2003.properties.src
+%{jredir}/lib/fontconfig.Sun.bfc
+%{jredir}/lib/fontconfig.Sun.properties.src
+%{jredir}/lib/fontconfig.Turbo.8.0.bfc
+%{jredir}/lib/fontconfig.Turbo.8.0.properties.src
+%{jredir}/lib/fontconfig.Turbo.bfc
+%{jredir}/lib/fontconfig.Turbo.properties.src
+%{jredir}/lib/fontconfig.bfc
+%{jredir}/lib/fontconfig.properties.src
+%attr(755,root,root) %{jredir}/lib/i386/gtkhelper
+%attr(755,root,root) %{jredir}/lib/i386/headless/libmawt.so
+%attr(755,root,root) %{jredir}/lib/i386/libsaproc.so
+%attr(755,root,root) %{jredir}/lib/i386/libunpack.so
+%attr(755,root,root) %{jredir}/lib/i386/motif21/libmawt.so
+%attr(755,root,root) %{jredir}/lib/i386/xawt/libmawt.so
+%{jredir}/lib/javaws/Java1.5.ico
+%{jredir}/lib/javaws/messages.properties
+%{jredir}/lib/javaws/messages_de.properties
+%{jredir}/lib/javaws/messages_es.properties
+%{jredir}/lib/javaws/messages_fr.properties
+%{jredir}/lib/javaws/messages_it.properties
+%{jredir}/lib/javaws/messages_ja.properties
+%{jredir}/lib/javaws/messages_ko.properties
+%{jredir}/lib/javaws/messages_sv.properties
+%{jredir}/lib/javaws/messages_zh_CN.properties
+%{jredir}/lib/javaws/messages_zh_HK.properties
+%{jredir}/lib/javaws/messages_zh_TW.properties
+%{jredir}/lib/javaws/miniSplash.jpg
+%{_datadir}/locale/de/LC_MESSAGES/sunw_java_plugin.mo
+%{_datadir}/locale/es/LC_MESSAGES/sunw_java_plugin.mo
+%{_datadir}/locale/fr/LC_MESSAGES/sunw_java_plugin.mo
+%{_datadir}/locale/it/LC_MESSAGES/sunw_java_plugin.mo
+%{_datadir}/locale/ja/LC_MESSAGES/sunw_java_plugin.mo
+%{_datadir}/locale/ko.UTF-8/LC_MESSAGES/sunw_java_plugin.mo
+%{_datadir}/locale/ko/LC_MESSAGES/sunw_java_plugin.mo
+%{_datadir}/locale/sv/LC_MESSAGES/sunw_java_plugin.mo
+%{_datadir}/locale/zh.GBK/LC_MESSAGES/sunw_java_plugin.mo
+%{_datadir}/locale/zh/LC_MESSAGES/sunw_java_plugin.mo
+%{_datadir}/locale/zh_HK.BIG5HK/LC_MESSAGES/sunw_java_plugin.mo
+%{_datadir}/locale/zh_TW.BIG5/LC_MESSAGES/sunw_java_plugin.mo
+%{_datadir}/locale/zh_TW/LC_MESSAGES/sunw_java_plugin.mo
+%{jredir}/lib/management/jmxremote.access
+%{jredir}/lib/management/jmxremote.password.template
+%{jredir}/lib/management/management.properties
+%{jredir}/lib/management/snmp.acl.template
+%{_desktopdir}/sun_java.desktop
+%{_pixmapsdir}/sun_java.png
 %{_mandir}/man1/java.1*
 %{_mandir}/man1/javaws.1*
 %{_mandir}/man1/keytool.1*
@@ -433,6 +527,8 @@ fi
 %{_mandir}/man1/rmid.1*
 %{_mandir}/man1/servertool.1*
 %{_mandir}/man1/tnameserv.1*
+%{_mandir}/man1/*pack200.1*
+%lang(ja) %{_mandir}/ja/man1/*pack200.1*
 %lang(ja) %{_mandir}/ja/man1/java.1*
 %lang(ja) %{_mandir}/ja/man1/javaws.1*
 %lang(ja) %{_mandir}/ja/man1/keytool.1*
@@ -445,14 +541,14 @@ fi
 %lang(ja) %{_mandir}/ja/man1/servertool.1*
 %lang(ja) %{_mandir}/ja/man1/tnameserv.1*
 %dir %{jredir}/javaws
-%{jredir}/javaws/resources
+##%{jredir}/javaws/resources
 %attr(755,root,root) %{jredir}/javaws/javaws
-%attr(755,root,root) %{jredir}/javaws/javawsbin
-%{jredir}/javaws/cacerts
-%{jredir}/javaws/*.gif
-%{jredir}/javaws/*.jar
-%{jredir}/javaws/*.policy
-%{jredir}/javaws/*.html
+##%attr(755,root,root) %{jredir}/javaws/javawsbin
+##%{jredir}/javaws/cacerts
+##%{jredir}/javaws/*.gif
+##%{jredir}/javaws/*.jar
+##%{jredir}/javaws/*.policy
+##%{jredir}/javaws/*.html
 
 %files alsa
 %defattr(644,root,root,755)
@@ -477,32 +573,14 @@ fi
 %lang(ja) %{_mandir}/ja/man1/rmic.1*
 %lang(ja) %{_mandir}/ja/man1/rmiregistry.1*
 
-%files -n netscape4-plugin-%{name}
-%defattr(644,root,root,755)
-%attr(755,root,root) %{netscape4dir}/plugins/libjavaplugin.so
-%{netscape4dir}/java/classes/*
-%dir %{jredir}/lib/locale
-%lang(de) %{jredir}/lib/locale/de
-%lang(es) %{jredir}/lib/locale/es
-%lang(fr) %{jredir}/lib/locale/fr
-%lang(it) %{jredir}/lib/locale/it
-%lang(ja) %{jredir}/lib/locale/ja
-%lang(ko) %{jredir}/lib/locale/ko
-%lang(ko) %{jredir}/lib/locale/ko.UTF-8
-%lang(sv) %{jredir}/lib/locale/sv
-%lang(zh_CN) %{jredir}/lib/locale/zh
-%lang(zh_CN) %{jredir}/lib/locale/zh.GBK
-%lang(zh_TW) %{jredir}/lib/locale/zh_TW
-%lang(zh_TW) %{jredir}/lib/locale/zh_TW.BIG5
-
 %files -n mozilla-plugin-gcc2-%{name}
 %defattr(644,root,root,755)
-%dir %{jredir}/plugin/i386/ns610
-%attr(755,root,root) %{jredir}/plugin/i386/ns610/libjavaplugin_oji.so
-%{mozilladir}/plugins/libjavaplugin_oji.so
+%dir %{jredir}/plugin/i386/ns7-gcc29
+%attr(755,root,root) %{jredir}/plugin/i386/ns7-gcc29/libjavaplugin_oji.so
+%{mozilladir}/plugins/libjavaplugin_oji-gcc29.so
 
-%files -n mozilla-plugin-gcc32-%{name}
+%files -n mozilla-plugin-gcc3-%{name}
 %defattr(644,root,root,755)
-%dir %{jredir}/plugin/i386/ns610-gcc32
-%attr(755,root,root) %{jredir}/plugin/i386/ns610-gcc32/libjavaplugin_oji.so
-%{mozilladir}/plugins/libjavaplugin_oji-gcc32.so
+%dir %{jredir}/plugin/i386/ns7
+%attr(755,root,root) %{jredir}/plugin/i386/ns7/libjavaplugin_oji.so
+%{mozilladir}/plugins/libjavaplugin_oji.so
