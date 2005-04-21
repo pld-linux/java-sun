@@ -10,11 +10,11 @@ License:	restricted, non-distributable
 Group:		Development/Languages/Java
 # download through forms from http://java.sun.com/j2se/1.5.0/download.jsp
 %ifarch %{ix86}
-Source0:	jdk-%{_src_ver}-linux-i586.bin
+Source0:	http://public.planetmirror.com/pub/java-sun/J2SE/5.0_02/linux/jdk-%{_src_ver}-linux-i586.bin
 # NoSource0-md5: 562d9797af801bfbe2b5e44417d8ccc4
 %endif
 %ifarch amd64
-Source0:	jdk-%{_src_ver}-linux-amd64.bin
+Source0:	http://public.planetmirror.com/pub/java-sun/J2SE/5.0_02/amd64/jdk-%{_src_ver}-linux-amd64.bin
 # NoSource0-md5: db0d14713854fb3be9350fd68bf2674f
 %endif
 NoSource:	0
