@@ -1,13 +1,16 @@
 Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
-Version:	1.4.2_07
+Version:	1.4.2_08
 Release:	1
 License:	restricted, non-distributable
 Group:		Development/Languages/Java
 # download through forms from http://java.sun.com/j2se/1.4.2/download.html
 Source0:        j2sdk-%(echo %{version} | tr . _)-linux-i586.bin
-# NoSource0-md5: cc27ac6189062214c072cb5b4ae068fa
+# NoSource0-md5:	cc27ac6189062214c072cb5b4ae068fa
+# Other Downloads at http://java.sun.com/j2se/1.4.2/download.html
+Source1:	jce_policy-1_4_2.zip
+# NoSource1-md5:	ff961c5f5326191c5ac2e4624d756f7e
 NoSource:       0
 Patch0:		%{name}-ControlPanel-fix.patch
 URL:		http://java.sun.com/linux/
@@ -198,7 +201,7 @@ Java plugin for Mozilla compiled using gcc 3.2.
 Wtyczka z obs³ug± Javy dla Mozilli skompilowana przy u¿yciu gcc 3.2.
 
 %prep
-%setup -q -T -c -n j2sdk%{version}
+%setup -q -T -c -n j2sdk%{version} -a1
 cd ..
 export MORE=10000
 sh %{SOURCE0} <<EOF
@@ -223,6 +226,8 @@ mv jre/lib/font.properties{,.orig}
 mv jre/lib/font.properties{.Redhat6.1,}
 
 cp -rf jre/{bin,lib} $RPM_BUILD_ROOT%{jredir}
+
+install jce/*.jar $RPM_BUILD_ROOT%{jredir}/lib/security
 
 # conflict with heimdal
 for i in kinit klist ; do
