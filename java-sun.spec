@@ -9,15 +9,12 @@ Release:	1
 License:	restricted, non-distributable
 Group:		Development/Languages/Java
 # download through forms from http://java.sun.com/j2se/1.5.0/download.jsp
-%ifarch %{ix86}
 Source0:	http://public.planetmirror.com/pub/java-sun/J2SE/5.0_02/linux/jdk-%{_src_ver}-linux-i586.bin
-# NoSource0-md5: 562d9797af801bfbe2b5e44417d8ccc4
-%endif
-%ifarch amd64
-Source0:	http://public.planetmirror.com/pub/java-sun/J2SE/5.0_02/amd64/jdk-%{_src_ver}-linux-amd64.bin
-# NoSource0-md5: db0d14713854fb3be9350fd68bf2674f
-%endif
+# NoSource0-md5:	562d9797af801bfbe2b5e44417d8ccc4
+Source1:	http://public.planetmirror.com/pub/java-sun/J2SE/5.0_02/amd64/jdk-%{_src_ver}-linux-amd64.bin
+# NoSource1-md5:	14b7a92077d51bbd6f39b3434a0765f8
 NoSource:	0
+NoSource:	1
 Patch0:		%{name}-ControlPanel-fix.patch
 Patch1:		%{name}-desktop.patch
 URL:		http://java.sun.com/linux/
@@ -235,7 +232,12 @@ Wtyczka z obs³ug± Javy dla Mozilli Firefox skompilowana przy u¿yciu gcc 3.
 %setup -q -T -c -n jdk%{_dir_ver}
 cd ..
 export MORE=10000
+%ifarch %{ix86}
 sh %{SOURCE0} <<EOF
+%endif
+%ifarch amd64
+sh %{SOURCE1} <<EOF
+%endif
 yes
 EOF
 cd jdk%{_dir_ver}
