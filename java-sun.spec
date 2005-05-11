@@ -19,6 +19,7 @@ Patch0:		%{name}-ControlPanel-fix.patch
 Patch1:		%{name}-desktop.patch
 URL:		http://java.sun.com/linux/
 BuildRequires:	rpm-build >= 4.3-0.20040107.21
+BuildRequires:	rpmbuild(macros) >= 1.213
 BuildRequires:	unzip
 Requires:	%{name}-jre = %{version}-%{release}
 Requires:	java-shared
@@ -30,7 +31,7 @@ Obsoletes:	java-blackdown
 Obsoletes:	jdk
 Obsoletes:	kaffe
 Conflicts:	netscape4-plugin-java-sun
-ExclusiveArch:	i586 i686 pentium3 pentium4 athlon amd64
+ExclusiveArch:	i586 i686 pentium3 pentium4 athlon %{x8664}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		javadir		%{_libdir}/java
@@ -235,13 +236,13 @@ export MORE=10000
 %ifarch %{ix86}
 sh %{SOURCE0} <<EOF
 %endif
-%ifarch amd64
+%ifarch %{x8664}
 sh %{SOURCE1} <<EOF
 %endif
 yes
 EOF
 cd jdk%{_dir_ver}
-%ifnarch amd64
+%ifnarch %{x8664}
 %patch0 -p1
 %patch1 -p1
 %endif
@@ -328,7 +329,7 @@ ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{_javadir}/jaas.jar
 ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{_javadir}/jdbc-stdext.jar
 ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{_javadir}/jdbc-stdext-3.0.jar
 
-%ifnarch amd64
+%ifnarch %{x8664}
 install -d -m 755 $RPM_BUILD_ROOT%{jredir}/javaws
 cp -a jre/javaws/* $RPM_BUILD_ROOT%{jredir}/javaws
 ln -sf %{jredir}/lib/javaws.jar $RPM_BUILD_ROOT%{_javadir}/javaws.jar
@@ -455,7 +456,7 @@ fi
 %ifarch %{ix86}
 %attr(755,root,root) %{jredir}/lib/i386/libJdbcOdbc.so
 %endif
-%ifarch amd64
+%ifarch %{x8664}
 %attr(755,root,root) %{jredir}/lib/amd64/libJdbcOdbc.so
 %endif
 
@@ -525,7 +526,7 @@ fi
 %attr(755,root,root) %{jredir}/lib/i386/lib[acdfhijmnrvz]*.so
 %exclude %{jredir}/lib/i386/libjsoundalsa.so
 %endif
-%ifarch amd64
+%ifarch %{x8664}
 %dir %{jredir}/lib/amd64
 %attr(755,root,root) %dir %{jredir}/lib/amd64/xawt
 %attr(755,root,root) %dir %{jredir}/lib/amd64/motif21
@@ -613,7 +614,7 @@ fi
 %lang(zh_HK) %{_datadir}/locale/zh_HK/LC_MESSAGES/sunw_java_plugin.mo
 %lang(zh_TW) %{_datadir}/locale/zh_TW/LC_MESSAGES/sunw_java_plugin.mo
 %endif
-%ifarch amd64
+%ifarch %{x8664}
 %attr(755,root,root) %{jredir}/lib/amd64/gtkhelper
 %attr(755,root,root) %{jredir}/lib/amd64/headless/libmawt.so
 %attr(755,root,root) %{jredir}/lib/amd64/libsaproc.so
@@ -666,7 +667,7 @@ fi
 %ifarch %{ix86}
 %attr(755,root,root) %{jredir}/lib/i386/libjsoundalsa.so
 %endif
-%ifarch amd64
+%ifarch %{x8664}
 %attr(755,root,root) %{jredir}/lib/amd64/libjsoundalsa.so
 %endif
 
