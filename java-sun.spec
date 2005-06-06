@@ -5,16 +5,16 @@ Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	%{_ver}
-Release:	1
+Release:	1.1
 License:	restricted, non-distributable
 Group:		Development/Languages/Java
 # download through forms from http://java.sun.com/j2se/1.5.0/download.jsp
 Source0:	http://public.planetmirror.com/pub/java-sun/J2SE/5.0_02/linux/jdk-%{_src_ver}-linux-i586.bin
 # NoSource0-md5:	562d9797af801bfbe2b5e44417d8ccc4
-Source1:	http://public.planetmirror.com/pub/java-sun/J2SE/5.0_02/amd64/jdk-%{_src_ver}-linux-amd64.bin
+#Source1:	http://public.planetmirror.com/pub/java-sun/J2SE/5.0_02/amd64/jdk-%{_src_ver}-linux-amd64.bin
 # NoSource1-md5:	14b7a92077d51bbd6f39b3434a0765f8
 NoSource:	0
-NoSource:	1
+#NoSource:	1
 Patch0:		%{name}-ControlPanel-fix.patch
 Patch1:		%{name}-desktop.patch
 URL:		http://java.sun.com/linux/
@@ -54,6 +54,18 @@ Java Development Kit for Linux.
 %description -l pl
 ¦rodowisko programistyczne Javy dla Linuksa.
 
+%package appletviewer
+Summary:	Java applet viewer from Sun Java
+Summary(pl):	Przegl±darka appletów Javy Suna
+Group:		Development/Languages/Java
+Requires:	%{name} = %{version}-%{release}
+
+%description appletviewer
+This package applet viewer for Sun Java.
+
+%description appletviewer -l pl
+Ten pakiet zawiera przegl±darkê appletów dla Javy Suna.
+
 %package jre-jdbc
 Summary:	JDBC files for Sun Java
 Summary(pl):	Pliki JDBC dla Javy Suna
@@ -74,14 +86,10 @@ Ten pakiet zawiera pliki JDBC dla Javy Suna.
 Summary:	Sun JRE (Java Runtime Environment) for Linux
 Summary(pl):	Sun JRE - ¶rodowisko uruchomieniowe Javy dla Linuksa
 Group:		Development/Languages/Java
-Requires:	XFree86-libs
 Requires:	java-jre-tools
 Provides:	java1.4
 Provides:	jre = %{version}
 Provides:	java
-%ifarch %{ix86}
-Provides:	javaws = %{version}
-%endif
 Provides:	jaas = %{version}
 Provides:	jaxp = 1.3
 Provides:	jce = %{version}
@@ -107,10 +115,30 @@ Obsoletes:	jre
 Obsoletes:	jsse
 
 %description jre
-Java Runtime Environment for Linux.
+Java Runtime Environment for Linux. Does not contain any X11-related
+compontents.
 
 %description jre -l pl
-¦rodowisko uruchomieniowe Javy dla Linuksa.
+¦rodowisko uruchomieniowe Javy dla Linuksa. Nie zawiera ¿adnych elementów
+zwi±zanych ze ¶rodowiskiem X11.
+
+%package jre-X11
+Summary:	Sun JRE (Java Runtime Environment) for Linux, X11 related parts
+Summary(pl):	Sun JRE - ¶rodowisko uruchomieniowe Javy dla Linuksa, czê¶ci korzystaj±ce z X11
+Group:		Development/Languages/Java
+Requires:	XFree86-libs
+Requires:	%{name}-jre = %{epoch}:%{version}-%{release}
+Provides:	jre-X11 = %{version}
+%ifarch %{ix86}
+Provides:	javaws = %{version}
+%endif
+
+%description jre-X11
+X11-related part of Java Runtime Environment for Linux.
+
+%description jre-X11 -l pl
+¦rodowisko uruchomieniowe Javy dla Linuksa, czê¶æ zwi±zana ze ¶rodowiskiem
+graficznym X11.
 
 %package jre-alsa
 Summary:	JRE module for ALSA sound support
@@ -165,7 +193,7 @@ Programy demonstracyjne do JDK.
 Summary:	Netscape 4.x Java plugin
 Summary(pl):	Wtyczka Javy do Netscape 4.x
 Group:		Development/Languages/Java
-Requires:	%{name}-jre = %{version}-%{release}
+Requires:	%{name}-jre-X11 = %{version}-%{release}
 Requires:	netscape-common >= 4.0
 Obsoletes:	blackdown-java-sdk-netscape4-plugin
 Obsoletes:	java-sun-nn4-plugin
@@ -182,7 +210,7 @@ Wtyczka z obs³ug± Javy dla Netscape 4.x.
 Summary:	Mozilla Java plugin file
 Summary(pl):	Plik wtyczki Javy do Mozilli
 Group:		Development/Languages/Java
-Requires:	%{name}-jre = %{version}-%{release}
+Requires:	%{name}-jre-X11 = %{version}-%{release}
 Obsoletes:	java-blackdown-mozilla-plugin
 
 %description mozilla-plugin
@@ -287,13 +315,14 @@ for i in ControlPanel java java_vm keytool ktab orbd policytool \
 done
 
 for i in HtmlConverter appletviewer extcheck idlj jar jarsigner java-rmi.cgi \
-         javac javadoc javah javap javaws jconsole jdb jinfo jmap jps \
+         javac javadoc javah javap jconsole jdb jinfo jmap jps \
 	 jsadebugd jstack jstat jstatd native2ascii rmic serialver ; do
 	ln -sf %{javadir}/bin/$i $RPM_BUILD_ROOT%{_bindir}/$i
 done
 
-rm -f $RPM_BUILD_ROOT%{javadir}/bin/java
+rm -f $RPM_BUILD_ROOT%{javadir}/bin/{java,javaws}
 ln -sf %{jredir}/bin/java $RPM_BUILD_ROOT%{javadir}/bin/java
+ln -sf %{jredir}/bin/javaws $RPM_BUILD_ROOT%{javadir}/bin/javaws
 
 #for i in javaplugin rt sunrsasign ; do
 #	ln -sf %{jredir}/lib/$i.jar $RPM_BUILD_ROOT%{netscape4dir}/java/classes
@@ -363,7 +392,6 @@ fi
 %attr(755,root,root) %{_bindir}/HtmlConverter
 %attr(755,root,root) %{_bindir}/java-rmi.cgi
 %endif
-%attr(755,root,root) %{_bindir}/appletviewer
 %attr(755,root,root) %{_bindir}/extcheck
 %attr(755,root,root) %{_bindir}/idlj
 %attr(755,root,root) %{_bindir}/jarsigner
@@ -386,7 +414,6 @@ fi
 %attr(755,root,root) %{javadir}/bin/java-rmi.cgi
 %attr(755,root,root) %{javadir}/bin/javaws
 %endif
-%attr(755,root,root) %{javadir}/bin/appletviewer
 %attr(755,root,root) %{javadir}/bin/apt
 %attr(755,root,root) %{javadir}/bin/extcheck
 %attr(755,root,root) %{javadir}/bin/idlj
@@ -410,7 +437,6 @@ fi
 %dir %{javadir}/lib
 %{javadir}/lib/*.jar
 %{javadir}/lib/*.idl
-%{_mandir}/man1/appletviewer.1*
 %{_mandir}/man1/apt.1*
 %{_mandir}/man1/extcheck.1*
 %{_mandir}/man1/idlj.1*
@@ -430,7 +456,6 @@ fi
 %{_mandir}/man1/native2ascii.1*
 %{_mandir}/man1/serialver.1*
 %{_mandir}/man1/jconsole.1*
-%lang(ja) %{_mandir}/ja/man1/appletviewer.1*
 %lang(ja) %{_mandir}/ja/man1/apt.1*
 %lang(ja) %{_mandir}/ja/man1/extcheck.1*
 %lang(ja) %{_mandir}/ja/man1/idlj.1*
@@ -451,6 +476,13 @@ fi
 %lang(ja) %{_mandir}/ja/man1/serialver.1*
 %lang(ja) %{_mandir}/ja/man1/jconsole.1*
 
+%files appletviewer
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/appletviewer
+%attr(755,root,root) %{javadir}/bin/appletviewer
+%{_mandir}/man1/appletviewer.1*
+%lang(ja) %{_mandir}/ja/man1/appletviewer.1*
+
 %files jre-jdbc
 %defattr(644,root,root,755)
 %ifarch %{ix86}
@@ -464,10 +496,6 @@ fi
 %defattr(644,root,root,755)
 %doc jre/{CHANGES,COPYRIGHT,LICENSE,README,*.txt}
 %doc jre/Welcome.html
-%ifarch %{ix86}
-%doc jre/Xusage*
-%attr(755,root,root) %{_bindir}/ControlPanel
-%endif
 %attr(644,root,root) %config(noreplace,missingok) %verify(not md5 size mtime) /etc/env.d/*
 %attr(755,root,root) %{_bindir}/java
 %attr(755,root,root) %{_bindir}/java_vm
@@ -476,13 +504,9 @@ fi
 %attr(755,root,root) %{_bindir}/jklist
 %attr(755,root,root) %{_bindir}/ktab
 %attr(755,root,root) %{_bindir}/orbd
-%attr(755,root,root) %{_bindir}/policytool
 %attr(755,root,root) %{_bindir}/rmid
 %attr(755,root,root) %{_bindir}/servertool
 %attr(755,root,root) %{_bindir}/tnameserv
-%ifarch %{ix86}
-%attr(755,root,root) %{jredir}/bin/javaws
-%endif
 %attr(755,root,root) %{jredir}/bin/pack200
 %attr(755,root,root) %{jredir}/bin/unpack200
 %attr(755,root,root) %{javadir}/bin/pack200
@@ -493,7 +517,6 @@ fi
 %dir %{jredir}
 %dir %{jredir}/bin
 %ifarch %{ix86}
-%attr(755,root,root) %{jredir}/bin/ControlPanel
 %attr(755,root,root) %{jredir}/bin/java_vm
 %endif
 %attr(755,root,root) %{jredir}/bin/java
@@ -502,7 +525,6 @@ fi
 %attr(755,root,root) %{jredir}/bin/klist
 %attr(755,root,root) %{jredir}/bin/ktab
 %attr(755,root,root) %{jredir}/bin/orbd
-%attr(755,root,root) %{jredir}/bin/policytool
 %attr(755,root,root) %{jredir}/bin/rmid
 %attr(755,root,root) %{jredir}/bin/servertool
 %attr(755,root,root) %{jredir}/bin/tnameserv
@@ -511,33 +533,29 @@ fi
 %{jredir}/lib/audio
 %{jredir}/lib/cmm
 %{jredir}/lib/ext
-%{jredir}/lib/fonts
-%{jredir}/lib/oblique-fonts
 %ifarch %{ix86}
 %dir %{jredir}/lib/i386
-%dir %{jredir}/lib/i386/xawt
-%dir %{jredir}/lib/i386/motif21
 %dir %{jredir}/lib/i386/headless
 %attr(755,root,root) %{jredir}/lib/i386/client
 %attr(755,root,root) %{jredir}/lib/i386/native_threads
 %attr(755,root,root) %{jredir}/lib/i386/server
 %{jredir}/lib/i386/jvm.cfg
-%attr(755,root,root) %{jredir}/lib/i386/awt_robot
 %attr(755,root,root) %{jredir}/lib/i386/lib[acdfhijmnrvz]*.so
 %exclude %{jredir}/lib/i386/libjsoundalsa.so
+%exclude %{jredir}/lib/i386/libawt.so
+%exclude %{jredir}/lib/i386/libjavaplugin*.so
 %endif
 %ifarch %{x8664}
 %dir %{jredir}/lib/amd64
-%attr(755,root,root) %dir %{jredir}/lib/amd64/xawt
-%attr(755,root,root) %dir %{jredir}/lib/amd64/motif21
 %attr(755,root,root) %dir %{jredir}/lib/amd64/headless
 #%attr(755,root,root) %{jredir}/lib/i386/client
 %attr(755,root,root) %{jredir}/lib/amd64/native_threads
 %attr(755,root,root) %{jredir}/lib/amd64/server
 %{jredir}/lib/amd64/jvm.cfg
-%attr(755,root,root) %{jredir}/lib/amd64/awt_robot
 %attr(755,root,root) %{jredir}/lib/amd64/lib[acdfhijmnrvz]*.so
 %exclude %{jredir}/lib/amd64/libjsoundalsa.so
+%exclude %{jredir}/lib/amd64/libawt.so
+%exclude %{jredir}/lib/amd64/libjavaplugin*.so
 %endif
 %{jredir}/lib/im
 %{jredir}/lib/images
@@ -552,9 +570,6 @@ fi
 %dir %{jredir}/plugin/i386
 %dir %{_javadir}
 %{_javadir}/jaas.jar
-%ifarch %{ix86}
-%{_javadir}/javaws.jar
-%endif
 %{_javadir}/jce.jar
 %{_javadir}/jcert.jar
 %{_javadir}/jdbc-stdext*.jar
@@ -587,6 +602,80 @@ fi
 %attr(755,root,root) %{jredir}/lib/i386/headless/libmawt.so
 %attr(755,root,root) %{jredir}/lib/i386/libsaproc.so
 %attr(755,root,root) %{jredir}/lib/i386/libunpack.so
+%endif
+%ifarch %{x8664}
+%attr(755,root,root) %{jredir}/lib/amd64/gtkhelper
+%attr(755,root,root) %{jredir}/lib/amd64/headless/libmawt.so
+%attr(755,root,root) %{jredir}/lib/amd64/libsaproc.so
+%attr(755,root,root) %{jredir}/lib/amd64/libunpack.so
+%endif
+%dir %{jredir}/lib/management
+%{jredir}/lib/management/jmxremote.access
+%{jredir}/lib/management/jmxremote.password.template
+%{jredir}/lib/management/management.properties
+%{jredir}/lib/management/snmp.acl.template
+%{_mandir}/man1/java.1*
+%ifarch %{ix86}
+%{_desktopdir}/sun_java.desktop
+%{_pixmapsdir}/sun_java.png
+%{_mandir}/man1/javaws.1*
+%endif
+%{_mandir}/man1/jkinit.1*
+%{_mandir}/man1/jklist.1*
+%{_mandir}/man1/keytool.1*
+%{_mandir}/man1/ktab.1*
+%{_mandir}/man1/orbd.1*
+%{_mandir}/man1/rmid.1*
+%{_mandir}/man1/servertool.1*
+%{_mandir}/man1/tnameserv.1*
+%{_mandir}/man1/*pack200.1*
+%lang(ja) %{_mandir}/ja/man1/*pack200.1*
+%lang(ja) %{_mandir}/ja/man1/java.1*
+%lang(ja) %{_mandir}/ja/man1/jkinit.1*
+%lang(ja) %{_mandir}/ja/man1/jklist.1*
+%lang(ja) %{_mandir}/ja/man1/keytool.1*
+%lang(ja) %{_mandir}/ja/man1/ktab.1*
+%lang(ja) %{_mandir}/ja/man1/orbd.1*
+%lang(ja) %{_mandir}/ja/man1/rmid.1*
+%lang(ja) %{_mandir}/ja/man1/servertool.1*
+%lang(ja) %{_mandir}/ja/man1/tnameserv.1*
+
+%files jre-X11
+%defattr(644,root,root,755)
+%ifarch %{ix86}
+%doc jre/Xusage*
+%attr(755,root,root) %{_bindir}/ControlPanel
+%endif
+%attr(755,root,root) %{_bindir}/policytool
+%ifarch %{ix86}
+%attr(755,root,root) %{jredir}/bin/javaws
+%attr(755,root,root) %{jredir}/bin/ControlPanel
+%endif
+%ifarch %{ix86}
+%attr(755,root,root) %{jredir}/bin/java_vm
+%endif
+%attr(755,root,root) %{jredir}/bin/policytool
+%{jredir}/lib/fonts
+%{jredir}/lib/oblique-fonts
+%ifarch %{ix86}
+%dir %{jredir}/lib/i386/xawt
+%dir %{jredir}/lib/i386/motif21
+%attr(755,root,root) %{jredir}/lib/i386/awt_robot
+%attr(755,root,root) %{jredir}/lib/i386/libawt.so
+%attr(755,root,root) %{jredir}/lib/i386/libjavaplugin*.so
+%endif
+%ifarch %{x8664}
+%dir %{jredir}/lib/amd64
+%attr(755,root,root) %dir %{jredir}/lib/amd64/xawt
+%attr(755,root,root) %dir %{jredir}/lib/amd64/motif21
+%attr(755,root,root) %{jredir}/lib/amd64/awt_robot
+%attr(755,root,root) %{jredir}/lib/amd64/libawt.so
+%attr(755,root,root) %{jredir}/lib/amd64/libjavaplugin*.so
+%endif
+%ifarch %{ix86}
+%{_javadir}/javaws.jar
+%endif
+%ifarch %{ix86}
 %attr(755,root,root) %{jredir}/lib/i386/motif21/libmawt.so
 %attr(755,root,root) %{jredir}/lib/i386/xawt/libmawt.so
 %dir %{jredir}/lib/javaws
@@ -615,48 +704,14 @@ fi
 %lang(zh_TW) %{_datadir}/locale/zh_TW/LC_MESSAGES/sunw_java_plugin.mo
 %endif
 %ifarch %{x8664}
-%attr(755,root,root) %{jredir}/lib/amd64/gtkhelper
-%attr(755,root,root) %{jredir}/lib/amd64/headless/libmawt.so
-%attr(755,root,root) %{jredir}/lib/amd64/libsaproc.so
-%attr(755,root,root) %{jredir}/lib/amd64/libunpack.so
 %attr(755,root,root) %{jredir}/lib/amd64/motif21/libmawt.so
 %attr(755,root,root) %{jredir}/lib/amd64/xawt/libmawt.so
 %endif
-%dir %{jredir}/lib/management
-%{jredir}/lib/management/jmxremote.access
-%{jredir}/lib/management/jmxremote.password.template
-%{jredir}/lib/management/management.properties
-%{jredir}/lib/management/snmp.acl.template
-%{_mandir}/man1/java.1*
-%ifarch %{ix86}
-%{_desktopdir}/sun_java.desktop
-%{_pixmapsdir}/sun_java.png
-%{_mandir}/man1/javaws.1*
-%endif
-%{_mandir}/man1/jkinit.1*
-%{_mandir}/man1/jklist.1*
-%{_mandir}/man1/keytool.1*
-%{_mandir}/man1/ktab.1*
-%{_mandir}/man1/orbd.1*
 %{_mandir}/man1/policytool.1*
-%{_mandir}/man1/rmid.1*
-%{_mandir}/man1/servertool.1*
-%{_mandir}/man1/tnameserv.1*
-%{_mandir}/man1/*pack200.1*
-%lang(ja) %{_mandir}/ja/man1/*pack200.1*
-%lang(ja) %{_mandir}/ja/man1/java.1*
 %ifarch %{ix86}
 %lang(ja) %{_mandir}/ja/man1/javaws.1*
 %endif
-%lang(ja) %{_mandir}/ja/man1/jkinit.1*
-%lang(ja) %{_mandir}/ja/man1/jklist.1*
-%lang(ja) %{_mandir}/ja/man1/keytool.1*
-%lang(ja) %{_mandir}/ja/man1/ktab.1*
-%lang(ja) %{_mandir}/ja/man1/orbd.1*
 %lang(ja) %{_mandir}/ja/man1/policytool.1*
-%lang(ja) %{_mandir}/ja/man1/rmid.1*
-%lang(ja) %{_mandir}/ja/man1/servertool.1*
-%lang(ja) %{_mandir}/ja/man1/tnameserv.1*
 %ifarch %{ix86}
 %dir %{jredir}/javaws
 %attr(755,root,root) %{jredir}/javaws/javaws
