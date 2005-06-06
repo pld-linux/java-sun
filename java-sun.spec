@@ -542,7 +542,6 @@ fi
 %{jredir}/lib/i386/jvm.cfg
 %attr(755,root,root) %{jredir}/lib/i386/lib[acdfhijmnrvz]*.so
 %exclude %{jredir}/lib/i386/libjsoundalsa.so
-%exclude %{jredir}/lib/i386/libawt.so
 %exclude %{jredir}/lib/i386/libjavaplugin*.so
 %endif
 %ifarch %{x8664}
@@ -554,7 +553,6 @@ fi
 %{jredir}/lib/amd64/jvm.cfg
 %attr(755,root,root) %{jredir}/lib/amd64/lib[acdfhijmnrvz]*.so
 %exclude %{jredir}/lib/amd64/libjsoundalsa.so
-%exclude %{jredir}/lib/amd64/libawt.so
 %exclude %{jredir}/lib/amd64/libjavaplugin*.so
 %endif
 %{jredir}/lib/im
@@ -661,7 +659,6 @@ fi
 %dir %{jredir}/lib/i386/xawt
 %dir %{jredir}/lib/i386/motif21
 %attr(755,root,root) %{jredir}/lib/i386/awt_robot
-%attr(755,root,root) %{jredir}/lib/i386/libawt.so
 %attr(755,root,root) %{jredir}/lib/i386/libjavaplugin*.so
 %endif
 %ifarch %{x8664}
@@ -669,7 +666,6 @@ fi
 %attr(755,root,root) %dir %{jredir}/lib/amd64/xawt
 %attr(755,root,root) %dir %{jredir}/lib/amd64/motif21
 %attr(755,root,root) %{jredir}/lib/amd64/awt_robot
-%attr(755,root,root) %{jredir}/lib/amd64/libawt.so
 %attr(755,root,root) %{jredir}/lib/amd64/libjavaplugin*.so
 %endif
 %ifarch %{ix86}
