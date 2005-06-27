@@ -1,4 +1,4 @@
-%define		_ver	1.5.0.02
+%define		_ver	1.5.0.04
 %define		_src_ver	%(echo %{_ver}|tr . _)
 %define		_dir_ver	%(echo %{_ver}|sed 's/\\.\\(..\\)$/_\\1/')
 Summary:	Sun JDK (Java Development Kit) for Linux
@@ -9,10 +9,10 @@ Release:	1.1
 License:	restricted, non-distributable
 Group:		Development/Languages/Java
 # download through forms from http://java.sun.com/j2se/1.5.0/download.jsp
-Source0:	http://public.planetmirror.com/pub/java-sun/J2SE/5.0_02/linux/jdk-%{_src_ver}-linux-i586.bin
-# NoSource0-md5:	562d9797af801bfbe2b5e44417d8ccc4
-#Source1:	http://public.planetmirror.com/pub/java-sun/J2SE/5.0_02/amd64/jdk-%{_src_ver}-linux-amd64.bin
-# NoSource1-md5:	14b7a92077d51bbd6f39b3434a0765f8
+Source0:	http://public.planetmirror.com/pub/java-sun/J2SE/5.0_04/linux/jdk-%{_src_ver}-linux-i586.bin
+# NoSource0-md5:	42a98986e971c86192cc0075bb10afff
+#Source1:	http://public.planetmirror.com/pub/java-sun/J2SE/5.0_04/amd64/jdk-%{_src_ver}-linux-amd64.bin
+# NoSource1-md5:	1e9720e314aae1691c751d1db3b436c5
 NoSource:	0
 #NoSource:	1
 Patch0:		%{name}-ControlPanel-fix.patch
