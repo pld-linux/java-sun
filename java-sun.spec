@@ -5,16 +5,16 @@ Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	%{_ver}
-Release:	1.1
+Release:	2
 License:	restricted, non-distributable
 Group:		Development/Languages/Java
 # download through forms from http://java.sun.com/j2se/1.5.0/download.jsp
 Source0:	http://public.planetmirror.com/pub/java-sun/J2SE/5.0_04/linux/jdk-%{_src_ver}-linux-i586.bin
 # NoSource0-md5:	42a98986e971c86192cc0075bb10afff
-#Source1:	http://public.planetmirror.com/pub/java-sun/J2SE/5.0_04/amd64/jdk-%{_src_ver}-linux-amd64.bin
+Source1:	http://public.planetmirror.com/pub/java-sun/J2SE/5.0_04/amd64/jdk-%{_src_ver}-linux-amd64.bin
 # NoSource1-md5:	1e9720e314aae1691c751d1db3b436c5
 NoSource:	0
-#NoSource:	1
+NoSource:	1
 Patch0:		%{name}-ControlPanel-fix.patch
 Patch1:		%{name}-desktop.patch
 URL:		http://java.sun.com/linux/
@@ -553,7 +553,6 @@ fi
 %{jredir}/lib/amd64/jvm.cfg
 %attr(755,root,root) %{jredir}/lib/amd64/lib[acdfhijmnrvz]*.so
 %exclude %{jredir}/lib/amd64/libjsoundalsa.so
-%exclude %{jredir}/lib/amd64/libjavaplugin*.so
 %endif
 %{jredir}/lib/im
 %{jredir}/lib/images
@@ -616,8 +615,8 @@ fi
 %ifarch %{ix86}
 %{_desktopdir}/sun_java.desktop
 %{_pixmapsdir}/sun_java.png
-%{_mandir}/man1/javaws.1*
 %endif
+%{_mandir}/man1/javaws.1*
 %{_mandir}/man1/jkinit.1*
 %{_mandir}/man1/jklist.1*
 %{_mandir}/man1/keytool.1*
@@ -666,7 +665,6 @@ fi
 %attr(755,root,root) %dir %{jredir}/lib/amd64/xawt
 %attr(755,root,root) %dir %{jredir}/lib/amd64/motif21
 %attr(755,root,root) %{jredir}/lib/amd64/awt_robot
-%attr(755,root,root) %{jredir}/lib/amd64/libjavaplugin*.so
 %endif
 %ifarch %{ix86}
 %{_javadir}/javaws.jar
