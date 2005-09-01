@@ -257,6 +257,15 @@ Java plugin for Mozilla Firefox compiled using gcc 3.
 %description -n mozilla-firefox-plugin-%{name} -l pl
 Wtyczka z obs³ug± Javy dla Mozilli Firefox skompilowana przy u¿yciu gcc 3.
 
+%package sources
+Summary:	JDK sources
+Summary(pl):	¬ród³a JDK
+Group:		Development/Languages/Java
+Requires:	%{name}-jre = %{version}-%{release}
+
+%description sources
+Sources for package JDK
+
 %prep
 %setup -q -T -c -n jdk%{_dir_ver}
 cd ..
@@ -282,7 +291,7 @@ rm -f demo/jvmti/mtrace/lib/libmtrace_g.so
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{jredir},%{_javadir},%{_bindir},%{_includedir}} \
-	$RPM_BUILD_ROOT{%{_mandir}/{,ja/}man1,/etc/env.d}
+	$RPM_BUILD_ROOT{%{_mandir}/{,ja/}man1,/etc/env.d,%{_prefix}/src/%{name}-sources}
 
 cp -rf bin demo include lib $RPM_BUILD_ROOT%{javadir}
 install man/man1/* $RPM_BUILD_ROOT%{_mandir}/man1
@@ -369,6 +378,9 @@ mv -f $RPM_BUILD_ROOT%{_datadir}/locale/{zh,zh_CN}
 mv -f $RPM_BUILD_ROOT%{_datadir}/locale/{zh_HK.BIG5HK,zh_HK}
 rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/{ko.UTF-8,zh.GBK,zh_TW.BIG5}
 %endif
+
+
+cp -a src.zip $RPM_BUILD_ROOT%{_prefix}/src/%{name}-sources
 
 cat << EOF >$RPM_BUILD_ROOT/etc/env.d/JAVA_HOME
 JAVA_HOME="%{javadir}"
@@ -769,3 +781,8 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{firefoxdir}/plugins/libjavaplugin_oji.so
 %endif
+
+%files sources
+%defattr(644,root,root,755)
+%dir %{_prefix}/src/%{name}-sources
+%{_prefix}/src/%{name}-sources/src.zip
