@@ -264,7 +264,10 @@ Group:		Development/Languages/Java
 Requires:	%{name}-jre = %{version}-%{release}
 
 %description sources
-Sources for package JDK
+Sources for package JDK.
+
+%description sources -l pl
+¬ród³a dla pakietu JDK.
 
 %prep
 %setup -q -T -c -n jdk%{_dir_ver}
@@ -378,7 +381,6 @@ mv -f $RPM_BUILD_ROOT%{_datadir}/locale/{zh,zh_CN}
 mv -f $RPM_BUILD_ROOT%{_datadir}/locale/{zh_HK.BIG5HK,zh_HK}
 rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/{ko.UTF-8,zh.GBK,zh_TW.BIG5}
 %endif
-
 
 cp -a src.zip $RPM_BUILD_ROOT%{_prefix}/src/%{name}-sources
 
