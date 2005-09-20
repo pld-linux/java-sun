@@ -9,9 +9,9 @@ Release:	2
 License:	restricted, non-distributable
 Group:		Development/Languages/Java
 # download through forms from http://java.sun.com/j2se/1.5.0/download.jsp
-Source0:	http://public.planetmirror.com/pub/java-sun/J2SE/5.0_04/linux/jdk-%{_src_ver}-linux-i586.bin
+Source0:	http://public.planetmirror.com/pub/java-sun/J2SE/5.0_04/linux32/jdk-%{_src_ver}-linux-i586.bin
 # NoSource0-md5:	42a98986e971c86192cc0075bb10afff
-Source1:	http://public.planetmirror.com/pub/java-sun/J2SE/5.0_04/amd64/jdk-%{_src_ver}-linux-amd64.bin
+Source1:	http://public.planetmirror.com/pub/java-sun/J2SE/5.0_04/linux64/jdk-%{_src_ver}-linux-amd64.bin
 # NoSource1-md5:	1e9720e314aae1691c751d1db3b436c5
 NoSource:	0
 NoSource:	1
