@@ -7,7 +7,7 @@ License:	restricted, non-distributable
 Group:		Development/Languages/Java
 # download through forms from http://java.sun.com/j2se/1.4.2/download.html
 Source0:        j2sdk-%(echo %{version} | tr . _)-linux-i586.bin
-# NoSource0-md5:	cc27ac6189062214c072cb5b4ae068fa
+# NoSource0-md5:	e35832af75e963a58119d2344a5a37c0
 # Other Downloads at http://java.sun.com/j2se/1.4.2/download.html
 Source1:	jce_policy-1_4_2.zip
 # NoSource1-md5:	ff961c5f5326191c5ac2e4624d756f7e
