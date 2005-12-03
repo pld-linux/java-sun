@@ -1,4 +1,4 @@
-%define		_ver	1.5.0.05
+%define		_ver	1.5.0.06
 %define		_src_ver	%(echo %{_ver}|tr . _)
 %define		_dir_ver	%(echo %{_ver}|sed 's/\\.\\(..\\)$/_\\1/')
 Summary:	Sun JDK (Java Development Kit) for Linux
@@ -12,10 +12,10 @@ Group:		Development/Languages/Java
 # looks like planetmirror does not have 1_5_0_05
 #Source0:	http://public.planetmirror.com/pub/java-sun/J2SE/5.0_05/linux32/jdk-%{_src_ver}-linux-i586.bin
 Source0:	jdk-%{_src_ver}-linux-i586.bin
-# NoSource0-md5:	2f83bf2a38fff1f8ac51b02ec7391ca3
+# NoSource0-md5:	3cdad4a383b93680f02f6f06198c2227
 #Source1:	http://public.planetmirror.com/pub/java-sun/J2SE/5.0_05/linux64/jdk-%{_src_ver}-linux-amd64.bin
 Source1:	jdk-%{_src_ver}-linux-amd64.bin
-# NoSource1-md5:	96e9743687a173287fc915665b81b939
+# NoSource1-md5:	27adf9c276e1ec824a3946ef9fe022a4
 NoSource:	0
 NoSource:	1
 Patch0:		%{name}-ControlPanel-fix.patch
