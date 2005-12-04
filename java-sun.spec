@@ -122,15 +122,15 @@ Java Runtime Environment for Linux. Does not contain any X11-related
 compontents.
 
 %description jre -l pl
-¦rodowisko uruchomieniowe Javy dla Linuksa. Nie zawiera ¿adnych elementów
-zwi±zanych ze ¶rodowiskiem X11.
+¦rodowisko uruchomieniowe Javy dla Linuksa. Nie zawiera ¿adnych
+elementów zwi±zanych ze ¶rodowiskiem X11.
 
 %package jre-X11
 Summary:	Sun JRE (Java Runtime Environment) for Linux, X11 related parts
 Summary(pl):	Sun JRE - ¶rodowisko uruchomieniowe Javy dla Linuksa, czê¶ci korzystaj±ce z X11
 Group:		Development/Languages/Java
-Requires:	XFree86-libs
 Requires:	%{name}-jre = %{epoch}:%{version}-%{release}
+Requires:	XFree86-libs
 Provides:	jre-X11 = %{version}
 %ifarch %{ix86}
 Provides:	javaws = %{version}
@@ -140,8 +140,8 @@ Provides:	javaws = %{version}
 X11-related part of Java Runtime Environment for Linux.
 
 %description jre-X11 -l pl
-¦rodowisko uruchomieniowe Javy dla Linuksa, czê¶æ zwi±zana ze ¶rodowiskiem
-graficznym X11.
+¦rodowisko uruchomieniowe Javy dla Linuksa, czê¶æ zwi±zana ze
+¶rodowiskiem graficznym X11.
 
 %package jre-alsa
 Summary:	JRE module for ALSA sound support
@@ -226,7 +226,7 @@ Plik wtyczki z obs³ug± Javy dla Mozilli.
 Summary:	Mozilla Java plugin
 Summary(pl):	Wtyczka Javy do Mozilli
 Group:		Development/Languages/Java
-PreReq:		mozilla-embedded
+Requires:	mozilla-embedded
 Requires:	%{name}-mozilla-plugin = %{version}-%{release}
 Obsoletes:	blackdown-java-sdk-mozilla-plugin
 Obsoletes:	java-sun-moz-plugin
@@ -248,7 +248,7 @@ Wtyczka z obs³ug± Javy dla Mozilli skompilowana przy u¿yciu gcc 3.
 Summary:	Mozilla Firefox Java plugin
 Summary(pl):	Wtyczka Javy do Mozilli Firefox
 Group:		Development/Languages/Java
-PreReq:		mozilla-firefox
+Requires:	mozilla-firefox
 Requires:	%{name}-mozilla-plugin = %{version}-%{release}
 Obsoletes:	mozilla-firefox-plugin-gcc2-java-sun
 Obsoletes:	mozilla-firefox-plugin-gcc3-java-sun
@@ -258,7 +258,8 @@ Obsoletes:	mozilla-firefox-plugin-java-blackdown
 Java plugin for Mozilla Firefox compiled using gcc 3.
 
 %description -n mozilla-firefox-plugin-%{name} -l pl
-Wtyczka z obs³ug± Javy dla Mozilli Firefox skompilowana przy u¿yciu gcc 3.
+Wtyczka z obs³ug± Javy dla Mozilli Firefox skompilowana przy u¿yciu
+gcc 3.
 
 %package sources
 Summary:	JDK sources
@@ -374,7 +375,7 @@ ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{_javadir}/jdbc-stdext.jar
 ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{_javadir}/jdbc-stdext-3.0.jar
 
 %ifnarch %{x8664}
-install -d -m 755 $RPM_BUILD_ROOT%{jredir}/javaws
+install -d $RPM_BUILD_ROOT%{jredir}/javaws
 cp -a jre/javaws/* $RPM_BUILD_ROOT%{jredir}/javaws
 ln -sf %{jredir}/lib/javaws.jar $RPM_BUILD_ROOT%{_javadir}/javaws.jar
 mv -f $RPM_BUILD_ROOT{%{jredir}/lib,%{_datadir}}/locale
@@ -513,7 +514,7 @@ fi
 %defattr(644,root,root,755)
 %doc jre/{CHANGES,COPYRIGHT,LICENSE,README,*.txt}
 %doc jre/Welcome.html
-%attr(644,root,root) %config(noreplace,missingok) %verify(not md5 size mtime) /etc/env.d/*
+%attr(644,root,root) %config(noreplace,missingok) %verify(not md5 mtime size) /etc/env.d/*
 %attr(755,root,root) %{_bindir}/java
 %attr(755,root,root) %{_bindir}/java_vm
 %attr(755,root,root) %{_bindir}/keytool
@@ -575,7 +576,7 @@ fi
 %{jredir}/lib/images
 %dir %{jredir}/lib/security
 %{jredir}/lib/security/*.*
-%verify(not md5 size mtime) %config(noreplace) %{jredir}/lib/security/cacerts
+%verify(not md5 mtime size) %config(noreplace) %{jredir}/lib/security/cacerts
 %{jredir}/lib/zi
 %{jredir}/lib/*.jar
 %{jredir}/lib/*.properties
