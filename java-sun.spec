@@ -598,6 +598,8 @@ fi
 %{jredir}/lib/fontconfig.RedHat.3.properties.src
 %{jredir}/lib/fontconfig.RedHat.8.0.bfc
 %{jredir}/lib/fontconfig.RedHat.8.0.properties.src
+%{jredir}/lib/fontconfig.RedHat.9.0.bfc
+%{jredir}/lib/fontconfig.RedHat.9.0.properties.src
 %{jredir}/lib/fontconfig.RedHat.bfc
 %{jredir}/lib/fontconfig.RedHat.properties.src
 %{jredir}/lib/fontconfig.SuSE.bfc
