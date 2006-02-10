@@ -13,19 +13,17 @@ Group:		Development/Languages/Java
 %ifarch	%{ix86}
 #Source0:	http://public.planetmirror.com/pub/java-sun/J2SE/5.0_05/linux32/jdk-%{_src_ver}-linux-i586.bin
 Source0:	http://mirror.dcc.fc.up.pt/Java/jdk-%{_src_ver}-linux-i586.bin
-# Source0-md5:	3cdad4a383b93680f02f6f06198c2227
-#Source0:	jdk-%{_src_ver}-linux-i586.bin
 # NoSource0-md5:	3cdad4a383b93680f02f6f06198c2227
+#Source0:	jdk-%{_src_ver}-linux-i586.bin
+NoSource:	0
 %endif
 %ifarch	%{x8664}
 #Source1:	http://public.planetmirror.com/pub/java-sun/J2SE/5.0_05/linux64/jdk-%{_src_ver}-linux-amd64.bin
 Source1:	http://mirror.dcc.fc.up.pt/Java/jdk-%{_src_ver}-linux-amd64.bin
-# Source1-md5:	27adf9c276e1ec824a3946ef9fe022a4
-#Source1:	jdk-%{_src_ver}-linux-amd64.bin
 # NoSource1-md5:	27adf9c276e1ec824a3946ef9fe022a4
+#Source1:	jdk-%{_src_ver}-linux-amd64.bin
+NoSource:	1
 %endif
-#NoSource:	0
-#NoSource:	1
 Patch0:		%{name}-ControlPanel-fix.patch
 Patch1:		%{name}-desktop.patch
 URL:		http://java.sun.com/linux/
