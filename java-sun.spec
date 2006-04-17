@@ -98,6 +98,7 @@ Group:		Development/Languages/Java
 Requires:	java-jre-tools
 Provides:	java1.4
 Provides:	jre = %{version}
+Provides:	j2re = %{version}
 Provides:	java
 Provides:	jaas = %{version}
 Provides:	jaxp = 1.3
