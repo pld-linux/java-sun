@@ -199,23 +199,6 @@ JDK demonstration programs.
 %description demos -l pl
 Programy demonstracyjne do JDK.
 
-%package -n netscape4-plugin-%{name}
-Summary:	Netscape 4.x Java plugin
-Summary(pl):	Wtyczka Javy do Netscape 4.x
-Group:		Development/Languages/Java
-Requires:	%{name}-jre-X11 = %{version}-%{release}
-Requires:	netscape-common >= 4.0
-Obsoletes:	blackdown-java-sdk-netscape4-plugin
-Obsoletes:	java-sun-nn4-plugin
-Obsoletes:	jre-netscape4-plugin
-Obsoletes:	netscape4-plugin-java-blackdown
-
-%description -n netscape4-plugin-%{name}
-Java plugin for Netscape 4.x.
-
-%description -n netscape4-plugin-%{name} -l pl
-Wtyczka z obs³ug± Javy dla Netscape 4.x.
-
 %package mozilla-plugin
 Summary:	Mozilla Java plugin file
 Summary(pl):	Plik wtyczki Javy do Mozilli
