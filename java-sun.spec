@@ -5,7 +5,7 @@ Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	%{_ver}
-Release:	1
+Release:	2
 License:	restricted, non-distributable
 Group:		Development/Languages/Java
 # download through forms from http://java.sun.com/j2se/1.5.0/download.jsp
@@ -28,7 +28,7 @@ Patch0:		%{name}-ControlPanel-fix.patch
 Patch1:		%{name}-desktop.patch
 URL:		http://java.sun.com/linux/
 BuildRequires:	rpm-build >= 4.3-0.20040107.21
-BuildRequires:	rpmbuild(macros) >= 1.213
+BuildRequires:	rpmbuild(macros) >= 1.236
 BuildRequires:	unzip
 Requires:	%{name}-jre = %{version}-%{release}
 Requires:	java-shared
@@ -45,9 +45,10 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		javadir		%{_libdir}/java
 %define		jredir		%{_libdir}/java/jre
-%define		netscape4dir	/usr/%{_lib}/netscape
-%define		mozilladir	/usr/%{_lib}/mozilla
-%define		firefoxdir	/usr/%{_lib}/mozilla-firefox
+%define		_plugindir	%{_libdir}/browser-plugins
+
+# list of supported browsers, in free form text
+%define		browsers	mozilla, mozilla-firefox, netscape, seamonkey
 
 # rpm doesn't like strange version definitions provided by Sun's libs
 %define		_noautoprov	'\\.\\./.*' '/export/.*'
@@ -199,27 +200,18 @@ JDK demonstration programs.
 %description demos -l pl
 Programy demonstracyjne do JDK.
 
-%package mozilla-plugin
-Summary:	Mozilla Java plugin file
-Summary(pl):	Plik wtyczki Javy do Mozilli
+%package -n browser-plugin-%{name}
+Summary:	Java plugin for WWW browsers
+Summary(pl):	Wtyczki Javy do przegl±darek WWW
 Group:		Development/Languages/Java
 Requires:	%{name}-jre-X11 = %{version}-%{release}
+Provides:	java-sun-mozilla-plugin
+Provides:	mozilla-plugin-java-sun
+Provides:	mozilla-firefox-plugin-java-sun
 Obsoletes:	java-blackdown-mozilla-plugin
-
-%description mozilla-plugin
-Java plugin file for Mozilla.
-
-%description mozilla-plugin -l pl
-Plik wtyczki z obs³ug± Javy dla Mozilli.
-
-%package -n mozilla-plugin-%{name}
-Summary:	Mozilla Java plugin
-Summary(pl):	Wtyczka Javy do Mozilli
-Group:		Development/Languages/Java
-Requires:	mozilla-embedded
-Requires:	%{name}-mozilla-plugin = %{version}-%{release}
 Obsoletes:	blackdown-java-sdk-mozilla-plugin
 Obsoletes:	java-sun-moz-plugin
+Obsoletes:	java-sun-mozilla-plugin
 Obsoletes:	jre-mozilla-plugin
 Obsoletes:	mozilla-plugin-blackdown-java-sdk
 Obsoletes:	mozilla-plugin-gcc2-java-sun
@@ -227,29 +219,20 @@ Obsoletes:	mozilla-plugin-gcc3-java-sun
 Obsoletes:	mozilla-plugin-gcc32-java-sun
 Obsoletes:	mozilla-plugin-java-blackdown
 Obsoletes:	mozilla-plugin-java-sun
-
-%description -n mozilla-plugin-%{name}
-Java plugin for Mozilla compiled using gcc 3.
-
-%description -n mozilla-plugin-%{name} -l pl
-Wtyczka z obs³ug± Javy dla Mozilli skompilowana przy u¿yciu gcc 3.
-
-%package -n mozilla-firefox-plugin-%{name}
-Summary:	Mozilla Firefox Java plugin
-Summary(pl):	Wtyczka Javy do Mozilli Firefox
-Group:		Development/Languages/Java
-Requires:	mozilla-firefox
-Requires:	%{name}-mozilla-plugin = %{version}-%{release}
 Obsoletes:	mozilla-firefox-plugin-gcc2-java-sun
 Obsoletes:	mozilla-firefox-plugin-gcc3-java-sun
 Obsoletes:	mozilla-firefox-plugin-java-blackdown
+Obsoletes:	mozilla-firefox-plugin-java-sun
 
-%description -n mozilla-firefox-plugin-%{name}
-Java plugin for Mozilla Firefox compiled using gcc 3.
+%description -n browser-plugin-%{name}
+Java plugin for WWW browsers.
 
-%description -n mozilla-firefox-plugin-%{name} -l pl
-Wtyczka z obs³ug± Javy dla Mozilli Firefox skompilowana przy u¿yciu
-gcc 3.
+Supported browsers: %{browsers}.
+
+%description -n browser-plugin-%{name} -l pl
+Wtyczki z obs³ug± Javy dla przegl±darek WWW.
+
+Obs³ugiwane przegl±darki: %{browsers}.
 
 %package sources
 Summary:	JDK sources
@@ -288,7 +271,8 @@ rm -f demo/jvmti/mtrace/lib/libmtrace_g.so
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{jredir},%{_javadir},%{_bindir},%{_includedir}} \
-	$RPM_BUILD_ROOT{%{_mandir}/{,ja/}man1,/etc/env.d,%{_prefix}/src/%{name}-sources}
+	$RPM_BUILD_ROOT{%{_mandir}/{,ja/}man1,/etc/env.d,%{_prefix}/src/%{name}-sources} \
+	$RPM_BUILD_ROOT{%{_desktopdir},%{_pixmapsdir},%{_plugindir}}
 
 cp -rf bin demo include lib $RPM_BUILD_ROOT%{javadir}
 install man/man1/* $RPM_BUILD_ROOT%{_mandir}/man1
@@ -334,17 +318,10 @@ ln -sf %{jredir}/bin/javaws $RPM_BUILD_ROOT%{javadir}/bin/javaws
 #	ln -sf %{jredir}/lib/$i.jar $RPM_BUILD_ROOT%{netscape4dir}/java/classes
 #done
 
-install -d $RPM_BUILD_ROOT{%{mozilladir}/plugins,%{firefoxdir}/plugins,%{jredir}/plugin/i386/ns7{,-gcc29}}
-
 %ifarch %{ix86}
-install jre/plugin/i386/ns7/libjavaplugin_oji.so \
-	$RPM_BUILD_ROOT%{jredir}/plugin/i386/ns7
-ln -sf %{jredir}/plugin/i386/ns7/libjavaplugin_oji.so \
-	$RPM_BUILD_ROOT%{mozilladir}/plugins
-ln -sf %{jredir}/plugin/i386/ns7/libjavaplugin_oji.so \
-	$RPM_BUILD_ROOT%{firefoxdir}/plugins
+# Install plugin for browsers:
+install jre/plugin/i386/ns7/libjavaplugin_oji.so $RPM_BUILD_ROOT%{_plugindir}
 
-install  -d $RPM_BUILD_ROOT{%{_desktopdir},%{_pixmapsdir}}
 install jre/plugin/desktop/*.desktop $RPM_BUILD_ROOT%{_desktopdir}
 install jre/plugin/desktop/*.png $RPM_BUILD_ROOT%{_pixmapsdir}
 %endif
@@ -392,6 +369,38 @@ fi
 if [ -L %{javadir} ]; then
 	rm -f %{javadir}
 fi
+
+%triggerin -n browser-plugin-%{name} -- mozilla
+%nsplugin_install -d %{_libdir}/mozilla/plugins libjavaplugin_oji.so
+
+%triggerun -n browser-plugin-%{name} -- mozilla
+%nsplugin_uninstall -d %{_libdir}/mozilla/plugins libjavaplugin_oji.so
+
+%triggerin -n browser-plugin-%{name} -- mozilla-firefox
+%nsplugin_install -d %{_libdir}/mozilla-firefox/plugins libjavaplugin_oji.so
+
+%triggerun -n browser-plugin-%{name} -- mozilla-forefox
+%nsplugin_uninstall -d %{_libdir}/mozilla-firefox/plugins libjavaplugin_oji.so
+
+%triggerin -n browser-plugin-%{name} -- netscape-common
+%nsplugin_install -d %{_libdir}/netscape/plugins libjavaplugin_oji.so
+
+%triggerun -n browser-plugin-%{name} -- netscape-common
+%nsplugin_uninstall -d %{_libdir}/netscape/plugins libjavaplugin_oji.so
+
+%triggerin -n browser-plugin-%{name} -- seamonkey
+%nsplugin_install -d %{_libdir}/seamonkey/plugins libjavaplugin_oji.so
+
+%triggerun -n browser-plugin-%{name} -- seamonkey
+%nsplugin_uninstall -d %{_libdir}/seamonkey/plugins libjavaplugin_oji.so
+
+# as rpm removes the old obsoleted package files after the triggers
+# are ran, add another trigger to make the links there.
+%triggerpostun -n browser-plugin-%{name} -- mozilla-plugin-java-sun
+%nsplugin_install -f -d %{_libdir}/mozilla/plugins libjavaplugin_oji.so
+
+%triggerpostun -n browser-plugin-%{name} -- mozilla-firefox-plugin-java-sun
+%nsplugin_install -f -d %{_libdir}/mozilla-firefox/plugins libjavaplugin_oji.so
 
 %files
 %defattr(644,root,root,755)
@@ -571,8 +580,6 @@ fi
 %{jredir}/lib/*.jar
 %{jredir}/lib/*.properties
 %lang(ja) %{jredir}/lib/*.properties.ja
-%dir %{jredir}/plugin
-%dir %{jredir}/plugin/i386
 %dir %{_javadir}
 %{_javadir}/jaas.jar
 %{_javadir}/jce.jar
@@ -766,18 +773,9 @@ fi
 %lang(ja) %{_mandir}/ja/man1/rmiregistry.1*
 
 %ifarch %{ix86}
-%files mozilla-plugin
+%files -n browser-plugin-%{name}
 %defattr(644,root,root,755)
-%dir %{jredir}/plugin/i386/ns7
-%attr(755,root,root) %{jredir}/plugin/i386/ns7/libjavaplugin_oji.so
-
-%files -n mozilla-plugin-%{name}
-%defattr(644,root,root,755)
-%attr(755,root,root) %{mozilladir}/plugins/libjavaplugin_oji.so
-
-%files -n mozilla-firefox-plugin-%{name}
-%defattr(644,root,root,755)
-%attr(755,root,root) %{firefoxdir}/plugins/libjavaplugin_oji.so
+%attr(755,root,root) %{_plugindir}/*.so
 %endif
 
 %files sources
