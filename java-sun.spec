@@ -320,7 +320,9 @@ ln -sf %{jredir}/bin/javaws $RPM_BUILD_ROOT%{javadir}/bin/javaws
 
 %ifarch %{ix86}
 # Install plugin for browsers:
-install jre/plugin/i386/ns7/libjavaplugin_oji.so $RPM_BUILD_ROOT%{_plugindir}
+install -d $RPM_BUILD_ROOT%{jredir}/plugin/i386/ns7
+install jre/plugin/i386/ns7/libjavaplugin_oji.so $RPM_BUILD_ROOT%{jredir}/plugin/i386/ns7
+ln -sf %{jredir}/plugin/i386/ns7/libjavaplugin_oji.so $RPM_BUILD_ROOT%{_plugindir}
 
 install jre/plugin/desktop/*.desktop $RPM_BUILD_ROOT%{_desktopdir}
 install jre/plugin/desktop/*.png $RPM_BUILD_ROOT%{_pixmapsdir}
@@ -775,6 +777,8 @@ fi
 %ifarch %{ix86}
 %files -n browser-plugin-%{name}
 %defattr(644,root,root,755)
+%dir %{jredir}/plugin/i386/ns7
+%attr(755,root,root) %{jredir}/plugin/i386/ns7/libjavaplugin_oji.so
 %attr(755,root,root) %{_plugindir}/*.so
 %endif
 
