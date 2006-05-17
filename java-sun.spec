@@ -9,7 +9,9 @@ Release:	3
 License:	restricted, distributable
 Group:		Development/Languages/Java
 Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-distro-linux-i586.bin
+# Source0-md5:	a721a3767694dc33c801ee453cda50c5
 Source1:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-distro-linux-amd64.bin
+# Source1-md5:	b272ca1e22893702286e9bb7d9778b16
 Patch0:		%{name}-ControlPanel-fix.patch
 Patch1:		%{name}-desktop.patch
 URL:		http://java.sun.com/linux/
