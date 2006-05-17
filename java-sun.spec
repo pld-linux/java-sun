@@ -5,7 +5,7 @@ Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	%{_ver}
-Release:	2
+Release:	3
 License:	restricted, non-distributable
 Group:		Development/Languages/Java
 # download through forms from http://java.sun.com/j2se/1.5.0/download.jsp
@@ -270,7 +270,7 @@ rm -f demo/jvmti/mtrace/lib/libmtrace_g.so
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{jredir},%{_javadir},%{_bindir},%{_includedir}} \
+install -d $RPM_BUILD_ROOT{%{jredir}/plugin/i386/ns7,%{_javadir},%{_bindir},%{_includedir}} \
 	$RPM_BUILD_ROOT{%{_mandir}/{,ja/}man1,/etc/env.d,%{_prefix}/src/%{name}-sources} \
 	$RPM_BUILD_ROOT{%{_desktopdir},%{_pixmapsdir},%{_plugindir}}
 
@@ -319,8 +319,8 @@ ln -sf %{jredir}/bin/javaws $RPM_BUILD_ROOT%{javadir}/bin/javaws
 #done
 
 %ifarch %{ix86}
-# Install plugin for browsers:
-install -d $RPM_BUILD_ROOT%{jredir}/plugin/i386/ns7
+# Install plugin for browsers
+# Plugin in regular location simply does not work (is seen by browsers):
 install jre/plugin/i386/ns7/libjavaplugin_oji.so $RPM_BUILD_ROOT%{jredir}/plugin/i386/ns7
 ln -sf %{jredir}/plugin/i386/ns7/libjavaplugin_oji.so $RPM_BUILD_ROOT%{_plugindir}
 
