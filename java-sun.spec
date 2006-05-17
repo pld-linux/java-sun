@@ -8,11 +8,8 @@ Version:	%{_ver}
 Release:	3
 License:	restricted, distributable
 Group:		Development/Languages/Java
-# download through forms from http://java.sun.com/j2se/1.5.0/download.jsp
-Source0:	http://mirror.dcc.fc.up.pt/Java/jdk-%{_src_ver}-linux-i586.bin
-# Source0-md5:	3cdad4a383b93680f02f6f06198c2227
-Source1:	http://mirror.dcc.fc.up.pt/Java/jdk-%{_src_ver}-linux-amd64.bin
-# Source1-md5:	27adf9c276e1ec824a3946ef9fe022a4
+Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-distro-linux-i586.bin
+Source1:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-distro-linux-amd64.bin
 Patch0:		%{name}-ControlPanel-fix.patch
 Patch1:		%{name}-desktop.patch
 URL:		http://java.sun.com/linux/
