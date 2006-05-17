@@ -6,7 +6,7 @@ Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	%{_ver}
 Release:	3
-License:	restricted, non-distributable
+License:	restricted, distributable
 Group:		Development/Languages/Java
 # download through forms from http://java.sun.com/j2se/1.5.0/download.jsp
 # looks like planetmirror does not have 1_5_0_05
