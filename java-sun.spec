@@ -1,3 +1,7 @@
+
+# TODO:
+#	- check if all files required by the license are packaged
+
 %define		_ver	1.5.0.06
 %define		_src_ver	%(echo %{_ver}|tr . _)
 %define		_dir_ver	%(echo %{_ver}|sed 's/\\.\\(..\\)$/_\\1/')
@@ -5,7 +9,7 @@ Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	%{_ver}
-Release:	3
+Release:	3.1
 License:	restricted, distributable
 Group:		Development/Languages/Java
 Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-distro-linux-i586.bin
@@ -256,6 +260,11 @@ cd jdk%{_dir_ver}
 rm -f demo/jvmti/heapTracker/lib/libheapTracker_g.so
 rm -f demo/jvmti/mtrace/lib/libmtrace_g.so
 
+# unpack packed jar files -- in %%prep as it is done "in place"
+for pack in `find . -name '*.pack'`; do
+	bin/unpack200 -r $pack `echo $pack|sed -e's/\.pack$/.jar/'`
+done
+
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{jredir}/plugin/i386/ns7,%{_javadir},%{_bindir},%{_includedir}} \
@@ -394,7 +403,7 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc COPYRIGHT LICENSE README.html
+%doc COPYRIGHT LICENSE README.html THIRDPARTYLICENSEREADME.txt
 %ifarch %{ix86}
 %attr(755,root,root) %{_bindir}/HtmlConverter
 %attr(755,root,root) %{_bindir}/java-rmi.cgi
