@@ -737,9 +737,11 @@ fi
 %lang(ko) %{_datadir}/locale/ko/LC_MESSAGES/sunw_java_plugin.mo
 %lang(sv) %{jredir}/lib/locale/sv
 %lang(sv) %{_datadir}/locale/sv/LC_MESSAGES/sunw_java_plugin.mo
-%lang(zh) %{jredir}/lib/locale/zh*
+%lang(zh_CN) %{jredir}/lib/locale/zh
+%lang(zh_CN) %{jredir}/lib/locale/zh.*
+%lang(zh_HK) %{jredir}/lib/locale/zh_HK*
+%lang(zh_TW) %{jredir}/lib/locale/zh_TW*
 %lang(zh_CN) %{_datadir}/locale/zh_CN/LC_MESSAGES/sunw_java_plugin.mo
-%lang(zh_HK) %{_datadir}/locale/zh_HK/LC_MESSAGES/sunw_java_plugin.mo
 %lang(zh_TW) %{_datadir}/locale/zh_TW/LC_MESSAGES/sunw_java_plugin.mo
 %endif
 %ifarch %{x8664}
