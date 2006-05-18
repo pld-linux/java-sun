@@ -1,7 +1,4 @@
 
-# TODO:
-#	- check if all files required by the license are packaged
-
 %define		_ver	1.5.0.06
 %define		_src_ver	%(echo %{_ver}|tr . _)
 %define		_dir_ver	%(echo %{_ver}|sed 's/\\.\\(..\\)$/_\\1/')
@@ -9,7 +6,7 @@ Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	%{_ver}
-Release:	3.1
+Release:	3.2
 License:	restricted, distributable
 Group:		Development/Languages/Java
 Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-distro-linux-i586.bin
@@ -46,7 +43,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_noautoprov	'\\.\\./.*' '/export/.*'
 # these with SUNWprivate.* are found as required, but not provided
 # the rest is because -jdbc wants unixODBC-devel(?)
-%define		_noautoreq	'libjava.so(SUNWprivate_1.1)' 'libnet.so(SUNWprivate_1.1)' 'libverify.so(SUNWprivate_1.1)' 'libodbcinst.so' 'libodbc.so'
+%define		_noautoreq	'libjava.so(SUNWprivate_1.1)' 'libnet.so(SUNWprivate_1.1)' 'libverify.so(SUNWprivate_1.1)' 'libodbcinst.so' 'libodbc.so' 'libjava_crw_demo_g\.so.*'
 # don't depend on other JRE/JDK installed on build host
 %define		_noautoreqdep	libjava.so libjvm.so
 
@@ -253,12 +250,10 @@ EOF
 cd jdk%{_dir_ver}
 %ifnarch %{x8664}
 %patch0 -p1
+# patch only copy of the desktop file, leave original unchanged
+cp jre/plugin/desktop/sun_java.desktop .
 %patch1 -p1
 %endif
-
-# these require libjava_crw_demo_g.so, which is not included
-rm -f demo/jvmti/heapTracker/lib/libheapTracker_g.so
-rm -f demo/jvmti/mtrace/lib/libmtrace_g.so
 
 # unpack packed jar files -- in %%prep as it is done "in place"
 for pack in `find . -name '*.pack'`; do
@@ -267,11 +262,11 @@ done
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{jredir}/plugin/i386/ns7,%{_javadir},%{_bindir},%{_includedir}} \
+install -d $RPM_BUILD_ROOT{%{jredir},%{_javadir},%{_bindir},%{_includedir}} \
 	$RPM_BUILD_ROOT{%{_mandir}/{,ja/}man1,/etc/env.d,%{_prefix}/src/%{name}-sources} \
 	$RPM_BUILD_ROOT{%{_desktopdir},%{_pixmapsdir},%{_plugindir}}
 
-cp -rf bin demo include lib $RPM_BUILD_ROOT%{javadir}
+cp -rf bin sample demo include lib $RPM_BUILD_ROOT%{javadir}
 install man/man1/* $RPM_BUILD_ROOT%{_mandir}/man1
 install man/ja/man1/* $RPM_BUILD_ROOT%{_mandir}/ja/man1
 
@@ -307,26 +302,28 @@ for i in HtmlConverter appletviewer extcheck idlj jar jarsigner java-rmi.cgi \
 	ln -sf %{javadir}/bin/$i $RPM_BUILD_ROOT%{_bindir}/$i
 done
 
+# make sure all tools are available under $(JDK_HOME)/bin
+for i in ControlPanel keytool kinit klist ktab orbd policytool rmid \
+		rmiregistry servertool tnameserv ; do
+	ln -sf ../jre/bin/$i $RPM_BUILD_ROOT%{javadir}/bin/$i
+done
+
 rm -f $RPM_BUILD_ROOT%{javadir}/bin/{java,javaws}
 ln -sf %{jredir}/bin/java $RPM_BUILD_ROOT%{javadir}/bin/java
 ln -sf %{jredir}/bin/javaws $RPM_BUILD_ROOT%{javadir}/bin/javaws
 
-#for i in javaplugin rt sunrsasign ; do
-#	ln -sf %{jredir}/lib/$i.jar $RPM_BUILD_ROOT%{netscape4dir}/java/classes
-#done
-
 %ifarch %{ix86}
+# copy _all_ plugin files (even those incompatible with PLD) --
+# license restriction
+cp -R jre/plugin $RPM_BUILD_ROOT%{jredir}
+
 # Install plugin for browsers
 # Plugin in regular location simply does not work (is seen by browsers):
-install jre/plugin/i386/ns7/libjavaplugin_oji.so $RPM_BUILD_ROOT%{jredir}/plugin/i386/ns7
 ln -sf %{jredir}/plugin/i386/ns7/libjavaplugin_oji.so $RPM_BUILD_ROOT%{_plugindir}
 
-install jre/plugin/desktop/*.desktop $RPM_BUILD_ROOT%{_desktopdir}
+install *.desktop $RPM_BUILD_ROOT%{_desktopdir}
 install jre/plugin/desktop/*.png $RPM_BUILD_ROOT%{_pixmapsdir}
 %endif
-
-# these binaries are in %{jredir}/bin - not needed in %{javadir}/bin?
-rm -f $RPM_BUILD_ROOT%{javadir}/bin/{ControlPanel,keytool,kinit,klist,ktab,orbd,policytool,rmid,rmiregistry,servertool,tnameserv}
 
 ln -sf %{jredir}/lib/jsse.jar $RPM_BUILD_ROOT%{_javadir}/jsse.jar
 ln -sf %{jredir}/lib/jsse.jar $RPM_BUILD_ROOT%{_javadir}/jcert.jar
@@ -344,7 +341,14 @@ ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{_javadir}/jdbc-stdext-3.0.jar
 install -d $RPM_BUILD_ROOT%{jredir}/javaws
 cp -a jre/javaws/* $RPM_BUILD_ROOT%{jredir}/javaws
 ln -sf %{jredir}/lib/javaws.jar $RPM_BUILD_ROOT%{_javadir}/javaws.jar
-mv -f $RPM_BUILD_ROOT{%{jredir}/lib,%{_datadir}}/locale
+
+# leave all locale files unchanged in the original location (license
+# restrictions) and only link them at the proper locations
+for loc in `ls $RPM_BUILD_ROOT%{jredir}/lib/locale` ; do
+	install -d $RPM_BUILD_ROOT%{_datadir}/locale/$loc/LC_MESSAGES
+	ln -sf %{jredir}/lib/locale/$loc/LC_MESSAGES/sunw_java_plugin.mo \
+		$RPM_BUILD_ROOT%{_datadir}/locale/$loc/LC_MESSAGES
+done
 
 # standardize dir names
 mv -f $RPM_BUILD_ROOT%{_datadir}/locale/{zh,zh_CN}
@@ -427,6 +431,7 @@ fi
 %attr(755,root,root) %{_bindir}/serialver
 %ifarch %{ix86}
 %attr(755,root,root) %{javadir}/bin/HtmlConverter
+%attr(755,root,root) %{javadir}/bin/ControlPanel
 %attr(755,root,root) %{javadir}/bin/java-rmi.cgi
 %attr(755,root,root) %{javadir}/bin/javaws
 %endif
@@ -447,8 +452,18 @@ fi
 %attr(755,root,root) %{javadir}/bin/jstack
 %attr(755,root,root) %{javadir}/bin/jstat
 %attr(755,root,root) %{javadir}/bin/jstatd
+%attr(755,root,root) %{javadir}/bin/keytool
+%attr(755,root,root) %{javadir}/bin/kinit
+%attr(755,root,root) %{javadir}/bin/klist
+%attr(755,root,root) %{javadir}/bin/ktab
 %attr(755,root,root) %{javadir}/bin/native2ascii
+%attr(755,root,root) %{javadir}/bin/orbd
+%attr(755,root,root) %{javadir}/bin/policytool
+%attr(755,root,root) %{javadir}/bin/rmid
+%attr(755,root,root) %{javadir}/bin/rmiregistry
 %attr(755,root,root) %{javadir}/bin/serialver
+%attr(755,root,root) %{javadir}/bin/servertool
+%attr(755,root,root) %{javadir}/bin/tnameserv
 %{javadir}/include
 %dir %{javadir}/lib
 %{javadir}/lib/*.jar
@@ -702,13 +717,22 @@ fi
 %{jredir}/lib/javaws/messages_zh_HK.properties
 %{jredir}/lib/javaws/messages_zh_TW.properties
 %{jredir}/lib/javaws/miniSplash.jpg
+%dir %{jredir}/lib/locale
+%lang(de) %{jredir}/lib/locale/de
 %lang(de) %{_datadir}/locale/de/LC_MESSAGES/sunw_java_plugin.mo
+%lang(es) %{jredir}/lib/locale/es
 %lang(es) %{_datadir}/locale/es/LC_MESSAGES/sunw_java_plugin.mo
+%lang(fr) %{jredir}/lib/locale/fr
 %lang(fr) %{_datadir}/locale/fr/LC_MESSAGES/sunw_java_plugin.mo
+%lang(it) %{jredir}/lib/locale/it
 %lang(it) %{_datadir}/locale/it/LC_MESSAGES/sunw_java_plugin.mo
+%lang(ja) %{jredir}/lib/locale/ja
 %lang(ja) %{_datadir}/locale/ja/LC_MESSAGES/sunw_java_plugin.mo
+%lang(ko) %{jredir}/lib/locale/ko*
 %lang(ko) %{_datadir}/locale/ko/LC_MESSAGES/sunw_java_plugin.mo
+%lang(sv) %{jredir}/lib/locale/sv
 %lang(sv) %{_datadir}/locale/sv/LC_MESSAGES/sunw_java_plugin.mo
+%lang(zh) %{jredir}/lib/locale/zh*
 %lang(zh_CN) %{_datadir}/locale/zh_CN/LC_MESSAGES/sunw_java_plugin.mo
 %lang(zh_HK) %{_datadir}/locale/zh_HK/LC_MESSAGES/sunw_java_plugin.mo
 %lang(zh_TW) %{_datadir}/locale/zh_TW/LC_MESSAGES/sunw_java_plugin.mo
@@ -755,6 +779,7 @@ fi
 %{javadir}/demo/plugin
 %{javadir}/demo/applets.html
 %endif
+%{javadir}/sample
 
 %files tools
 %defattr(644,root,root,755)
@@ -774,8 +799,11 @@ fi
 %ifarch %{ix86}
 %files -n browser-plugin-%{name}
 %defattr(644,root,root,755)
-%dir %{jredir}/plugin/i386/ns7
-%attr(755,root,root) %{jredir}/plugin/i386/ns7/libjavaplugin_oji.so
+%dir %{jredir}/plugin
+%{jredir}/plugin/desktop
+%dir %{jredir}/plugin/i386
+%dir %{jredir}/plugin/i386/*
+%attr(755,root,root) %{jredir}/plugin/i386/*/libjavaplugin_oji.so
 %attr(755,root,root) %{_plugindir}/*.so
 %endif
 
