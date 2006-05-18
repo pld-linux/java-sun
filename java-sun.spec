@@ -131,7 +131,7 @@ elementów zwi±zanych ze ¶rodowiskiem X11.
 Summary:	Sun JRE (Java Runtime Environment) for Linux, X11 related parts
 Summary(pl):	Sun JRE - ¶rodowisko uruchomieniowe Javy dla Linuksa, czê¶ci korzystaj±ce z X11
 Group:		Development/Languages/Java
-Requires:	%{name}-jre = %{epoch}:%{version}-%{release}
+Requires:	%{name}-jre = %{version}-%{release}
 Requires:	XFree86-libs
 Provides:	jre-X11 = %{version}
 %ifarch %{ix86}
