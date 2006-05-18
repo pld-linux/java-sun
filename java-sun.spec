@@ -70,8 +70,13 @@ Summary:	JDBC files for Sun Java
 Summary(pl):	Pliki JDBC dla Javy Suna
 Group:		Development/Languages/Java
 Requires:	%{name}-jre = %{version}-%{release}
+%ifarch %{x8664}
+Requires:	libodbc.so.1()(64bit)
+Requires:	libodbcinst.so.1()(64bit)
+%else
 Requires:	libodbc.so.1
 Requires:	libodbcinst.so.1
+%endif
 Provides:	%{name}-jdbc
 Obsoletes:	java-sun-jdbc
 
