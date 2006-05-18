@@ -1,5 +1,5 @@
---- jdk1.5.0/jre/plugin/desktop/sun_java.desktop.orig	2004-05-13 14:02:37.000000000 +0200
-+++ jdk1.5.0/jre/plugin/desktop/sun_java.desktop	2004-06-27 15:30:12.733090520 +0200
+--- jdk1.5.0/sun_java.desktop.orig	2004-05-13 14:02:37.000000000 +0200
++++ jdk1.5.0/sun_java.desktop	2004-06-27 15:30:12.733090520 +0200
 @@ -1,8 +1,8 @@
  [Desktop Entry]
 -Name=Java
