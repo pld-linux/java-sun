@@ -6,7 +6,7 @@ Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	%{_ver}
-Release:	4
+Release:	5
 License:	restricted, distributable
 Group:		Development/Languages/Java
 Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-distro-linux-i586.bin
@@ -106,6 +106,7 @@ Provides:	jndi-rmi = %{version}
 Provides:	jsse = %{version}
 Provides:	jdbc-stdext = 3.0
 Provides:	jdbc-stdext = %{version}
+Provides:	jaxp_parser_impl
 Obsoletes:	jaas
 Obsoletes:	java-blackdown-jre
 Obsoletes:	jaxp
@@ -341,6 +342,7 @@ ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{_javadir}/jndi-rmi.jar
 ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{_javadir}/jaas.jar
 ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{_javadir}/jdbc-stdext.jar
 ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{_javadir}/jdbc-stdext-3.0.jar
+ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{_javadir}/jaxp_parser_impl.jar
 
 %ifnarch %{x8664}
 install -d $RPM_BUILD_ROOT%{jredir}/javaws
@@ -607,6 +609,7 @@ fi
 %{_javadir}/jndi*.jar
 %{_javadir}/jnet.jar
 %{_javadir}/jsse.jar
+%{_javadir}/jaxp_parser_impl.jar
 %{jredir}/lib/classlist
 %{jredir}/lib/fontconfig.RedHat.2.1.bfc
 %{jredir}/lib/fontconfig.RedHat.2.1.properties.src
