@@ -1,4 +1,9 @@
-
+%include 	/usr/lib/rpm/macros.java
+#
+# TODO:
+#	- better way to choose preferred jvm (currently the symlinks are hardcoded)
+#	  Maybe a package containing only the symlinks?
+#
 %define		_ver	1.5.0.06
 %define		_src_ver	%(echo %{_ver}|tr . _)
 %define		_dir_ver	%(echo %{_ver}|sed 's/\\.\\(..\\)$/_\\1/')
@@ -6,7 +11,7 @@ Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	%{_ver}
-Release:	5
+Release:	5.1
 License:	restricted, distributable
 Group:		Development/Languages/Java
 Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-distro-linux-i586.bin
@@ -19,8 +24,10 @@ URL:		http://java.sun.com/linux/
 BuildRequires:	rpm-build >= 4.3-0.20040107.21
 BuildRequires:	rpmbuild(macros) >= 1.236
 BuildRequires:	unzip
+BuildRequires:	jpackage-utils
 Requires:	%{name}-jre = %{version}-%{release}
 Requires:	java-shared
+Requires:	jpackage-utils
 Provides:	jdk = %{version}
 Provides:	j2sdk = %{version}
 Obsoletes:	blackdown-java-sdk
@@ -32,8 +39,11 @@ Conflicts:	netscape4-plugin-java-sun
 ExclusiveArch:	i586 i686 pentium3 pentium4 athlon %{x8664}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		javadir		%{_libdir}/java
-%define		jredir		%{_libdir}/java/jre
+%define		javareldir	%{name}-%{version}
+%define		javadir		%{_jvmdir}/%{javareldir}
+%define		jrereldir	%{javareldir}/jre
+%define		jredir		%{_jvmdir}/%{jrereldir}
+%define		jvmjardir	%{_jvmjardir}/%{name}-%{version}
 %define		_plugindir	%{_libdir}/browser-plugins
 
 # list of supported browsers, in free form text
@@ -268,8 +278,8 @@ done
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{jredir},%{_javadir},%{_bindir},%{_includedir}} \
-	$RPM_BUILD_ROOT{%{_mandir}/{,ja/}man1,/etc/env.d,%{_prefix}/src/%{name}-sources} \
+install -d $RPM_BUILD_ROOT{%{jredir},%{javadir},%{jvmjardir},%{_javadir},%{_bindir},%{_includedir}} \
+	$RPM_BUILD_ROOT{%{_mandir}/{,ja/}man1,%{_prefix}/src/%{name}-sources} \
 	$RPM_BUILD_ROOT{%{_desktopdir},%{_pixmapsdir},%{_plugindir}}
 
 cp -rf bin sample demo include lib $RPM_BUILD_ROOT%{javadir}
@@ -331,23 +341,27 @@ install *.desktop $RPM_BUILD_ROOT%{_desktopdir}
 install jre/plugin/desktop/*.png $RPM_BUILD_ROOT%{_pixmapsdir}
 %endif
 
-ln -sf %{jredir}/lib/jsse.jar $RPM_BUILD_ROOT%{_javadir}/jsse.jar
-ln -sf %{jredir}/lib/jsse.jar $RPM_BUILD_ROOT%{_javadir}/jcert.jar
-ln -sf %{jredir}/lib/jsse.jar $RPM_BUILD_ROOT%{_javadir}/jnet.jar
-ln -sf %{jredir}/lib/jce.jar $RPM_BUILD_ROOT%{_javadir}/jce.jar
-ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{_javadir}/jndi.jar
-ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{_javadir}/jndi-ldap.jar
-ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{_javadir}/jndi-cos.jar
-ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{_javadir}/jndi-rmi.jar
-ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{_javadir}/jaas.jar
-ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{_javadir}/jdbc-stdext.jar
-ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{_javadir}/jdbc-stdext-3.0.jar
-ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{_javadir}/jaxp_parser_impl.jar
+ln -sf %{jredir}/lib/jsse.jar $RPM_BUILD_ROOT%{jvmjardir}/jsse.jar
+ln -sf %{jredir}/lib/jsse.jar $RPM_BUILD_ROOT%{jvmjardir}/jcert.jar
+ln -sf %{jredir}/lib/jsse.jar $RPM_BUILD_ROOT%{jvmjardir}/jnet.jar
+ln -sf %{jredir}/lib/jce.jar $RPM_BUILD_ROOT%{jvmjardir}/jce.jar
+ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{jvmjardir}/jndi.jar
+ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{jvmjardir}/jndi-ldap.jar
+ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{jvmjardir}/jndi-cos.jar
+ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{jvmjardir}/jndi-rmi.jar
+ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{jvmjardir}/jaas.jar
+ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{jvmjardir}/jdbc-stdext.jar
+ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{jvmjardir}/jdbc-stdext-3.0.jar
+ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{jvmjardir}/sasl.jar
+ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{jvmjardir}/jaxp_parser_impl.jar
+ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{jvmjardir}/jaxp_transform_impl.jar
+ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{jvmjardir}/jaxp.jar
+ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{jvmjardir}/xml-commons-apis.jar
 
 %ifnarch %{x8664}
 install -d $RPM_BUILD_ROOT%{jredir}/javaws
 cp -a jre/javaws/* $RPM_BUILD_ROOT%{jredir}/javaws
-ln -sf %{jredir}/lib/javaws.jar $RPM_BUILD_ROOT%{_javadir}/javaws.jar
+ln -sf %{jredir}/lib/javaws.jar $RPM_BUILD_ROOT%{jvmjardir}/javaws.jar
 
 # leave all locale files unchanged in the original location (license
 # restrictions) and only link them at the proper locations
@@ -365,9 +379,10 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/{ko.UTF-8,zh.GBK,zh_TW.BIG5}
 
 cp -a src.zip $RPM_BUILD_ROOT%{_prefix}/src/%{name}-sources
 
-cat << EOF >$RPM_BUILD_ROOT/etc/env.d/JAVA_HOME
-JAVA_HOME="%{javadir}"
-EOF
+ln -s %{javareldir} $RPM_BUILD_ROOT%{_jvmdir}/java
+ln -s %{jrereldir} $RPM_BUILD_ROOT%{_jvmdir}/jre
+ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_jvmjardir}/java
+ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_jvmjardir}/jre
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -415,6 +430,8 @@ fi
 %files
 %defattr(644,root,root,755)
 %doc COPYRIGHT LICENSE README.html THIRDPARTYLICENSEREADME.txt
+%{_jvmdir}/java
+%{_jvmjardir}/java
 %ifarch %{ix86}
 %attr(755,root,root) %{_bindir}/HtmlConverter
 %attr(755,root,root) %{_bindir}/java-rmi.cgi
@@ -534,7 +551,8 @@ fi
 %defattr(644,root,root,755)
 %doc jre/{CHANGES,COPYRIGHT,LICENSE,README,*.txt}
 %doc jre/Welcome.html
-%attr(644,root,root) %config(noreplace,missingok) %verify(not md5 mtime size) /etc/env.d/*
+%{_jvmdir}/jre
+%{_jvmjardir}/jre
 %attr(755,root,root) %{_bindir}/java
 %attr(755,root,root) %{_bindir}/java_vm
 %attr(755,root,root) %{_bindir}/keytool
@@ -601,15 +619,17 @@ fi
 %{jredir}/lib/*.jar
 %{jredir}/lib/*.properties
 %lang(ja) %{jredir}/lib/*.properties.ja
-%dir %{_javadir}
-%{_javadir}/jaas.jar
-%{_javadir}/jce.jar
-%{_javadir}/jcert.jar
-%{_javadir}/jdbc-stdext*.jar
-%{_javadir}/jndi*.jar
-%{_javadir}/jnet.jar
-%{_javadir}/jsse.jar
-%{_javadir}/jaxp_parser_impl.jar
+%dir %{jvmjardir}
+%{jvmjardir}/jaas.jar
+%{jvmjardir}/jce.jar
+%{jvmjardir}/jcert.jar
+%{jvmjardir}/jdbc-stdext*.jar
+%{jvmjardir}/jndi*.jar
+%{jvmjardir}/jnet.jar
+%{jvmjardir}/jsse.jar
+%{jvmjardir}/sasl.jar
+%{jvmjardir}/jaxp*.jar
+%{jvmjardir}/xml-commons*.jar
 %{jredir}/lib/classlist
 %{jredir}/lib/fontconfig.RedHat.2.1.bfc
 %{jredir}/lib/fontconfig.RedHat.2.1.properties.src
@@ -706,7 +726,7 @@ fi
 %attr(755,root,root) %{jredir}/lib/amd64/awt_robot
 %endif
 %ifarch %{ix86}
-%{_javadir}/javaws.jar
+%{jvmjardir}/javaws.jar
 %endif
 %ifarch %{ix86}
 %attr(755,root,root) %{jredir}/lib/i386/motif21/libmawt.so
