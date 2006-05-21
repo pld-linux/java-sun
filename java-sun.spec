@@ -11,7 +11,7 @@ Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	%{_ver}
-Release:	7
+Release:	8
 License:	restricted, distributable
 Group:		Development/Languages/Java
 Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-distro-linux-i586.bin
@@ -108,6 +108,7 @@ Provides:	java
 Provides:	jaas = %{version}
 Provides:	jaxp = 1.3
 Provides:	jce = %{version}
+Provides:	jmx = %{version}
 Provides:	jndi = %{version}
 Provides:	jndi-cos = %{version}
 Provides:	jndi-dns = %{version}
@@ -348,18 +349,10 @@ ln -sf %{jredir}/lib/jsse.jar $RPM_BUILD_ROOT%{jvmjardir}/jsse.jar
 ln -sf %{jredir}/lib/jsse.jar $RPM_BUILD_ROOT%{jvmjardir}/jcert.jar
 ln -sf %{jredir}/lib/jsse.jar $RPM_BUILD_ROOT%{jvmjardir}/jnet.jar
 ln -sf %{jredir}/lib/jce.jar $RPM_BUILD_ROOT%{jvmjardir}/jce.jar
-ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{jvmjardir}/jndi.jar
-ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{jvmjardir}/jndi-ldap.jar
-ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{jvmjardir}/jndi-cos.jar
-ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{jvmjardir}/jndi-rmi.jar
-ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{jvmjardir}/jaas.jar
-ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{jvmjardir}/jdbc-stdext.jar
-ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{jvmjardir}/jdbc-stdext-3.0.jar
-ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{jvmjardir}/sasl.jar
-ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{jvmjardir}/jaxp_parser_impl.jar
-ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{jvmjardir}/jaxp_transform_impl.jar
-ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{jvmjardir}/jaxp.jar
-ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{jvmjardir}/xml-commons-apis.jar
+for f in jndi jndi-ldap jndi-cos jndi-rmi jaas jdbc-stdext jdbc-stdext-3.0 \
+  sasl jaxp_parser_impl jaxp_transform_impl jaxp jmx xml-commons-apis; do
+	ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{jvmjardir}/$f.jar
+done
 
 %ifnarch %{x8664}
 install -d $RPM_BUILD_ROOT%{jredir}/javaws
