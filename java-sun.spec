@@ -11,7 +11,7 @@ Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	%{_ver}
-Release:	6
+Release:	7
 License:	restricted, distributable
 Group:		Development/Languages/Java
 Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-distro-linux-i586.bin
@@ -143,7 +143,8 @@ Summary:	Sun JRE (Java Runtime Environment) for Linux, X11 related parts
 Summary(pl):	Sun JRE - ¶rodowisko uruchomieniowe Javy dla Linuksa, czê¶ci korzystaj±ce z X11
 Group:		Development/Languages/Java
 Requires:	%{name}-jre = %{version}-%{release}
-Requires:	XFree86-libs
+# commented out for now to avoid need for AC-branch
+# Requires:	XFree86-libs
 Provides:	jre-X11 = %{version}
 %ifarch %{ix86}
 Provides:	javaws = %{version}
