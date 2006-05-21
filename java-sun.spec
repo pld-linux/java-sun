@@ -22,14 +22,14 @@ Patch0:		%{name}-ControlPanel-fix.patch
 Patch1:		%{name}-desktop.patch
 URL:		http://java.sun.com/linux/
 BuildRequires:	rpm-build >= 4.3-0.20040107.21
+BuildRequires:	rpm-javaprov
 BuildRequires:	rpmbuild(macros) >= 1.236
 BuildRequires:	unzip
-BuildRequires:	jpackage-utils
 Requires:	%{name}-jre = %{version}-%{release}
 Requires:	java-shared
 Requires:	jpackage-utils
-Provides:	jdk = %{version}
 Provides:	j2sdk = %{version}
+Provides:	jdk = %{version}
 Obsoletes:	blackdown-java-sdk
 Obsoletes:	ibm-java
 Obsoletes:	java-blackdown
@@ -101,23 +101,23 @@ Summary:	Sun JRE (Java Runtime Environment) for Linux
 Summary(pl):	Sun JRE - ¶rodowisko uruchomieniowe Javy dla Linuksa
 Group:		Development/Languages/Java
 Requires:	java-jre-tools
-Provides:	java1.4
-Provides:	jre = %{version}
 Provides:	j2re = %{version}
-Provides:	java
 Provides:	jaas = %{version}
+Provides:	java
+Provides:	java1.4
 Provides:	jaxp = 1.3
+Provides:	jaxp_parser_impl
 Provides:	jce = %{version}
+Provides:	jdbc-stdext = %{version}
+Provides:	jdbc-stdext = 3.0
 Provides:	jmx = %{version}
 Provides:	jndi = %{version}
 Provides:	jndi-cos = %{version}
 Provides:	jndi-dns = %{version}
 Provides:	jndi-ldap = %{version}
 Provides:	jndi-rmi = %{version}
+Provides:	jre = %{version}
 Provides:	jsse = %{version}
-Provides:	jdbc-stdext = 3.0
-Provides:	jdbc-stdext = %{version}
-Provides:	jaxp_parser_impl
 Obsoletes:	jaas
 Obsoletes:	java-blackdown-jre
 Obsoletes:	jaxp
@@ -176,8 +176,8 @@ Summary(pl):	Wspó³dzielone narzêdzia Javy
 Group:		Development/Languages/Java
 Requires:	%{name}-jre = %{version}-%{release}
 Provides:	jar
-Provides:	java-shared
 Provides:	java-jre-tools
+Provides:	java-shared
 Obsoletes:	fastjar
 Obsoletes:	jar
 Obsoletes:	java-jre-tools
@@ -211,23 +211,23 @@ Summary(pl):	Wtyczki Javy do przegl±darek WWW
 Group:		Development/Languages/Java
 Requires:	%{name}-jre-X11 = %{version}-%{release}
 Provides:	java-sun-mozilla-plugin
-Provides:	mozilla-plugin-java-sun
 Provides:	mozilla-firefox-plugin-java-sun
-Obsoletes:	java-blackdown-mozilla-plugin
+Provides:	mozilla-plugin-java-sun
 Obsoletes:	blackdown-java-sdk-mozilla-plugin
+Obsoletes:	java-blackdown-mozilla-plugin
 Obsoletes:	java-sun-moz-plugin
 Obsoletes:	java-sun-mozilla-plugin
 Obsoletes:	jre-mozilla-plugin
+Obsoletes:	mozilla-firefox-plugin-gcc2-java-sun
+Obsoletes:	mozilla-firefox-plugin-gcc3-java-sun
+Obsoletes:	mozilla-firefox-plugin-java-blackdown
+Obsoletes:	mozilla-firefox-plugin-java-sun
 Obsoletes:	mozilla-plugin-blackdown-java-sdk
 Obsoletes:	mozilla-plugin-gcc2-java-sun
 Obsoletes:	mozilla-plugin-gcc3-java-sun
 Obsoletes:	mozilla-plugin-gcc32-java-sun
 Obsoletes:	mozilla-plugin-java-blackdown
 Obsoletes:	mozilla-plugin-java-sun
-Obsoletes:	mozilla-firefox-plugin-gcc2-java-sun
-Obsoletes:	mozilla-firefox-plugin-gcc3-java-sun
-Obsoletes:	mozilla-firefox-plugin-java-blackdown
-Obsoletes:	mozilla-firefox-plugin-java-sun
 
 %description -n browser-plugin-%{name}
 Java plugin for WWW browsers.
