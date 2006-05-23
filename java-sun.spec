@@ -1,5 +1,3 @@
-%include 	/usr/lib/rpm/macros.java
-#
 # TODO:
 #	- better way to choose preferred jvm (currently the symlinks are hardcoded)
 #	  Maybe a package containing only the symlinks?
@@ -22,8 +20,7 @@ Patch0:		%{name}-ControlPanel-fix.patch
 Patch1:		%{name}-desktop.patch
 URL:		http://java.sun.com/linux/
 BuildRequires:	rpm-build >= 4.3-0.20040107.21
-BuildRequires:	rpm-javaprov
-BuildRequires:	rpmbuild(macros) >= 1.236
+BuildRequires:	rpmbuild(macros) >= 1.300
 BuildRequires:	unzip
 Requires:	%{name}-jre = %{version}-%{release}
 Requires:	java-shared
