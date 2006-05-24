@@ -98,6 +98,7 @@ Summary:	Sun JRE (Java Runtime Environment) for Linux
 Summary(pl):	Sun JRE - ¶rodowisko uruchomieniowe Javy dla Linuksa
 Group:		Development/Languages/Java
 Requires:	java-jre-tools
+Requires:	jpackage-utils
 Provides:	j2re = %{version}
 Provides:	jaas = %{version}
 Provides:	java
