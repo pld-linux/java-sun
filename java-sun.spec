@@ -1,4 +1,3 @@
-%include 	/usr/lib/rpm/macros.java
 #
 # TODO:
 #	- better way to choose preferred jvm (currently the symlinks are hardcoded)
