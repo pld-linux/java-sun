@@ -2,7 +2,7 @@
 #	- better way to choose preferred jvm (currently the symlinks are hardcoded)
 #	  Maybe a package containing only the symlinks?
 #
-%define		_ver	1.5.0.06
+%define		_ver	1.5.0.07
 %define		_src_ver	%(echo %{_ver}|tr . _)
 %define		_dir_ver	%(echo %{_ver}|sed 's/\\.\\(..\\)$/_\\1/')
 Summary:	Sun JDK (Java Development Kit) for Linux
@@ -13,9 +13,9 @@ Release:	12
 License:	restricted, distributable
 Group:		Development/Languages/Java
 Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-distro-linux-i586.bin
-# Source0-md5:	a721a3767694dc33c801ee453cda50c5
+# Source0-md5:	d7bf7e986ab185c830d11f93f18b3930
 Source1:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-distro-linux-amd64.bin
-# Source1-md5:	b272ca1e22893702286e9bb7d9778b16
+# Source1-md5:	cbf4fee8c737ed6b1d5288dc0f6dbe3c
 Patch0:		%{name}-ControlPanel-fix.patch
 Patch1:		%{name}-desktop.patch
 URL:		http://java.sun.com/linux/
