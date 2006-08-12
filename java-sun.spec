@@ -821,6 +821,7 @@ fi
 %files -n browser-plugin-%{name}
 %defattr(644,root,root,755)
 %dir %{jredir}/plugin
+%dir %{_prefix}/lib/browser-plugins
 %{jredir}/plugin/desktop
 %dir %{jredir}/plugin/i386
 %dir %{jredir}/plugin/i386/*
