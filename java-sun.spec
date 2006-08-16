@@ -209,6 +209,7 @@ Summary:	Java plugin for WWW browsers
 Summary(pl):	Wtyczki Javy do przegl±darek WWW
 Group:		Development/Languages/Java
 Requires:	%{name}-jre-X11 = %{version}-%{release}
+Requires:	browser-plugins
 Provides:	java-sun-mozilla-plugin
 Provides:	mozilla-firefox-plugin-java-sun
 Provides:	mozilla-plugin-java-sun
@@ -821,7 +822,6 @@ fi
 %files -n browser-plugin-%{name}
 %defattr(644,root,root,755)
 %dir %{jredir}/plugin
-%dir %{_prefix}/lib/browser-plugins
 %{jredir}/plugin/desktop
 %dir %{jredir}/plugin/i386
 %dir %{jredir}/plugin/i386/*
