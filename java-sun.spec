@@ -9,7 +9,7 @@ Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	%{_ver}
-Release:	1
+Release:	2
 License:	restricted, distributable
 Group:		Development/Languages/Java
 Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-i586.bin
@@ -44,7 +44,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_plugindir	%{_libdir}/browser-plugins
 
 # list of supported browsers, in free form text
-%define		browsers	mozilla, mozilla-firefox, netscape, seamonkey
+%define		browsers	mozilla, mozilla-firefox, mozilla-firefox-bin, netscape, seamonkey
 
 # rpm doesn't like strange version definitions provided by Sun's libs
 %define		_noautoprov	'\\.\\./.*' '/export/.*'
@@ -398,6 +398,12 @@ fi
 
 %triggerun -n browser-plugin-%{name} -- mozilla-forefox
 %nsplugin_uninstall -d %{_libdir}/mozilla-firefox/plugins libjavaplugin_oji.so
+
+%triggerin -n browser-plugin-%{name} -- mozilla-firefox-bin
+%nsplugin_install -d %{_libdir}/mozilla-firefox-bin/plugins libjavaplugin_oji.so
+
+%triggerun -n browser-plugin-%{name} -- mozilla-forefox-bin
+%nsplugin_uninstall -d %{_libdir}/mozilla-firefox-bin/plugins libjavaplugin_oji.so
 
 %triggerin -n browser-plugin-%{name} -- netscape-common
 %nsplugin_install -d %{_libdir}/netscape/plugins libjavaplugin_oji.so
