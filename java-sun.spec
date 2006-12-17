@@ -9,7 +9,7 @@ Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	%{_ver}
-Release:	0.1
+Release:	0.2
 License:	restricted, distributable
 Group:		Development/Languages/Java
 Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-i586.bin
@@ -306,8 +306,9 @@ for i in ControlPanel java java_vm keytool ktab orbd policytool \
 done
 
 for i in HtmlConverter appletviewer extcheck idlj jar jarsigner java-rmi.cgi \
-         javac javadoc javah javap jconsole jdb jinfo jmap jps \
-	 jsadebugd jstack jstat jstatd native2ascii rmic serialver ; do
+	javac javadoc javah javap jcontrol jconsole jdb jhat jinfo jmap jps \
+	jrunscript jsadebugd jstack jstat jstatd native2ascii rmic serialver \
+	schemagen wsgen wsimport xjc ; do
 	ln -sf %{javadir}/bin/$i $RPM_BUILD_ROOT%{_bindir}/$i
 done
 
@@ -435,20 +436,27 @@ fi
 %attr(755,root,root) %{_bindir}/javah
 %attr(755,root,root) %{_bindir}/javap
 %attr(755,root,root) %{_bindir}/jdb
+%attr(755,root,root) %{_bindir}/jhat
 %attr(755,root,root) %{_bindir}/jinfo
 %attr(755,root,root) %{_bindir}/jmap
 %attr(755,root,root) %{_bindir}/jps
+%attr(755,root,root) %{_bindir}/jrunscript
 %attr(755,root,root) %{_bindir}/jsadebugd
 %attr(755,root,root) %{_bindir}/jstack
 %attr(755,root,root) %{_bindir}/jstat
 %attr(755,root,root) %{_bindir}/jstatd
 %attr(755,root,root) %{_bindir}/native2ascii
 %attr(755,root,root) %{_bindir}/serialver
+%attr(755,root,root) %{_bindir}/schemagen
+%attr(755,root,root) %{_bindir}/wsgen
+%attr(755,root,root) %{_bindir}/wsimport
+%attr(755,root,root) %{_bindir}/xjc
 %ifarch %{ix86}
 %attr(755,root,root) %{javadir}/bin/HtmlConverter
 %attr(755,root,root) %{javadir}/bin/ControlPanel
 %attr(755,root,root) %{javadir}/bin/java-rmi.cgi
 %attr(755,root,root) %{javadir}/bin/javaws
+%attr(755,root,root) %{javadir}/bin/jcontrol
 %endif
 %attr(755,root,root) %{javadir}/bin/apt
 %attr(755,root,root) %{javadir}/bin/extcheck
@@ -460,9 +468,11 @@ fi
 %attr(755,root,root) %{javadir}/bin/javap
 %attr(755,root,root) %{javadir}/bin/jconsole
 %attr(755,root,root) %{javadir}/bin/jdb
+%attr(755,root,root) %{javadir}/bin/jhat
 %attr(755,root,root) %{javadir}/bin/jinfo
 %attr(755,root,root) %{javadir}/bin/jmap
 %attr(755,root,root) %{javadir}/bin/jps
+%attr(755,root,root) %{javadir}/bin/jrunscript
 %attr(755,root,root) %{javadir}/bin/jsadebugd
 %attr(755,root,root) %{javadir}/bin/jstack
 %attr(755,root,root) %{javadir}/bin/jstat
@@ -473,11 +483,17 @@ fi
 %attr(755,root,root) %{javadir}/bin/policytool
 %attr(755,root,root) %{javadir}/bin/rmid
 %attr(755,root,root) %{javadir}/bin/rmiregistry
+%attr(755,root,root) %{javadir}/bin/schemagen
 %attr(755,root,root) %{javadir}/bin/serialver
 %attr(755,root,root) %{javadir}/bin/servertool
 %attr(755,root,root) %{javadir}/bin/tnameserv
+%attr(755,root,root) %{javadir}/bin/wsgen
+%attr(755,root,root) %{javadir}/bin/wsimport
+%attr(755,root,root) %{javadir}/bin/xjc
 %{javadir}/include
 %dir %{javadir}/lib
+%attr(755,root,root) %{javadir}/lib/jexec
+%{javadir}/lib/ct.sym
 %{javadir}/lib/*.jar
 %{javadir}/lib/*.idl
 %{_mandir}/man1/apt.1*
@@ -488,17 +504,23 @@ fi
 %{_mandir}/man1/javadoc.1*
 %{_mandir}/man1/javah.1*
 %{_mandir}/man1/javap.1*
+%{_mandir}/man1/jconsole.1*
 %{_mandir}/man1/jdb.1*
+%{_mandir}/man1/jhat.1*
 %{_mandir}/man1/jinfo.1*
 %{_mandir}/man1/jmap.1*
 %{_mandir}/man1/jps.1*
+%{_mandir}/man1/jrunscript.1*
 %{_mandir}/man1/jsadebugd.1*
 %{_mandir}/man1/jstack.1*
 %{_mandir}/man1/jstat.1*
 %{_mandir}/man1/jstatd.1*
 %{_mandir}/man1/native2ascii.1*
 %{_mandir}/man1/serialver.1*
-%{_mandir}/man1/jconsole.1*
+%{_mandir}/man1/schemagen.1*
+%{_mandir}/man1/wsgen.1*
+%{_mandir}/man1/wsimport.1*
+%{_mandir}/man1/xjc.1*
 %lang(ja) %{_mandir}/ja/man1/apt.1*
 %lang(ja) %{_mandir}/ja/man1/extcheck.1*
 %lang(ja) %{_mandir}/ja/man1/idlj.1*
@@ -507,17 +529,23 @@ fi
 %lang(ja) %{_mandir}/ja/man1/javadoc.1*
 %lang(ja) %{_mandir}/ja/man1/javah.1*
 %lang(ja) %{_mandir}/ja/man1/javap.1*
+%lang(ja) %{_mandir}/ja/man1/jconsole.1*
 %lang(ja) %{_mandir}/ja/man1/jdb.1*
+%lang(ja) %{_mandir}/ja/man1/jhat.1*
 %lang(ja) %{_mandir}/ja/man1/jinfo.1*
 %lang(ja) %{_mandir}/ja/man1/jmap.1*
 %lang(ja) %{_mandir}/ja/man1/jps.1*
+%lang(ja) %{_mandir}/ja/man1/jrunscript.1*
 %lang(ja) %{_mandir}/ja/man1/jsadebugd.1*
 %lang(ja) %{_mandir}/ja/man1/jstack.1*
 %lang(ja) %{_mandir}/ja/man1/jstat.1*
 %lang(ja) %{_mandir}/ja/man1/jstatd.1*
 %lang(ja) %{_mandir}/ja/man1/native2ascii.1*
 %lang(ja) %{_mandir}/ja/man1/serialver.1*
-%lang(ja) %{_mandir}/ja/man1/jconsole.1*
+%lang(ja) %{_mandir}/ja/man1/schemagen.1*
+%lang(ja) %{_mandir}/ja/man1/wsgen.1*
+%lang(ja) %{_mandir}/ja/man1/wsimport.1*
+%lang(ja) %{_mandir}/ja/man1/xjc.1*
 
 %files appletviewer
 %defattr(644,root,root,755)
@@ -568,6 +596,7 @@ fi
 %attr(755,root,root) %{jredir}/bin/servertool
 %attr(755,root,root) %{jredir}/bin/tnameserv
 %dir %{jredir}/lib
+%{jredir}/lib/jexec
 %{jredir}/lib/applet
 %{jredir}/lib/audio
 %{jredir}/lib/cmm
@@ -575,10 +604,13 @@ fi
 %ifarch %{ix86}
 %dir %{jredir}/lib/i386
 %dir %{jredir}/lib/i386/headless
+%dir %{jredir}/lib/i386/jli
 %attr(755,root,root) %{jredir}/lib/i386/client
 %attr(755,root,root) %{jredir}/lib/i386/native_threads
 %attr(755,root,root) %{jredir}/lib/i386/server
+%{jredir}/lib/i386/jli/libjli.so
 %{jredir}/lib/i386/jvm.cfg
+%{jredir}/lib/i386/libsplashscreen.so
 %attr(755,root,root) %{jredir}/lib/i386/lib[acdfhijmnrvz]*.so
 %exclude %{jredir}/lib/i386/libjsoundalsa.so
 %exclude %{jredir}/lib/i386/libjavaplugin*.so
@@ -593,8 +625,12 @@ fi
 %attr(755,root,root) %{jredir}/lib/amd64/lib[acdfhijmnrvz]*.so
 %exclude %{jredir}/lib/amd64/libjsoundalsa.so
 %endif
+%{jredir}/lib/deploy
+%{jredir}/lib/desktop
 %{jredir}/lib/im
 %{jredir}/lib/images
+%attr(755,root,root) %{jredir}/lib/jexec
+%{jredir}/lib/meta-index
 %dir %{jredir}/lib/security
 %{jredir}/lib/security/*.*
 %verify(not md5 mtime size) %config(noreplace) %{jredir}/lib/security/cacerts
@@ -674,6 +710,7 @@ fi
 %ifarch %{ix86}
 %attr(755,root,root) %{jredir}/bin/javaws
 %attr(755,root,root) %{jredir}/bin/ControlPanel
+%attr(755,root,root) %{jredir}/bin/jcontrol
 %endif
 %ifarch %{ix86}
 %attr(755,root,root) %{jredir}/bin/java_vm
@@ -757,10 +794,12 @@ fi
 %{javadir}/demo/jvmti/*/README*
 %{javadir}/demo/jvmti/*/*.jar
 %{javadir}/demo/management
+%{javadir}/demo/nbproject
 %ifarch %{ix86}
 %{javadir}/demo/plugin
 %{javadir}/demo/applets.html
 %endif
+%{javadir}/demo/scripting
 %{javadir}/sample
 
 %files tools
