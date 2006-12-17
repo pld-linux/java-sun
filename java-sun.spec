@@ -9,7 +9,7 @@ Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	%{_ver}
-Release:	0.2
+Release:	0.3
 License:	restricted, distributable
 Group:		Development/Languages/Java
 Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-i586.bin
@@ -618,15 +618,17 @@ fi
 %ifarch %{x8664}
 %dir %{jredir}/lib/amd64
 %attr(755,root,root) %dir %{jredir}/lib/amd64/headless
-#%attr(755,root,root) %{jredir}/lib/i386/client
+%attr(755,root,root) %{jredir}/lib/amd64/jli
 %attr(755,root,root) %{jredir}/lib/amd64/native_threads
 %attr(755,root,root) %{jredir}/lib/amd64/server
 %{jredir}/lib/amd64/jvm.cfg
 %attr(755,root,root) %{jredir}/lib/amd64/lib[acdfhijmnrvz]*.so
 %exclude %{jredir}/lib/amd64/libjsoundalsa.so
 %endif
+%ifnarch %{x8664}
 %{jredir}/lib/deploy
 %{jredir}/lib/desktop
+%endif
 %{jredir}/lib/im
 %{jredir}/lib/images
 %attr(755,root,root) %{jredir}/lib/jexec
@@ -670,7 +672,6 @@ fi
 %attr(755,root,root) %{jredir}/lib/i386/libunpack.so
 %endif
 %ifarch %{x8664}
-%attr(755,root,root) %{jredir}/lib/amd64/gtkhelper
 %attr(755,root,root) %{jredir}/lib/amd64/headless/libmawt.so
 %attr(755,root,root) %{jredir}/lib/amd64/libsaproc.so
 %attr(755,root,root) %{jredir}/lib/amd64/libunpack.so
@@ -727,7 +728,7 @@ fi
 %dir %{jredir}/lib/amd64
 %attr(755,root,root) %dir %{jredir}/lib/amd64/xawt
 %attr(755,root,root) %dir %{jredir}/lib/amd64/motif21
-%attr(755,root,root) %{jredir}/lib/amd64/awt_robot
+%attr(755,root,root) %{jredir}/lib/amd64/libsplashscreen.so
 %endif
 %ifarch %{ix86}
 %{jvmjardir}/javaws.jar
