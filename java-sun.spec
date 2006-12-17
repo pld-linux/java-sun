@@ -2,20 +2,20 @@
 #	- better way to choose preferred jvm (currently the symlinks are hardcoded)
 #	  Maybe a package containing only the symlinks?
 #
-%define		_ver	1.5.0.10
-%define		_src_ver	%(echo %{_ver}|tr . _)
+%define		_ver	1.6.0
+%define		_src_ver	6
 %define		_dir_ver	%(echo %{_ver}|sed 's/\\.\\(..\\)$/_\\1/')
 Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	%{_ver}
-Release:	1
+Release:	0.1
 License:	restricted, distributable
 Group:		Development/Languages/Java
 Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-i586.bin
-# Source0-md5:	baa5f71d72d1d4d7c38374d59bedfe7c
+# Source0-md5:	f4481c4e064cec06a65d7751d9105c6d
 Source1:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-amd64.bin
-# Source1-md5:	eca3b5106aa3cb0469ea01b96dc70510
+# Source1-md5:	2e0c075c27b09aed67f99475c3a19f83
 Patch0:		%{name}-ControlPanel-fix.patch
 Patch1:		%{name}-desktop.patch
 URL:		http://java.sun.com/linux/
@@ -265,7 +265,7 @@ yes
 EOF
 cd jdk%{_dir_ver}
 %ifnarch %{x8664}
-%patch0 -p1
+#%patch0 -p1
 # patch only copy of the desktop file, leave original unchanged
 cp jre/plugin/desktop/sun_java.desktop .
 %patch1 -p1
@@ -299,13 +299,6 @@ fi
 #mv jre/lib/font.properties{.Redhat6.1,}
 
 cp -rf jre/{bin,lib} $RPM_BUILD_ROOT%{jredir}
-
-# conflict with heimdal
-for i in kinit klist ; do
-	ln -sf %{jredir}/bin/$i $RPM_BUILD_ROOT%{_bindir}/j$i
-	mv -f $RPM_BUILD_ROOT%{_mandir}/man1/${i}.1 $RPM_BUILD_ROOT%{_mandir}/man1/j${i}.1
-	mv -f $RPM_BUILD_ROOT%{_mandir}/ja/man1/${i}.1 $RPM_BUILD_ROOT%{_mandir}/ja/man1/j${i}.1
-done
 
 for i in ControlPanel java java_vm keytool ktab orbd policytool \
 	rmid rmiregistry servertool tnameserv ; do
@@ -475,9 +468,6 @@ fi
 %attr(755,root,root) %{javadir}/bin/jstat
 %attr(755,root,root) %{javadir}/bin/jstatd
 %attr(755,root,root) %{javadir}/bin/keytool
-%attr(755,root,root) %{javadir}/bin/kinit
-%attr(755,root,root) %{javadir}/bin/klist
-%attr(755,root,root) %{javadir}/bin/ktab
 %attr(755,root,root) %{javadir}/bin/native2ascii
 %attr(755,root,root) %{javadir}/bin/orbd
 %attr(755,root,root) %{javadir}/bin/policytool
@@ -547,15 +537,13 @@ fi
 
 %files jre
 %defattr(644,root,root,755)
-%doc jre/{CHANGES,COPYRIGHT,LICENSE,README,*.txt}
+%doc jre/{COPYRIGHT,LICENSE,README,*.txt}
 %doc jre/Welcome.html
 %{_jvmdir}/jre
 %{_jvmjardir}/jre
 %attr(755,root,root) %{_bindir}/java
 %attr(755,root,root) %{_bindir}/java_vm
 %attr(755,root,root) %{_bindir}/keytool
-%attr(755,root,root) %{_bindir}/jkinit
-%attr(755,root,root) %{_bindir}/jklist
 %attr(755,root,root) %{_bindir}/ktab
 %attr(755,root,root) %{_bindir}/orbd
 %attr(755,root,root) %{_bindir}/rmid
@@ -575,9 +563,6 @@ fi
 %endif
 %attr(755,root,root) %{jredir}/bin/java
 %attr(755,root,root) %{jredir}/bin/keytool
-%attr(755,root,root) %{jredir}/bin/kinit
-%attr(755,root,root) %{jredir}/bin/klist
-%attr(755,root,root) %{jredir}/bin/ktab
 %attr(755,root,root) %{jredir}/bin/orbd
 %attr(755,root,root) %{jredir}/bin/rmid
 %attr(755,root,root) %{jredir}/bin/servertool
@@ -633,26 +618,17 @@ fi
 %{jredir}/lib/fontconfig.RedHat.2.1.properties.src
 %{jredir}/lib/fontconfig.RedHat.3.bfc
 %{jredir}/lib/fontconfig.RedHat.3.properties.src
-%{jredir}/lib/fontconfig.RedHat.8.0.bfc
-%{jredir}/lib/fontconfig.RedHat.8.0.properties.src
-%{jredir}/lib/fontconfig.RedHat.9.0.bfc
-%{jredir}/lib/fontconfig.RedHat.9.0.properties.src
 %{jredir}/lib/fontconfig.RedHat.bfc
 %{jredir}/lib/fontconfig.RedHat.properties.src
 %{jredir}/lib/fontconfig.SuSE.bfc
 %{jredir}/lib/fontconfig.SuSE.properties.src
-%{jredir}/lib/fontconfig.Sun.2003.bfc
-%{jredir}/lib/fontconfig.Sun.2003.properties.src
 %{jredir}/lib/fontconfig.Sun.bfc
 %{jredir}/lib/fontconfig.Sun.properties.src
-%{jredir}/lib/fontconfig.Turbo.8.0.bfc
-%{jredir}/lib/fontconfig.Turbo.8.0.properties.src
 %{jredir}/lib/fontconfig.Turbo.bfc
 %{jredir}/lib/fontconfig.Turbo.properties.src
 %{jredir}/lib/fontconfig.bfc
 %{jredir}/lib/fontconfig.properties.src
 %ifarch %{ix86}
-%attr(755,root,root) %{jredir}/lib/i386/gtkhelper
 %attr(755,root,root) %{jredir}/lib/i386/headless/libmawt.so
 %attr(755,root,root) %{jredir}/lib/i386/libsaproc.so
 %attr(755,root,root) %{jredir}/lib/i386/libunpack.so
@@ -674,10 +650,7 @@ fi
 %{_pixmapsdir}/sun_java.png
 %endif
 %{_mandir}/man1/javaws.1*
-%{_mandir}/man1/jkinit.1*
-%{_mandir}/man1/jklist.1*
 %{_mandir}/man1/keytool.1*
-%{_mandir}/man1/ktab.1*
 %{_mandir}/man1/orbd.1*
 %{_mandir}/man1/rmid.1*
 %{_mandir}/man1/servertool.1*
@@ -685,10 +658,7 @@ fi
 %{_mandir}/man1/*pack200.1*
 %lang(ja) %{_mandir}/ja/man1/*pack200.1*
 %lang(ja) %{_mandir}/ja/man1/java.1*
-%lang(ja) %{_mandir}/ja/man1/jkinit.1*
-%lang(ja) %{_mandir}/ja/man1/jklist.1*
 %lang(ja) %{_mandir}/ja/man1/keytool.1*
-%lang(ja) %{_mandir}/ja/man1/ktab.1*
 %lang(ja) %{_mandir}/ja/man1/orbd.1*
 %lang(ja) %{_mandir}/ja/man1/rmid.1*
 %lang(ja) %{_mandir}/ja/man1/servertool.1*
@@ -714,7 +684,6 @@ fi
 %ifarch %{ix86}
 %dir %{jredir}/lib/i386/xawt
 %dir %{jredir}/lib/i386/motif21
-%attr(755,root,root) %{jredir}/lib/i386/awt_robot
 %attr(755,root,root) %{jredir}/lib/i386/libjavaplugin*.so
 %endif
 %ifarch %{x8664}
@@ -729,20 +698,6 @@ fi
 %ifarch %{ix86}
 %attr(755,root,root) %{jredir}/lib/i386/motif21/libmawt.so
 %attr(755,root,root) %{jredir}/lib/i386/xawt/libmawt.so
-%dir %{jredir}/lib/javaws
-%{jredir}/lib/javaws/Java1.5.ico
-%{jredir}/lib/javaws/messages.properties
-%{jredir}/lib/javaws/messages_de.properties
-%{jredir}/lib/javaws/messages_es.properties
-%{jredir}/lib/javaws/messages_fr.properties
-%{jredir}/lib/javaws/messages_it.properties
-%{jredir}/lib/javaws/messages_ja.properties
-%{jredir}/lib/javaws/messages_ko.properties
-%{jredir}/lib/javaws/messages_sv.properties
-%{jredir}/lib/javaws/messages_zh_CN.properties
-%{jredir}/lib/javaws/messages_zh_HK.properties
-%{jredir}/lib/javaws/messages_zh_TW.properties
-%{jredir}/lib/javaws/miniSplash.jpg
 %dir %{jredir}/lib/locale
 %lang(de) %{jredir}/lib/locale/de
 %lang(de) %{_datadir}/locale/de/LC_MESSAGES/sunw_java_plugin.mo
@@ -801,7 +756,6 @@ fi
 %{javadir}/demo/jvmti/*/src
 %{javadir}/demo/jvmti/*/README*
 %{javadir}/demo/jvmti/*/*.jar
-%{javadir}/demo/jvmti/index.html
 %{javadir}/demo/management
 %ifarch %{ix86}
 %{javadir}/demo/plugin
