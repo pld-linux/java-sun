@@ -9,15 +9,14 @@ Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	%{_ver}
-Release:	0.3
+Release:	1
 License:	restricted, distributable
 Group:		Development/Languages/Java
 Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-i586.bin
 # Source0-md5:	f4481c4e064cec06a65d7751d9105c6d
 Source1:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-amd64.bin
 # Source1-md5:	2e0c075c27b09aed67f99475c3a19f83
-Patch0:		%{name}-ControlPanel-fix.patch
-Patch1:		%{name}-desktop.patch
+Patch0:		%{name}-desktop.patch
 URL:		http://java.sun.com/linux/
 BuildRequires:	rpm-build >= 4.3-0.20040107.21
 BuildRequires:	rpmbuild(macros) >= 1.300
@@ -265,10 +264,9 @@ yes
 EOF
 cd jdk%{_dir_ver}
 %ifnarch %{x8664}
-#%patch0 -p1
 # patch only copy of the desktop file, leave original unchanged
 cp jre/plugin/desktop/sun_java.desktop .
-%patch1 -p1
+%patch0 -p1
 %endif
 
 # unpack packed jar files -- in %%prep as it is done "in place"
@@ -295,8 +293,6 @@ fi
 if test -f jre/lib/*.txt ; then
 mv -f jre/lib/*.txt jre
 fi
-#mv jre/lib/font.properties{,.orig}
-#mv jre/lib/font.properties{.Redhat6.1,}
 
 cp -rf jre/{bin,lib} $RPM_BUILD_ROOT%{jredir}
 
