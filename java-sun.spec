@@ -1,14 +1,14 @@
 # TODO:
-#	- better way to choose preferred jvm (currently the symlinks are hardcoded)
-#	  Maybe a package containing only the symlinks?
+# - better way to choose preferred jvm (currently the symlinks are hardcoded)
+#   Maybe a package containing only the symlinks?
+# - dead symlinks in %{javadir}/bin if -jre-X11 not installed: ControlPanel, javaws, policytool
 #
-%define		_ver	1.6.0
 %define		_src_ver	6
-%define		_dir_ver	%(echo %{_ver}|sed 's/\\.\\(..\\)$/_\\1/')
+%define		_dir_ver	%(echo %{version} | sed 's/\\.\\(..\\)$/_\\1/')
 Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
-Version:	%{_ver}
+Version:	1.6.0
 Release:	1
 License:	restricted, distributable
 Group:		Development/Languages/Java
