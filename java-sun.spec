@@ -1,7 +1,6 @@
 # TODO:
 # - better way to choose preferred jvm (currently the symlinks are hardcoded)
 #   Maybe a package containing only the symlinks?
-# - dead symlinks in %{javadir}/bin if -jre-X11 not installed: ControlPanel, javaws, policytool
 #
 %define		_src_ver	6
 %define		_dir_ver	%(echo %{version} | sed 's/\\.\\(..\\)$/_\\1/')
@@ -9,7 +8,7 @@ Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	1.6.0
-Release:	1
+Release:	2
 License:	restricted, distributable
 Group:		Development/Languages/Java
 Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-i586.bin
@@ -296,7 +295,7 @@ fi
 
 cp -rf jre/{bin,lib} $RPM_BUILD_ROOT%{jredir}
 
-for i in ControlPanel java java_vm keytool ktab orbd policytool \
+for i in ControlPanel java java_vm keytool orbd policytool \
 	rmid rmiregistry servertool tnameserv ; do
 	ln -sf %{jredir}/bin/$i $RPM_BUILD_ROOT%{_bindir}/$i
 done
@@ -309,7 +308,7 @@ for i in HtmlConverter appletviewer extcheck idlj jar jarsigner java-rmi.cgi \
 done
 
 # make sure all tools are available under $(JDK_HOME)/bin
-for i in ControlPanel keytool kinit klist ktab orbd policytool rmid \
+for i in ControlPanel keytool kinit klist orbd policytool rmid \
 		rmiregistry servertool tnameserv ; do
 	ln -sf ../jre/bin/$i $RPM_BUILD_ROOT%{javadir}/bin/$i
 done
@@ -476,7 +475,6 @@ fi
 %attr(755,root,root) %{javadir}/bin/keytool
 %attr(755,root,root) %{javadir}/bin/native2ascii
 %attr(755,root,root) %{javadir}/bin/orbd
-%attr(755,root,root) %{javadir}/bin/policytool
 %attr(755,root,root) %{javadir}/bin/rmid
 %attr(755,root,root) %{javadir}/bin/rmiregistry
 %attr(755,root,root) %{javadir}/bin/schemagen
@@ -566,9 +564,7 @@ fi
 %{_jvmdir}/jre
 %{_jvmjardir}/jre
 %attr(755,root,root) %{_bindir}/java
-%attr(755,root,root) %{_bindir}/java_vm
 %attr(755,root,root) %{_bindir}/keytool
-%attr(755,root,root) %{_bindir}/ktab
 %attr(755,root,root) %{_bindir}/orbd
 %attr(755,root,root) %{_bindir}/rmid
 %attr(755,root,root) %{_bindir}/servertool
@@ -582,9 +578,6 @@ fi
 %attr(755,root,root) %{javadir}/bin/java
 %dir %{jredir}
 %dir %{jredir}/bin
-%ifarch %{ix86}
-%attr(755,root,root) %{jredir}/bin/java_vm
-%endif
 %attr(755,root,root) %{jredir}/bin/java
 %attr(755,root,root) %{jredir}/bin/keytool
 %attr(755,root,root) %{jredir}/bin/orbd
@@ -710,6 +703,7 @@ fi
 %attr(755,root,root) %{jredir}/bin/jcontrol
 %endif
 %ifarch %{ix86}
+%attr(755,root,root) %{_bindir}/java_vm
 %attr(755,root,root) %{jredir}/bin/java_vm
 %endif
 %attr(755,root,root) %{jredir}/bin/policytool
