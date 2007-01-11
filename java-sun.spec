@@ -13,8 +13,6 @@ License:	restricted, distributable
 Group:		Development/Languages/Java
 Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-i586.bin
 # Source0-md5:	f4481c4e064cec06a65d7751d9105c6d
-Source1:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-amd64.bin
-# Source1-md5:	2e0c075c27b09aed67f99475c3a19f83
 Patch0:		%{name}-desktop.patch
 URL:		http://java.sun.com/linux/
 BuildRequires:	rpm-build >= 4.3-0.20040107.21
@@ -295,7 +293,7 @@ fi
 
 cp -rf jre/{bin,lib} $RPM_BUILD_ROOT%{jredir}
 
-for i in ControlPanel java java_vm keytool orbd policytool \
+for i in ControlPanel java javaws java_vm keytool orbd policytool \
 	rmid rmiregistry servertool tnameserv ; do
 	ln -sf %{jredir}/bin/$i $RPM_BUILD_ROOT%{_bindir}/$i
 done
@@ -339,7 +337,7 @@ for f in jndi jndi-ldap jndi-cos jndi-rmi jaas jdbc-stdext jdbc-stdext-3.0 \
 	ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{jvmjardir}/$f.jar
 done
 
-%ifnarch %{x8664}
+%ifarch %{ix86}
 install -d $RPM_BUILD_ROOT%{jredir}/javaws
 cp -a jre/javaws/* $RPM_BUILD_ROOT%{jredir}/javaws
 ln -sf %{jredir}/lib/javaws.jar $RPM_BUILD_ROOT%{jvmjardir}/javaws.jar
@@ -448,9 +446,7 @@ fi
 %attr(755,root,root) %{_bindir}/xjc
 %ifarch %{ix86}
 %attr(755,root,root) %{javadir}/bin/HtmlConverter
-%attr(755,root,root) %{javadir}/bin/ControlPanel
 %attr(755,root,root) %{javadir}/bin/java-rmi.cgi
-%attr(755,root,root) %{javadir}/bin/javaws
 %attr(755,root,root) %{javadir}/bin/jcontrol
 %endif
 %attr(755,root,root) %{javadir}/bin/apt
@@ -675,7 +671,6 @@ fi
 %{_desktopdir}/sun_java.desktop
 %{_pixmapsdir}/sun_java.png
 %endif
-%{_mandir}/man1/javaws.1*
 %{_mandir}/man1/keytool.1*
 %{_mandir}/man1/orbd.1*
 %{_mandir}/man1/rmid.1*
@@ -695,17 +690,16 @@ fi
 %ifarch %{ix86}
 %doc jre/Xusage*
 %attr(755,root,root) %{_bindir}/ControlPanel
-%endif
-%attr(755,root,root) %{_bindir}/policytool
-%ifarch %{ix86}
+%attr(755,root,root) %{_bindir}/javaws
 %attr(755,root,root) %{jredir}/bin/javaws
 %attr(755,root,root) %{jredir}/bin/ControlPanel
 %attr(755,root,root) %{jredir}/bin/jcontrol
-%endif
-%ifarch %{ix86}
 %attr(755,root,root) %{_bindir}/java_vm
 %attr(755,root,root) %{jredir}/bin/java_vm
+%attr(755,root,root) %{javadir}/bin/ControlPanel
+%attr(755,root,root) %{javadir}/bin/javaws
 %endif
+%attr(755,root,root) %{_bindir}/policytool
 %attr(755,root,root) %{jredir}/bin/policytool
 %{jredir}/lib/fonts
 %{jredir}/lib/oblique-fonts
@@ -754,6 +748,7 @@ fi
 %endif
 %{_mandir}/man1/policytool.1*
 %ifarch %{ix86}
+%{_mandir}/man1/javaws.1*
 %lang(ja) %{_mandir}/ja/man1/javaws.1*
 %endif
 %lang(ja) %{_mandir}/ja/man1/policytool.1*
