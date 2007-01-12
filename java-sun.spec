@@ -1,6 +1,7 @@
 # TODO:
 # - better way to choose preferred jvm (currently the symlinks are hardcoded)
 #   Maybe a package containing only the symlinks?
+# - unpackaged: /usr/share/man/man1/javaws.1.gz
 #
 %define		_src_ver	6
 %define		_dir_ver	%(echo %{version} | sed 's/\\.\\(..\\)$/_\\1/')
@@ -18,7 +19,7 @@ Source1:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-amd64.b
 Patch0:		%{name}-desktop.patch
 URL:		http://java.sun.com/linux/
 BuildRequires:	rpm-build >= 4.3-0.20040107.21
-BuildRequires:	rpmbuild(macros) >= 1.300
+BuildRequires:	rpmbuild(macros) >= 1.357
 BuildRequires:	unzip
 Requires:	%{name}-jre = %{version}-%{release}
 Requires:	java-shared
@@ -39,10 +40,6 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		jrereldir	%{javareldir}/jre
 %define		jredir		%{_jvmdir}/%{jrereldir}
 %define		jvmjardir	%{_jvmjardir}/%{name}-%{version}
-%define		_plugindir	%{_libdir}/browser-plugins
-
-# list of supported browsers, in free form text
-%define		browsers	mozilla, mozilla-firefox, mozilla-firefox-bin, netscape, seamonkey
 
 # rpm doesn't like strange version definitions provided by Sun's libs
 %define		_noautoprov	'\\.\\./.*' '/export/.*'
@@ -207,6 +204,7 @@ Summary:	Java plugin for WWW browsers
 Summary(pl):	Wtyczki Javy do przegl±darek WWW
 Group:		Development/Languages/Java
 Requires:	%{name}-jre-X11 = %{version}-%{release}
+Requires:	browser-plugins >= 2.0
 Requires:	browser-plugins(%{_target_base_arch})
 Provides:	java-sun-mozilla-plugin
 Provides:	mozilla-firefox-plugin-java-sun
@@ -230,12 +228,8 @@ Obsoletes:	mozilla-plugin-java-sun
 %description -n browser-plugin-%{name}
 Java plugin for WWW browsers.
 
-Supported browsers: %{browsers}.
-
 %description -n browser-plugin-%{name} -l pl
 Wtyczki z obs³ug± Javy dla przegl±darek WWW.
-
-Obs³ugiwane przegl±darki: %{browsers}.
 
 %package sources
 Summary:	JDK sources
@@ -277,7 +271,7 @@ done
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{jredir},%{javadir},%{jvmjardir},%{_javadir},%{_bindir},%{_includedir}} \
 	$RPM_BUILD_ROOT{%{_mandir}/{,ja/}man1,%{_prefix}/src/%{name}-sources} \
-	$RPM_BUILD_ROOT{%{_desktopdir},%{_pixmapsdir},%{_plugindir}}
+	$RPM_BUILD_ROOT{%{_desktopdir},%{_pixmapsdir},%{_browserpluginsdir}}
 
 cp -rf bin sample demo include lib $RPM_BUILD_ROOT%{javadir}
 install man/man1/* $RPM_BUILD_ROOT%{_mandir}/man1
@@ -324,7 +318,7 @@ cp -R jre/plugin $RPM_BUILD_ROOT%{jredir}
 
 # Install plugin for browsers
 # Plugin in regular location simply does not work (is seen by browsers):
-ln -sf %{jredir}/plugin/i386/ns7/libjavaplugin_oji.so $RPM_BUILD_ROOT%{_plugindir}
+ln -sf %{jredir}/plugin/i386/ns7/libjavaplugin_oji.so $RPM_BUILD_ROOT%{_browserpluginsdir}
 
 install *.desktop $RPM_BUILD_ROOT%{_desktopdir}
 install jre/plugin/desktop/*.png $RPM_BUILD_ROOT%{_pixmapsdir}
@@ -376,43 +370,13 @@ if [ -L %{javadir} ]; then
 	rm -f %{javadir}
 fi
 
-%triggerin -n browser-plugin-%{name} -- mozilla
-%nsplugin_install -d %{_libdir}/mozilla/plugins libjavaplugin_oji.so
+%post -n browser-plugin-%{name}
+%update_browser_plugins
 
-%triggerun -n browser-plugin-%{name} -- mozilla
-%nsplugin_uninstall -d %{_libdir}/mozilla/plugins libjavaplugin_oji.so
-
-%triggerin -n browser-plugin-%{name} -- mozilla-firefox
-%nsplugin_install -d %{_libdir}/mozilla-firefox/plugins libjavaplugin_oji.so
-
-%triggerun -n browser-plugin-%{name} -- mozilla-forefox
-%nsplugin_uninstall -d %{_libdir}/mozilla-firefox/plugins libjavaplugin_oji.so
-
-%triggerin -n browser-plugin-%{name} -- mozilla-firefox-bin
-%nsplugin_install -d %{_libdir}/mozilla-firefox-bin/plugins libjavaplugin_oji.so
-
-%triggerun -n browser-plugin-%{name} -- mozilla-forefox-bin
-%nsplugin_uninstall -d %{_libdir}/mozilla-firefox-bin/plugins libjavaplugin_oji.so
-
-%triggerin -n browser-plugin-%{name} -- netscape-common
-%nsplugin_install -d %{_libdir}/netscape/plugins libjavaplugin_oji.so
-
-%triggerun -n browser-plugin-%{name} -- netscape-common
-%nsplugin_uninstall -d %{_libdir}/netscape/plugins libjavaplugin_oji.so
-
-%triggerin -n browser-plugin-%{name} -- seamonkey
-%nsplugin_install -d %{_libdir}/seamonkey/plugins libjavaplugin_oji.so
-
-%triggerun -n browser-plugin-%{name} -- seamonkey
-%nsplugin_uninstall -d %{_libdir}/seamonkey/plugins libjavaplugin_oji.so
-
-# as rpm removes the old obsoleted package files after the triggers
-# are ran, add another trigger to make the links there.
-%triggerpostun -n browser-plugin-%{name} -- mozilla-plugin-java-sun
-%nsplugin_install -f -d %{_libdir}/mozilla/plugins libjavaplugin_oji.so
-
-%triggerpostun -n browser-plugin-%{name} -- mozilla-firefox-plugin-java-sun
-%nsplugin_install -f -d %{_libdir}/mozilla-firefox/plugins libjavaplugin_oji.so
+%postun -n browser-plugin-%{name}
+if [ "$1" = 0 ]; then
+	%update_browser_plugins
+fi
 
 %files
 %defattr(644,root,root,755)
@@ -813,7 +777,7 @@ fi
 %dir %{jredir}/plugin/i386
 %dir %{jredir}/plugin/i386/*
 %attr(755,root,root) %{jredir}/plugin/i386/*/libjavaplugin_oji.so
-%attr(755,root,root) %{_plugindir}/*.so
+%attr(755,root,root) %{_browserpluginsdir}/*.so
 %endif
 
 %files sources
