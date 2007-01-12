@@ -568,7 +568,7 @@ fi
 %endif
 %ifarch %{x8664}
 %dir %{jredir}/lib/amd64
-%attr(755,root,root) %dir %{jredir}/lib/amd64/headless
+%dir %{jredir}/lib/amd64/headless
 %attr(755,root,root) %{jredir}/lib/amd64/jli
 %attr(755,root,root) %{jredir}/lib/amd64/native_threads
 %attr(755,root,root) %{jredir}/lib/amd64/server
@@ -676,8 +676,8 @@ fi
 %endif
 %ifarch %{x8664}
 %dir %{jredir}/lib/amd64
-%attr(755,root,root) %dir %{jredir}/lib/amd64/xawt
-%attr(755,root,root) %dir %{jredir}/lib/amd64/motif21
+%dir %{jredir}/lib/amd64/xawt
+%dir %{jredir}/lib/amd64/motif21
 %attr(755,root,root) %{jredir}/lib/amd64/libsplashscreen.so
 %endif
 %ifarch %{ix86}
