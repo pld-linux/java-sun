@@ -358,6 +358,7 @@ ln -s %{javareldir} $RPM_BUILD_ROOT%{_jvmdir}/java
 ln -s %{jrereldir} $RPM_BUILD_ROOT%{_jvmdir}/jre
 ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_jvmjardir}/java
 ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_jvmjardir}/jre
+ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_jvmjardir}/jsse
 
 %clean
 rm -rf $RPM_BUILD_ROOT
