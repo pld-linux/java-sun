@@ -2,6 +2,7 @@
 # - better way to choose preferred jvm (currently the symlinks are hardcoded)
 #   Maybe a package containing only the symlinks?
 # - unpackaged: /usr/share/man/man1/javaws.1.gz
+# - packaged twice: warning: File listed twice: /usr/lib/jvm/java-sun-1.6.0/jre/lib/jexec
 #
 %define		_src_ver	6
 %define		_dir_ver	%(echo %{version} | sed 's/\\.\\(..\\)$/_\\1/')
