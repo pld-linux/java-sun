@@ -526,6 +526,7 @@ fi
 %doc jre/Welcome.html
 %{_jvmdir}/jre
 %{_jvmjardir}/jre
+%{_jvmjardir}/jsse
 %attr(755,root,root) %{_bindir}/java
 %attr(755,root,root) %{_bindir}/keytool
 %attr(755,root,root) %{_bindir}/orbd
