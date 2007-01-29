@@ -9,7 +9,7 @@ Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	1.6.0
-Release:	3.2
+Release:	3.3
 License:	restricted, distributable
 Group:		Development/Languages/Java
 Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-i586.bin
@@ -302,12 +302,17 @@ for i in ControlPanel java javaws java_vm keytool orbd policytool \
 	ln -sf %{jredir}/bin/$i $RPM_BUILD_ROOT%{_bindir}/$i
 done
 
-for i in HtmlConverter appletviewer extcheck idlj jar jarsigner java-rmi.cgi \
-	javac javadoc javah javap jcontrol jconsole jdb jhat jinfo jmap jps \
+for i in appletviewer extcheck idlj jar jarsigner \
+	javac javadoc javah javap jconsole jdb jhat jinfo jmap jps \
 	jrunscript jsadebugd jstack jstat jstatd native2ascii rmic serialver \
 	schemagen wsgen wsimport xjc ; do
 	ln -sf %{javadir}/bin/$i $RPM_BUILD_ROOT%{_bindir}/$i
 done
+%ifarch %{ix86}
+for i in HtmlConverter jcontrol java-rmi.cgi; do
+	ln -sf %{javadir}/bin/$i $RPM_BUILD_ROOT%{_bindir}/$i
+done
+%endif
 
 # make sure all tools are available under $(JDK_HOME)/bin
 for i in ControlPanel keytool kinit klist orbd policytool rmid \
@@ -337,7 +342,7 @@ ln -sf %{jredir}/lib/jsse.jar $RPM_BUILD_ROOT%{jvmjardir}/jcert.jar
 ln -sf %{jredir}/lib/jsse.jar $RPM_BUILD_ROOT%{jvmjardir}/jnet.jar
 ln -sf %{jredir}/lib/jce.jar $RPM_BUILD_ROOT%{jvmjardir}/jce.jar
 for f in jndi jndi-ldap jndi-cos jndi-rmi jaas jdbc-stdext jdbc-stdext-3.0 \
-  sasl jaxp_parser_impl jaxp_transform_impl jaxp jmx xml-commons-apis; do
+	sasl jaxp_parser_impl jaxp_transform_impl jaxp jmx xml-commons-apis; do
 	ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{jvmjardir}/$f.jar
 done
 
@@ -395,6 +400,7 @@ fi
 %ifarch %{ix86}
 %attr(755,root,root) %{_bindir}/HtmlConverter
 %attr(755,root,root) %{_bindir}/java-rmi.cgi
+%attr(755,root,root) %{_bindir}/jcontrol
 %endif
 %attr(755,root,root) %{_bindir}/extcheck
 %attr(755,root,root) %{_bindir}/idlj
@@ -662,11 +668,9 @@ fi
 %{jredir}/lib/oblique-fonts
 %dir %{jredir}/lib/%{arch}/xawt
 %dir %{jredir}/lib/%{arch}/motif21
+%attr(755,root,root) %{jredir}/lib/%{arch}/libsplashscreen.so
 %ifarch %{ix86}
 %attr(755,root,root) %{jredir}/lib/%{arch}/libjavaplugin*.so
-%endif
-%ifarch %{x8664}
-%attr(755,root,root) %{jredir}/lib/%{arch}/libsplashscreen.so
 %endif
 %ifarch %{ix86}
 %{jvmjardir}/javaws.jar
