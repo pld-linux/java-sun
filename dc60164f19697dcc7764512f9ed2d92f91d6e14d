@@ -1,0 +1,3 @@
+- resolved autodeps error with new rpm (now new rpm is BRed for .* support)
+- separated alsa module
+- added missing %{_bindir}/rmiregistry symlink
