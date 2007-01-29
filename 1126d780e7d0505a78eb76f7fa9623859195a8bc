@@ -1,0 +1,2 @@
+- merged standarization from DEVEL - seems successful, tomcat and jedit work
+- added %pre - remove old symlinks before making directories
