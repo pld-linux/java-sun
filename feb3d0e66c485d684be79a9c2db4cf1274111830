@@ -1,0 +1,7 @@
+- moved lib*.so Provides to -jre (where these libs exist)
+- moved .jar symlinks and Provides to -jre (runtime stuff, not development)
+- libstdc++-compat seems no longer needed
+- mozilla gcc 2.9x plugin renamed to mozilla-plugin-gcc2-%{name}
+- fixed -tools separation
+- added missing k{init,list,tab} manuals
+- added patch for broken ControlPanel script
