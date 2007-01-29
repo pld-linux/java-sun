@@ -9,7 +9,7 @@ Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	1.6.0
-Release:	3.3
+Release:	3.5
 License:	restricted, distributable
 Group:		Development/Languages/Java
 Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-i586.bin
@@ -263,16 +263,16 @@ sh %{SOURCE1} <<EOF
 %endif
 yes
 EOF
-cd jdk%{_dir_ver}
-%ifnarch %{x8664}
+cd -
+%ifarch %{ix86}
 # patch only copy of the desktop file, leave original unchanged
 cp jre/plugin/desktop/sun_java.desktop .
 %patch0 -p1
 %endif
 
 # unpack packed jar files -- in %%prep as it is done "in place"
-for pack in `find . -name '*.pack'`; do
-	bin/unpack200 -r $pack `echo $pack|sed -e's/\.pack$/.jar/'`
+for pack in $(find . -name '*.pack'); do
+	bin/unpack200 -r $pack ${pack%.pack}.jar
 done
 
 %install
@@ -298,7 +298,7 @@ fi
 cp -rf jre/{bin,lib} $RPM_BUILD_ROOT%{jredir}
 
 for i in ControlPanel java javaws java_vm keytool orbd policytool \
-	rmid rmiregistry servertool tnameserv ; do
+	rmid rmiregistry servertool tnameserv pack200 unpack200 jconsole apt; do
 	ln -sf %{jredir}/bin/$i $RPM_BUILD_ROOT%{_bindir}/$i
 done
 
@@ -316,13 +316,9 @@ done
 
 # make sure all tools are available under $(JDK_HOME)/bin
 for i in ControlPanel keytool kinit klist orbd policytool rmid \
-		rmiregistry servertool tnameserv ; do
+		rmiregistry servertool tnameserv pack200 unpack200 java javaws; do
 	ln -sf ../jre/bin/$i $RPM_BUILD_ROOT%{javadir}/bin/$i
 done
-
-rm -f $RPM_BUILD_ROOT%{javadir}/bin/{java,javaws}
-ln -sf %{jredir}/bin/java $RPM_BUILD_ROOT%{javadir}/bin/java
-ln -sf %{jredir}/bin/javaws $RPM_BUILD_ROOT%{javadir}/bin/javaws
 
 %ifarch %{ix86}
 # copy _all_ plugin files (even those incompatible with PLD) --
@@ -402,6 +398,7 @@ fi
 %attr(755,root,root) %{_bindir}/java-rmi.cgi
 %attr(755,root,root) %{_bindir}/jcontrol
 %endif
+%attr(755,root,root) %{_bindir}/apt
 %attr(755,root,root) %{_bindir}/extcheck
 %attr(755,root,root) %{_bindir}/idlj
 %attr(755,root,root) %{_bindir}/jarsigner
@@ -409,6 +406,7 @@ fi
 %attr(755,root,root) %{_bindir}/javadoc
 %attr(755,root,root) %{_bindir}/javah
 %attr(755,root,root) %{_bindir}/javap
+%attr(755,root,root) %{_bindir}/jconsole
 %attr(755,root,root) %{_bindir}/jdb
 %attr(755,root,root) %{_bindir}/jhat
 %attr(755,root,root) %{_bindir}/jinfo
@@ -542,6 +540,8 @@ fi
 %attr(755,root,root) %{_bindir}/rmid
 %attr(755,root,root) %{_bindir}/servertool
 %attr(755,root,root) %{_bindir}/tnameserv
+%attr(755,root,root) %{_bindir}/pack200
+%attr(755,root,root) %{_bindir}/unpack200
 %attr(755,root,root) %{jredir}/bin/pack200
 %attr(755,root,root) %{jredir}/bin/unpack200
 %attr(755,root,root) %{javadir}/bin/pack200
