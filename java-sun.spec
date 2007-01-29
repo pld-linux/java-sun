@@ -10,7 +10,7 @@ Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	1.6.0
-Release:	3
+Release:	3.1
 License:	restricted, distributable
 Group:		Development/Languages/Java
 Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-i586.bin
@@ -41,6 +41,14 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		jrereldir	%{javareldir}/jre
 %define		jredir		%{_jvmdir}/%{jrereldir}
 %define		jvmjardir	%{_jvmjardir}/%{name}-%{version}
+
+%ifarch %{ix86}
+%define		arch	i386
+%endif
+%ifarch %{x8664}
+%define		arch	amd64
+%endif
+
 
 # rpm doesn't like strange version definitions provided by Sun's libs
 %define		_noautoprov	'\\.\\./.*' '/export/.*'
@@ -278,14 +286,14 @@ cp -rf bin sample demo include lib $RPM_BUILD_ROOT%{javadir}
 install man/man1/* $RPM_BUILD_ROOT%{_mandir}/man1
 install man/ja/man1/* $RPM_BUILD_ROOT%{_mandir}/ja/man1
 
-if test -f jre/lib/i386/client/Xusage.txt ; then
-mv -f jre/lib/i386/client/Xusage.txt jre/Xusage.client
+if test -f jre/lib/i386/client/Xusage.txt; then
+	mv -f jre/lib/i386/client/Xusage.txt jre/Xusage.client
 fi
-if test -f jre/lib/i386/server/Xusage.txt ; then
-mv -f jre/lib/i386/server/Xusage.txt jre/Xusage.server
+if test -f jre/lib/i386/server/Xusage.txt; then
+	mv -f jre/lib/i386/server/Xusage.txt jre/Xusage.server
 fi
-if test -f jre/lib/*.txt ; then
-mv -f jre/lib/*.txt jre
+if test -f jre/lib/*.txt; then
+	mv -f jre/lib/*.txt jre
 fi
 
 cp -rf jre/{bin,lib} $RPM_BUILD_ROOT%{jredir}
@@ -514,12 +522,7 @@ fi
 
 %files jre-jdbc
 %defattr(644,root,root,755)
-%ifarch %{ix86}
-%attr(755,root,root) %{jredir}/lib/i386/libJdbcOdbc.so
-%endif
-%ifarch %{x8664}
-%attr(755,root,root) %{jredir}/lib/amd64/libJdbcOdbc.so
-%endif
+%attr(755,root,root) %{jredir}/lib/%{arch}/libJdbcOdbc.so
 
 %files jre
 %defattr(644,root,root,755)
@@ -555,31 +558,23 @@ fi
 %{jredir}/lib/audio
 %{jredir}/lib/cmm
 %{jredir}/lib/ext
+
+%dir %{jredir}/lib/%{arch}
+%dir %{jredir}/lib/%{arch}/headless
+%dir %{jredir}/lib/%{arch}/jli
+%attr(755,root,root) %{jredir}/lib/%{arch}/client
+%attr(755,root,root) %{jredir}/lib/%{arch}/native_threads
+%attr(755,root,root) %{jredir}/lib/%{arch}/server
+%{jredir}/lib/%{arch}/jli/libjli.so
+%{jredir}/lib/%{arch}/jvm.cfg
+%attr(755,root,root) %{jredir}/lib/%{arch}/lib[acdfhijmnrvz]*.so
+%exclude %{jredir}/lib/%{arch}/libjsoundalsa.so
 %ifarch %{ix86}
-%dir %{jredir}/lib/i386
-%dir %{jredir}/lib/i386/headless
-%dir %{jredir}/lib/i386/jli
-%attr(755,root,root) %{jredir}/lib/i386/client
-%attr(755,root,root) %{jredir}/lib/i386/native_threads
-%attr(755,root,root) %{jredir}/lib/i386/server
-%{jredir}/lib/i386/jli/libjli.so
-%{jredir}/lib/i386/jvm.cfg
-%{jredir}/lib/i386/libsplashscreen.so
-%attr(755,root,root) %{jredir}/lib/i386/lib[acdfhijmnrvz]*.so
-%exclude %{jredir}/lib/i386/libjsoundalsa.so
-%exclude %{jredir}/lib/i386/libjavaplugin*.so
+%{jredir}/lib/%{arch}/libsplashscreen.so
+%exclude %{jredir}/lib/%{arch}/libjavaplugin*.so
 %endif
-%ifarch %{x8664}
-%dir %{jredir}/lib/amd64
-%dir %{jredir}/lib/amd64/headless
-%attr(755,root,root) %{jredir}/lib/amd64/jli
-%attr(755,root,root) %{jredir}/lib/amd64/native_threads
-%attr(755,root,root) %{jredir}/lib/amd64/server
-%{jredir}/lib/amd64/jvm.cfg
-%attr(755,root,root) %{jredir}/lib/amd64/lib[acdfhijmnrvz]*.so
-%exclude %{jredir}/lib/amd64/libjsoundalsa.so
-%endif
-%ifnarch %{x8664}
+
+%ifarch %{ix86}
 %{jredir}/lib/deploy
 %{jredir}/lib/desktop
 %endif
@@ -620,16 +615,9 @@ fi
 %{jredir}/lib/fontconfig.Turbo.properties.src
 %{jredir}/lib/fontconfig.bfc
 %{jredir}/lib/fontconfig.properties.src
-%ifarch %{ix86}
-%attr(755,root,root) %{jredir}/lib/i386/headless/libmawt.so
-%attr(755,root,root) %{jredir}/lib/i386/libsaproc.so
-%attr(755,root,root) %{jredir}/lib/i386/libunpack.so
-%endif
-%ifarch %{x8664}
-%attr(755,root,root) %{jredir}/lib/amd64/headless/libmawt.so
-%attr(755,root,root) %{jredir}/lib/amd64/libsaproc.so
-%attr(755,root,root) %{jredir}/lib/amd64/libunpack.so
-%endif
+%attr(755,root,root) %{jredir}/lib/%{arch}/headless/libmawt.so
+%attr(755,root,root) %{jredir}/lib/%{arch}/libsaproc.so
+%attr(755,root,root) %{jredir}/lib/%{arch}/libunpack.so
 %dir %{jredir}/lib/management
 %{jredir}/lib/management/jmxremote.access
 %{jredir}/lib/management/jmxremote.password.template
@@ -670,25 +658,24 @@ fi
 %endif
 %attr(755,root,root) %{_bindir}/policytool
 %attr(755,root,root) %{jredir}/bin/policytool
+%{_mandir}/man1/policytool.1*
+%lang(ja) %{_mandir}/ja/man1/policytool.1*
 %{jredir}/lib/fonts
 %{jredir}/lib/oblique-fonts
+%dir %{jredir}/lib/%{arch}/xawt
+%dir %{jredir}/lib/%{arch}/motif21
 %ifarch %{ix86}
-%dir %{jredir}/lib/i386/xawt
-%dir %{jredir}/lib/i386/motif21
-%attr(755,root,root) %{jredir}/lib/i386/libjavaplugin*.so
+%attr(755,root,root) %{jredir}/lib/%{arch}/libjavaplugin*.so
 %endif
 %ifarch %{x8664}
-%dir %{jredir}/lib/amd64
-%dir %{jredir}/lib/amd64/xawt
-%dir %{jredir}/lib/amd64/motif21
-%attr(755,root,root) %{jredir}/lib/amd64/libsplashscreen.so
+%attr(755,root,root) %{jredir}/lib/%{arch}/libsplashscreen.so
 %endif
 %ifarch %{ix86}
 %{jvmjardir}/javaws.jar
 %endif
+%attr(755,root,root) %{jredir}/lib/%{arch}/motif21/libmawt.so
+%attr(755,root,root) %{jredir}/lib/%{arch}/xawt/libmawt.so
 %ifarch %{ix86}
-%attr(755,root,root) %{jredir}/lib/i386/motif21/libmawt.so
-%attr(755,root,root) %{jredir}/lib/i386/xawt/libmawt.so
 %dir %{jredir}/lib/locale
 %lang(de) %{jredir}/lib/locale/de
 %lang(de) %{_datadir}/locale/de/LC_MESSAGES/sunw_java_plugin.mo
@@ -711,29 +698,16 @@ fi
 %lang(zh_CN) %{_datadir}/locale/zh_CN/LC_MESSAGES/sunw_java_plugin.mo
 %lang(zh_TW) %{_datadir}/locale/zh_TW/LC_MESSAGES/sunw_java_plugin.mo
 %endif
-%ifarch %{x8664}
-%attr(755,root,root) %{jredir}/lib/amd64/motif21/libmawt.so
-%attr(755,root,root) %{jredir}/lib/amd64/xawt/libmawt.so
-%endif
-%{_mandir}/man1/policytool.1*
-%ifarch %{ix86}
-%{_mandir}/man1/javaws.1*
-%lang(ja) %{_mandir}/ja/man1/javaws.1*
-%endif
-%lang(ja) %{_mandir}/ja/man1/policytool.1*
 %ifarch %{ix86}
 %dir %{jredir}/javaws
 %attr(755,root,root) %{jredir}/javaws/javaws
+%{_mandir}/man1/javaws.1*
+%lang(ja) %{_mandir}/ja/man1/javaws.1*
 %endif
 
 %files jre-alsa
 %defattr(644,root,root,755)
-%ifarch %{ix86}
-%attr(755,root,root) %{jredir}/lib/i386/libjsoundalsa.so
-%endif
-%ifarch %{x8664}
-%attr(755,root,root) %{jredir}/lib/amd64/libjsoundalsa.so
-%endif
+%attr(755,root,root) %{jredir}/lib/%{arch}/libjsoundalsa.so
 
 %files demos
 %defattr(644,root,root,755)
@@ -777,9 +751,9 @@ fi
 %defattr(644,root,root,755)
 %dir %{jredir}/plugin
 %{jredir}/plugin/desktop
-%dir %{jredir}/plugin/i386
-%dir %{jredir}/plugin/i386/*
-%attr(755,root,root) %{jredir}/plugin/i386/*/libjavaplugin_oji.so
+%dir %{jredir}/plugin/%{arch}
+%dir %{jredir}/plugin/%{arch}/*
+%attr(755,root,root) %{jredir}/plugin/%{arch}/*/libjavaplugin_oji.so
 %attr(755,root,root) %{_browserpluginsdir}/*.so
 %endif
 
