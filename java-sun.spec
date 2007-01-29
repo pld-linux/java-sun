@@ -565,12 +565,12 @@ fi
 %attr(755,root,root) %{jredir}/lib/%{arch}/client
 %attr(755,root,root) %{jredir}/lib/%{arch}/native_threads
 %attr(755,root,root) %{jredir}/lib/%{arch}/server
-%{jredir}/lib/%{arch}/jli/libjli.so
+%attr(755,root,root) %{jredir}/lib/%{arch}/jli/libjli.so
 %{jredir}/lib/%{arch}/jvm.cfg
 %attr(755,root,root) %{jredir}/lib/%{arch}/lib[acdfhijmnrvz]*.so
 %exclude %{jredir}/lib/%{arch}/libjsoundalsa.so
 %ifarch %{ix86}
-%{jredir}/lib/%{arch}/libsplashscreen.so
+%attr(755,root,root) %{jredir}/lib/%{arch}/libsplashscreen.so
 %exclude %{jredir}/lib/%{arch}/libjavaplugin*.so
 %endif
 
