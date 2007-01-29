@@ -1,0 +1,1 @@
+- %{_javalibdir} == (rpm) %{_javadir}.
