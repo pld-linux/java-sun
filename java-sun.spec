@@ -1,7 +1,6 @@
 # TODO:
 # - better way to choose preferred jvm (currently the symlinks are hardcoded)
 #   Maybe a package containing only the symlinks?
-# - unpackaged: /usr/share/man/man1/javaws.1.gz
 #
 %define		_src_ver	6
 %define		_dir_ver	%(echo %{version} | sed 's/\\.\\(..\\)$/_\\1/')
@@ -9,7 +8,7 @@ Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	1.6.0
-Release:	3.5
+Release:	4
 License:	restricted, distributable
 Group:		Development/Languages/Java
 Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-i586.bin
@@ -320,6 +319,11 @@ for i in ControlPanel keytool kinit klist orbd policytool rmid \
 	ln -sf ../jre/bin/$i $RPM_BUILD_ROOT%{javadir}/bin/$i
 done
 
+%ifarch %{x8664}
+# only manual available on this platform
+rm -f $RPM_BUILD_ROOT%{_mandir}/man1/javaws.1
+%endif
+
 %ifarch %{ix86}
 # copy _all_ plugin files (even those incompatible with PLD) --
 # license restriction
@@ -566,7 +570,6 @@ fi
 %dir %{jredir}/lib/%{arch}
 %dir %{jredir}/lib/%{arch}/headless
 %dir %{jredir}/lib/%{arch}/jli
-%attr(755,root,root) %{jredir}/lib/%{arch}/client
 %attr(755,root,root) %{jredir}/lib/%{arch}/native_threads
 %attr(755,root,root) %{jredir}/lib/%{arch}/server
 %attr(755,root,root) %{jredir}/lib/%{arch}/jli/libjli.so
@@ -574,6 +577,7 @@ fi
 %attr(755,root,root) %{jredir}/lib/%{arch}/lib[acdfhijmnrvz]*.so
 %exclude %{jredir}/lib/%{arch}/libjsoundalsa.so
 %ifarch %{ix86}
+%attr(755,root,root) %{jredir}/lib/%{arch}/client
 %attr(755,root,root) %{jredir}/lib/%{arch}/libsplashscreen.so
 %exclude %{jredir}/lib/%{arch}/libjavaplugin*.so
 %endif
