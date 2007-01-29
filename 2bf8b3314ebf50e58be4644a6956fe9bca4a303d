@@ -1,0 +1,6 @@
+- remove %{jdkdir} before doing a link avoids making it at the directory
+  if earlier version is not uninstalled cleanly (e.g. when there are some
+  changes in jre .properties)
+- changed default font.properties to font.properties.RedHat.6.1 to avoid
+  unnatural big gaps between text lines
+- release 0.2
