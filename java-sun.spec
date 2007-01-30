@@ -8,7 +8,7 @@ Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	1.6.0
-Release:	4
+Release:	5
 License:	restricted, distributable
 Group:		Development/Languages/Java
 Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-i586.bin
@@ -297,14 +297,14 @@ fi
 cp -rf jre/{bin,lib} $RPM_BUILD_ROOT%{jredir}
 
 for i in ControlPanel java javaws java_vm keytool orbd policytool \
-	rmid rmiregistry servertool tnameserv pack200 unpack200 jconsole apt; do
+	rmid rmiregistry servertool tnameserv pack200 unpack200 jconsole; do
 	ln -sf %{jredir}/bin/$i $RPM_BUILD_ROOT%{_bindir}/$i
 done
 
 for i in appletviewer extcheck idlj jar jarsigner \
 	javac javadoc javah javap jconsole jdb jhat jinfo jmap jps \
 	jrunscript jsadebugd jstack jstat jstatd native2ascii rmic serialver \
-	schemagen wsgen wsimport xjc ; do
+	schemagen wsgen wsimport xjc apt; do
 	ln -sf %{javadir}/bin/$i $RPM_BUILD_ROOT%{_bindir}/$i
 done
 %ifarch %{ix86}
