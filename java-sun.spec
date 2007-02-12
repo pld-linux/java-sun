@@ -5,7 +5,7 @@
 %define		_src_ver	6
 %define		_dir_ver	%(echo %{version} | sed 's/\\.\\(..\\)$/_\\1/')
 Summary:	Sun JDK (Java Development Kit) for Linux
-Summary(pl):	Sun JDK - ∂rodowisko programistyczne Javy dla Linuksa
+Summary(pl.UTF-8):   Sun JDK - ≈õrodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	1.6.0
 Release:	5
@@ -59,24 +59,24 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %description
 Java Development Kit for Linux.
 
-%description -l pl
-¶rodowisko programistyczne Javy dla Linuksa.
+%description -l pl.UTF-8
+≈örodowisko programistyczne Javy dla Linuksa.
 
 %package appletviewer
 Summary:	Java applet viewer from Sun Java
-Summary(pl):	Przegl±darka appletÛw Javy Suna
+Summary(pl.UTF-8):   PrzeglƒÖdarka applet√≥w Javy Suna
 Group:		Development/Languages/Java
 Requires:	%{name} = %{version}-%{release}
 
 %description appletviewer
 This package applet viewer for Sun Java.
 
-%description appletviewer -l pl
-Ten pakiet zawiera przegl±darkÍ appletÛw dla Javy Suna.
+%description appletviewer -l pl.UTF-8
+Ten pakiet zawiera przeglƒÖdarkƒô applet√≥w dla Javy Suna.
 
 %package jre-jdbc
 Summary:	JDBC files for Sun Java
-Summary(pl):	Pliki JDBC dla Javy Suna
+Summary(pl.UTF-8):   Pliki JDBC dla Javy Suna
 Group:		Development/Languages/Java
 Requires:	%{name}-jre = %{version}-%{release}
 %ifarch %{x8664}
@@ -92,12 +92,12 @@ Obsoletes:	java-sun-jdbc
 %description jre-jdbc
 This package contains JDBC files for Sun Java.
 
-%description jre-jdbc -l pl
+%description jre-jdbc -l pl.UTF-8
 Ten pakiet zawiera pliki JDBC dla Javy Suna.
 
 %package jre
 Summary:	Sun JRE (Java Runtime Environment) for Linux
-Summary(pl):	Sun JRE - ∂rodowisko uruchomieniowe Javy dla Linuksa
+Summary(pl.UTF-8):   Sun JRE - ≈õrodowisko uruchomieniowe Javy dla Linuksa
 Group:		Development/Languages/Java
 Requires:	java-jre-tools
 Requires:	jpackage-utils
@@ -136,13 +136,13 @@ Obsoletes:	jsse
 Java Runtime Environment for Linux. Does not contain any X11-related
 compontents.
 
-%description jre -l pl
-¶rodowisko uruchomieniowe Javy dla Linuksa. Nie zawiera øadnych
-elementÛw zwi±zanych ze ∂rodowiskiem X11.
+%description jre -l pl.UTF-8
+≈örodowisko uruchomieniowe Javy dla Linuksa. Nie zawiera ≈ºadnych
+element√≥w zwiƒÖzanych ze ≈õrodowiskiem X11.
 
 %package jre-X11
 Summary:	Sun JRE (Java Runtime Environment) for Linux, X11 related parts
-Summary(pl):	Sun JRE - ∂rodowisko uruchomieniowe Javy dla Linuksa, czÍ∂ci korzystaj±ce z X11
+Summary(pl.UTF-8):   Sun JRE - ≈õrodowisko uruchomieniowe Javy dla Linuksa, czƒô≈õci korzystajƒÖce z X11
 Group:		Development/Languages/Java
 Requires:	%{name}-jre = %{version}-%{release}
 Provides:	jre-X11 = %{version}
@@ -153,13 +153,13 @@ Provides:	javaws = %{version}
 %description jre-X11
 X11-related part of Java Runtime Environment for Linux.
 
-%description jre-X11 -l pl
-¶rodowisko uruchomieniowe Javy dla Linuksa, czÍ∂Ê zwi±zana ze
-∂rodowiskiem graficznym X11.
+%description jre-X11 -l pl.UTF-8
+≈örodowisko uruchomieniowe Javy dla Linuksa, czƒô≈õƒá zwiƒÖzana ze
+≈õrodowiskiem graficznym X11.
 
 %package jre-alsa
 Summary:	JRE module for ALSA sound support
-Summary(pl):	Modu≥ JRE do obs≥ugi dºwiÍku poprzez ALSA
+Summary(pl.UTF-8):   Modu≈Ç JRE do obs≈Çugi d≈∫wiƒôku poprzez ALSA
 Group:		Development/Languages/Java
 Requires:	%{name}-jre = %{version}-%{release}
 Provides:	%{name}-alsa
@@ -168,12 +168,12 @@ Obsoletes:	java-sun-alsa
 %description jre-alsa
 JRE module for ALSA sound support.
 
-%description jre-alsa -l pl
-Modu≥ JRE do obs≥ugi dºwiÍku poprzez ALSA.
+%description jre-alsa -l pl.UTF-8
+Modu≈Ç JRE do obs≈Çugi d≈∫wiƒôku poprzez ALSA.
 
 %package tools
 Summary:	Shared Java tools
-Summary(pl):	WspÛ≥dzielone narzÍdzia Javy
+Summary(pl.UTF-8):   Wsp√≥≈Çdzielone narzƒôdzia Javy
 Group:		Development/Languages/Java
 Requires:	%{name}-jre = %{version}-%{release}
 Provides:	jar
@@ -188,13 +188,13 @@ Obsoletes:	java-shared
 This package contains tools that are common for every Java(TM)
 implementation, such as rmic or jar.
 
-%description tools -l pl
-Pakiet ten zawiera narzÍdzia wspÛlne dla kaødej implementacji
+%description tools -l pl.UTF-8
+Pakiet ten zawiera narzƒôdzia wsp√≥lne dla ka≈ºdej implementacji
 Javy(TM), takie jak rmic czy jar.
 
 %package demos
 Summary:	JDK demonstration programs
-Summary(pl):	Programy demonstracyjne do JDK
+Summary(pl.UTF-8):   Programy demonstracyjne do JDK
 Group:		Development/Languages/Java
 Requires:	%{name}-jre = %{version}-%{release}
 Obsoletes:	java-blackdown-demos
@@ -203,12 +203,12 @@ Obsoletes:	jdk-demos
 %description demos
 JDK demonstration programs.
 
-%description demos -l pl
+%description demos -l pl.UTF-8
 Programy demonstracyjne do JDK.
 
 %package -n browser-plugin-%{name}
 Summary:	Java plugin for WWW browsers
-Summary(pl):	Wtyczki Javy do przegl±darek WWW
+Summary(pl.UTF-8):   Wtyczki Javy do przeglƒÖdarek WWW
 Group:		Development/Languages/Java
 Requires:	%{name}-jre-X11 = %{version}-%{release}
 Requires:	browser-plugins >= 2.0
@@ -235,20 +235,20 @@ Obsoletes:	mozilla-plugin-java-sun
 %description -n browser-plugin-%{name}
 Java plugin for WWW browsers.
 
-%description -n browser-plugin-%{name} -l pl
-Wtyczki z obs≥ug± Javy dla przegl±darek WWW.
+%description -n browser-plugin-%{name} -l pl.UTF-8
+Wtyczki z obs≈ÇugƒÖ Javy dla przeglƒÖdarek WWW.
 
 %package sources
 Summary:	JDK sources
-Summary(pl):	¨rÛd≥a JDK
+Summary(pl.UTF-8):   ≈πr√≥d≈Ça JDK
 Group:		Development/Languages/Java
 Requires:	%{name}-jre = %{version}-%{release}
 
 %description sources
 Sources for package JDK.
 
-%description sources -l pl
-¨rÛd≥a dla pakietu JDK.
+%description sources -l pl.UTF-8
+≈πr√≥d≈Ça dla pakietu JDK.
 
 %prep
 %setup -q -T -c -n jdk%{_dir_ver}
