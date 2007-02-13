@@ -5,7 +5,7 @@
 %define		_src_ver	6
 %define		_dir_ver	%(echo %{version} | sed 's/\\.\\(..\\)$/_\\1/')
 Summary:	Sun JDK (Java Development Kit) for Linux
-Summary(pl.UTF-8):   Sun JDK - środowisko programistyczne Javy dla Linuksa
+Summary(pl.UTF-8):	Sun JDK - środowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	1.6.0
 Release:	5
@@ -64,7 +64,7 @@ Java Development Kit for Linux.
 
 %package appletviewer
 Summary:	Java applet viewer from Sun Java
-Summary(pl.UTF-8):   Przeglądarka appletów Javy Suna
+Summary(pl.UTF-8):	Przeglądarka appletów Javy Suna
 Group:		Development/Languages/Java
 Requires:	%{name} = %{version}-%{release}
 
@@ -76,7 +76,7 @@ Ten pakiet zawiera przeglądarkę appletów dla Javy Suna.
 
 %package jre-jdbc
 Summary:	JDBC files for Sun Java
-Summary(pl.UTF-8):   Pliki JDBC dla Javy Suna
+Summary(pl.UTF-8):	Pliki JDBC dla Javy Suna
 Group:		Development/Languages/Java
 Requires:	%{name}-jre = %{version}-%{release}
 %ifarch %{x8664}
@@ -97,7 +97,7 @@ Ten pakiet zawiera pliki JDBC dla Javy Suna.
 
 %package jre
 Summary:	Sun JRE (Java Runtime Environment) for Linux
-Summary(pl.UTF-8):   Sun JRE - środowisko uruchomieniowe Javy dla Linuksa
+Summary(pl.UTF-8):	Sun JRE - środowisko uruchomieniowe Javy dla Linuksa
 Group:		Development/Languages/Java
 Requires:	java-jre-tools
 Requires:	jpackage-utils
@@ -142,7 +142,7 @@ elementów związanych ze środowiskiem X11.
 
 %package jre-X11
 Summary:	Sun JRE (Java Runtime Environment) for Linux, X11 related parts
-Summary(pl.UTF-8):   Sun JRE - środowisko uruchomieniowe Javy dla Linuksa, części korzystające z X11
+Summary(pl.UTF-8):	Sun JRE - środowisko uruchomieniowe Javy dla Linuksa, części korzystające z X11
 Group:		Development/Languages/Java
 Requires:	%{name}-jre = %{version}-%{release}
 Provides:	jre-X11 = %{version}
@@ -159,7 +159,7 @@ X11-related part of Java Runtime Environment for Linux.
 
 %package jre-alsa
 Summary:	JRE module for ALSA sound support
-Summary(pl.UTF-8):   Moduł JRE do obsługi dźwięku poprzez ALSA
+Summary(pl.UTF-8):	Moduł JRE do obsługi dźwięku poprzez ALSA
 Group:		Development/Languages/Java
 Requires:	%{name}-jre = %{version}-%{release}
 Provides:	%{name}-alsa
@@ -173,7 +173,7 @@ Moduł JRE do obsługi dźwięku poprzez ALSA.
 
 %package tools
 Summary:	Shared Java tools
-Summary(pl.UTF-8):   Współdzielone narzędzia Javy
+Summary(pl.UTF-8):	Współdzielone narzędzia Javy
 Group:		Development/Languages/Java
 Requires:	%{name}-jre = %{version}-%{release}
 Provides:	jar
@@ -194,7 +194,7 @@ Javy(TM), takie jak rmic czy jar.
 
 %package demos
 Summary:	JDK demonstration programs
-Summary(pl.UTF-8):   Programy demonstracyjne do JDK
+Summary(pl.UTF-8):	Programy demonstracyjne do JDK
 Group:		Development/Languages/Java
 Requires:	%{name}-jre = %{version}-%{release}
 Obsoletes:	java-blackdown-demos
@@ -208,7 +208,7 @@ Programy demonstracyjne do JDK.
 
 %package -n browser-plugin-%{name}
 Summary:	Java plugin for WWW browsers
-Summary(pl.UTF-8):   Wtyczki Javy do przeglądarek WWW
+Summary(pl.UTF-8):	Wtyczki Javy do przeglądarek WWW
 Group:		Development/Languages/Java
 Requires:	%{name}-jre-X11 = %{version}-%{release}
 Requires:	browser-plugins >= 2.0
@@ -240,7 +240,7 @@ Wtyczki z obsługą Javy dla przeglądarek WWW.
 
 %package sources
 Summary:	JDK sources
-Summary(pl.UTF-8):   Źródła JDK
+Summary(pl.UTF-8):	Źródła JDK
 Group:		Development/Languages/Java
 Requires:	%{name}-jre = %{version}-%{release}
 
