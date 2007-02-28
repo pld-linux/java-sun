@@ -8,7 +8,7 @@ Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	1.6.0
-Release:	5
+Release:	6
 License:	restricted, distributable
 Group:		Development/Languages/Java
 Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-i586.bin
@@ -314,7 +314,7 @@ done
 %endif
 
 # make sure all tools are available under $(JDK_HOME)/bin
-for i in ControlPanel keytool kinit klist orbd policytool rmid \
+for i in ControlPanel keytool orbd policytool rmid \
 		rmiregistry servertool tnameserv pack200 unpack200 java javaws; do
 	ln -sf ../jre/bin/$i $RPM_BUILD_ROOT%{javadir}/bin/$i
 done
@@ -372,6 +372,48 @@ ln -s %{jrereldir} $RPM_BUILD_ROOT%{_jvmdir}/jre
 ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_jvmjardir}/java
 ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_jvmjardir}/jre
 ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_jvmjardir}/jsse
+
+# modify RPATH so that javac and friends are able to work when /proc is not
+# mounted and we can't append to RPATH (for example to keep previous lookup
+# path) as RPATH can't be longer than original
+#
+# for example:
+# old javac: RPATH=$ORIGIN/../lib/i386/jli:$ORIGIN/../jre/lib/i386/jli
+# new javac: RPATH=/usr/lib/jvm/java-sun-1.6.0/jre/lib/i386/jli
+
+# silly rpath: jre/bin/unpack200: RPATH=$ORIGIN
+chrpath -d $RPM_BUILD_ROOT%{jredir}/bin/unpack200
+
+fixrpath() {
+	execlist=$(find $RPM_BUILD_ROOT%{javadir} -type f -perm +1 | xargs file | awk -F: '/ELF.*executable/{print $1}')
+	for f in $execlist; do
+		rpath=$(chrpath -l $f | awk '/RPATH=/ { gsub(/.*RPATH=/,""); gsub(/:/," "); print $0 }')
+		[ "$rpath" ] || continue
+
+		# file
+		file=${f#$RPM_BUILD_ROOT}
+		origin=${file%/*}
+
+		new=
+		for a in $rpath; do
+			t=$(echo $a | sed -e "s,\$ORIGIN,$origin,g")
+			# get rid of ../../
+			t=$(set -e; t=$RPM_BUILD_ROOT$t; [ -d $t ] || exit 0; cd $t; pwd)
+			# skip inexistent paths
+			[ "$t" ] || continue
+
+			t=${t#$RPM_BUILD_ROOT}
+
+			if [[ "$new" != *$t* ]]; then
+				# append it now
+				new=${new}${new:+:}$t
+			fi
+		done
+		chrpath -r ${new} $f
+	done
+}
+
+fixrpath
 
 %clean
 rm -rf $RPM_BUILD_ROOT
