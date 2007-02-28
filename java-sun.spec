@@ -1,26 +1,24 @@
 # TODO:
-#	- better way to choose preferred jvm (currently the symlinks are hardcoded)
-#	  Maybe a package containing only the symlinks?
+# - better way to choose preferred jvm (currently the symlinks are hardcoded)
+#   Maybe a package containing only the symlinks?
 #
-%define		_ver	1.6.0
 %define		_src_ver	6
-%define		_dir_ver	%(echo %{_ver}|sed 's/\\.\\(..\\)$/_\\1/')
+%define		_dir_ver	%(echo %{version} | sed 's/\\.\\(..\\)$/_\\1/')
 Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
-Version:	%{_ver}
-Release:	0.1
+Version:	1.6.0
+Release:	6
 License:	restricted, distributable
 Group:		Development/Languages/Java
 Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-i586.bin
 # Source0-md5:	f4481c4e064cec06a65d7751d9105c6d
 Source1:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-amd64.bin
-# Source1-md5:	2e0c075c27b09aed67f99475c3a19f83
-Patch0:		%{name}-ControlPanel-fix.patch
-Patch1:		%{name}-desktop.patch
+# Source1-md5: 2e0c075c27b09aed67f99475c3a19f83
+Patch0:		%{name}-desktop.patch
 URL:		http://java.sun.com/linux/
 BuildRequires:	rpm-build >= 4.3-0.20040107.21
-BuildRequires:	rpmbuild(macros) >= 1.300
+BuildRequires:	rpmbuild(macros) >= 1.357
 BuildRequires:	unzip
 Requires:	%{name}-jre = %{version}-%{release}
 Requires:	java-shared
@@ -41,10 +39,14 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		jrereldir	%{javareldir}/jre
 %define		jredir		%{_jvmdir}/%{jrereldir}
 %define		jvmjardir	%{_jvmjardir}/%{name}-%{version}
-%define		_plugindir	%{_libdir}/browser-plugins
 
-# list of supported browsers, in free form text
-%define		browsers	mozilla, mozilla-firefox, mozilla-firefox-bin, netscape, seamonkey
+%ifarch %{ix86}
+%define		arch	i386
+%endif
+%ifarch %{x8664}
+%define		arch	amd64
+%endif
+
 
 # rpm doesn't like strange version definitions provided by Sun's libs
 %define		_noautoprov	'\\.\\./.*' '/export/.*'
@@ -209,6 +211,7 @@ Summary:	Java plugin for WWW browsers
 Summary(pl):	Wtyczki Javy do przegl±darek WWW
 Group:		Development/Languages/Java
 Requires:	%{name}-jre-X11 = %{version}-%{release}
+Requires:	browser-plugins >= 2.0
 Requires:	browser-plugins(%{_target_base_arch})
 Provides:	java-sun-mozilla-plugin
 Provides:	mozilla-firefox-plugin-java-sun
@@ -232,12 +235,8 @@ Obsoletes:	mozilla-plugin-java-sun
 %description -n browser-plugin-%{name}
 Java plugin for WWW browsers.
 
-Supported browsers: %{browsers}.
-
 %description -n browser-plugin-%{name} -l pl
 Wtyczki z obs³ug± Javy dla przegl±darek WWW.
-
-Obs³ugiwane przegl±darki: %{browsers}.
 
 %package sources
 Summary:	JDK sources
@@ -263,63 +262,67 @@ sh %{SOURCE1} <<EOF
 %endif
 yes
 EOF
-cd jdk%{_dir_ver}
-%ifnarch %{x8664}
-#%patch0 -p1
+cd -
+%ifarch %{ix86}
 # patch only copy of the desktop file, leave original unchanged
 cp jre/plugin/desktop/sun_java.desktop .
-%patch1 -p1
+%patch0 -p1
 %endif
 
 # unpack packed jar files -- in %%prep as it is done "in place"
-for pack in `find . -name '*.pack'`; do
-	bin/unpack200 -r $pack `echo $pack|sed -e's/\.pack$/.jar/'`
+for pack in $(find . -name '*.pack'); do
+	bin/unpack200 -r $pack ${pack%.pack}.jar
 done
 
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{jredir},%{javadir},%{jvmjardir},%{_javadir},%{_bindir},%{_includedir}} \
 	$RPM_BUILD_ROOT{%{_mandir}/{,ja/}man1,%{_prefix}/src/%{name}-sources} \
-	$RPM_BUILD_ROOT{%{_desktopdir},%{_pixmapsdir},%{_plugindir}}
+	$RPM_BUILD_ROOT{%{_desktopdir},%{_pixmapsdir},%{_browserpluginsdir}}
 
 cp -rf bin sample demo include lib $RPM_BUILD_ROOT%{javadir}
 install man/man1/* $RPM_BUILD_ROOT%{_mandir}/man1
 install man/ja/man1/* $RPM_BUILD_ROOT%{_mandir}/ja/man1
 
-if test -f jre/lib/i386/client/Xusage.txt ; then
-mv -f jre/lib/i386/client/Xusage.txt jre/Xusage.client
+if test -f jre/lib/i386/client/Xusage.txt; then
+	mv -f jre/lib/i386/client/Xusage.txt jre/Xusage.client
 fi
-if test -f jre/lib/i386/server/Xusage.txt ; then
-mv -f jre/lib/i386/server/Xusage.txt jre/Xusage.server
+if test -f jre/lib/i386/server/Xusage.txt; then
+	mv -f jre/lib/i386/server/Xusage.txt jre/Xusage.server
 fi
-if test -f jre/lib/*.txt ; then
-mv -f jre/lib/*.txt jre
+if test -f jre/lib/*.txt; then
+	mv -f jre/lib/*.txt jre
 fi
-#mv jre/lib/font.properties{,.orig}
-#mv jre/lib/font.properties{.Redhat6.1,}
 
 cp -rf jre/{bin,lib} $RPM_BUILD_ROOT%{jredir}
 
-for i in ControlPanel java java_vm keytool ktab orbd policytool \
-	rmid rmiregistry servertool tnameserv ; do
+for i in ControlPanel java javaws java_vm keytool orbd policytool \
+	rmid rmiregistry servertool tnameserv pack200 unpack200 jconsole; do
 	ln -sf %{jredir}/bin/$i $RPM_BUILD_ROOT%{_bindir}/$i
 done
 
-for i in HtmlConverter appletviewer extcheck idlj jar jarsigner java-rmi.cgi \
-         javac javadoc javah javap jconsole jdb jinfo jmap jps \
-	 jsadebugd jstack jstat jstatd native2ascii rmic serialver ; do
+for i in appletviewer extcheck idlj jar jarsigner \
+	javac javadoc javah javap jconsole jdb jhat jinfo jmap jps \
+	jrunscript jsadebugd jstack jstat jstatd native2ascii rmic serialver \
+	schemagen wsgen wsimport xjc apt; do
 	ln -sf %{javadir}/bin/$i $RPM_BUILD_ROOT%{_bindir}/$i
 done
+%ifarch %{ix86}
+for i in HtmlConverter jcontrol java-rmi.cgi; do
+	ln -sf %{javadir}/bin/$i $RPM_BUILD_ROOT%{_bindir}/$i
+done
+%endif
 
 # make sure all tools are available under $(JDK_HOME)/bin
-for i in ControlPanel keytool kinit klist ktab orbd policytool rmid \
-		rmiregistry servertool tnameserv ; do
+for i in ControlPanel keytool orbd policytool rmid \
+		rmiregistry servertool tnameserv pack200 unpack200 java javaws; do
 	ln -sf ../jre/bin/$i $RPM_BUILD_ROOT%{javadir}/bin/$i
 done
 
-rm -f $RPM_BUILD_ROOT%{javadir}/bin/{java,javaws}
-ln -sf %{jredir}/bin/java $RPM_BUILD_ROOT%{javadir}/bin/java
-ln -sf %{jredir}/bin/javaws $RPM_BUILD_ROOT%{javadir}/bin/javaws
+%ifarch %{x8664}
+# only manual available on this platform
+rm -f $RPM_BUILD_ROOT%{_mandir}/man1/javaws.1
+%endif
 
 %ifarch %{ix86}
 # copy _all_ plugin files (even those incompatible with PLD) --
@@ -328,7 +331,7 @@ cp -R jre/plugin $RPM_BUILD_ROOT%{jredir}
 
 # Install plugin for browsers
 # Plugin in regular location simply does not work (is seen by browsers):
-ln -sf %{jredir}/plugin/i386/ns7/libjavaplugin_oji.so $RPM_BUILD_ROOT%{_plugindir}
+ln -sf %{jredir}/plugin/i386/ns7/libjavaplugin_oji.so $RPM_BUILD_ROOT%{_browserpluginsdir}
 
 install *.desktop $RPM_BUILD_ROOT%{_desktopdir}
 install jre/plugin/desktop/*.png $RPM_BUILD_ROOT%{_pixmapsdir}
@@ -339,11 +342,11 @@ ln -sf %{jredir}/lib/jsse.jar $RPM_BUILD_ROOT%{jvmjardir}/jcert.jar
 ln -sf %{jredir}/lib/jsse.jar $RPM_BUILD_ROOT%{jvmjardir}/jnet.jar
 ln -sf %{jredir}/lib/jce.jar $RPM_BUILD_ROOT%{jvmjardir}/jce.jar
 for f in jndi jndi-ldap jndi-cos jndi-rmi jaas jdbc-stdext jdbc-stdext-3.0 \
-  sasl jaxp_parser_impl jaxp_transform_impl jaxp jmx xml-commons-apis; do
+	sasl jaxp_parser_impl jaxp_transform_impl jaxp jmx xml-commons-apis; do
 	ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{jvmjardir}/$f.jar
 done
 
-%ifnarch %{x8664}
+%ifarch %{ix86}
 install -d $RPM_BUILD_ROOT%{jredir}/javaws
 cp -a jre/javaws/* $RPM_BUILD_ROOT%{jredir}/javaws
 ln -sf %{jredir}/lib/javaws.jar $RPM_BUILD_ROOT%{jvmjardir}/javaws.jar
@@ -368,6 +371,49 @@ ln -s %{javareldir} $RPM_BUILD_ROOT%{_jvmdir}/java
 ln -s %{jrereldir} $RPM_BUILD_ROOT%{_jvmdir}/jre
 ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_jvmjardir}/java
 ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_jvmjardir}/jre
+ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_jvmjardir}/jsse
+
+# modify RPATH so that javac and friends are able to work when /proc is not
+# mounted and we can't append to RPATH (for example to keep previous lookup
+# path) as RPATH can't be longer than original
+#
+# for example:
+# old javac: RPATH=$ORIGIN/../lib/i386/jli:$ORIGIN/../jre/lib/i386/jli
+# new javac: RPATH=/usr/lib/jvm/java-sun-1.6.0/jre/lib/i386/jli
+
+# silly rpath: jre/bin/unpack200: RPATH=$ORIGIN
+chrpath -d $RPM_BUILD_ROOT%{jredir}/bin/unpack200
+
+fixrpath() {
+	execlist=$(find $RPM_BUILD_ROOT%{javadir} -type f -perm +1 | xargs file | awk -F: '/ELF.*executable/{print $1}')
+	for f in $execlist; do
+		rpath=$(chrpath -l $f | awk '/RPATH=/ { gsub(/.*RPATH=/,""); gsub(/:/," "); print $0 }')
+		[ "$rpath" ] || continue
+
+		# file
+		file=${f#$RPM_BUILD_ROOT}
+		origin=${file%/*}
+
+		new=
+		for a in $rpath; do
+			t=$(echo $a | sed -e "s,\$ORIGIN,$origin,g")
+			# get rid of ../../
+			t=$(set -e; t=$RPM_BUILD_ROOT$t; [ -d $t ] || exit 0; cd $t; pwd)
+			# skip inexistent paths
+			[ "$t" ] || continue
+
+			t=${t#$RPM_BUILD_ROOT}
+
+			if [[ "$new" != *$t* ]]; then
+				# append it now
+				new=${new}${new:+:}$t
+			fi
+		done
+		chrpath -r ${new} $f
+	done
+}
+
+fixrpath
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -380,43 +426,13 @@ if [ -L %{javadir} ]; then
 	rm -f %{javadir}
 fi
 
-%triggerin -n browser-plugin-%{name} -- mozilla
-%nsplugin_install -d %{_libdir}/mozilla/plugins libjavaplugin_oji.so
+%post -n browser-plugin-%{name}
+%update_browser_plugins
 
-%triggerun -n browser-plugin-%{name} -- mozilla
-%nsplugin_uninstall -d %{_libdir}/mozilla/plugins libjavaplugin_oji.so
-
-%triggerin -n browser-plugin-%{name} -- mozilla-firefox
-%nsplugin_install -d %{_libdir}/mozilla-firefox/plugins libjavaplugin_oji.so
-
-%triggerun -n browser-plugin-%{name} -- mozilla-forefox
-%nsplugin_uninstall -d %{_libdir}/mozilla-firefox/plugins libjavaplugin_oji.so
-
-%triggerin -n browser-plugin-%{name} -- mozilla-firefox-bin
-%nsplugin_install -d %{_libdir}/mozilla-firefox-bin/plugins libjavaplugin_oji.so
-
-%triggerun -n browser-plugin-%{name} -- mozilla-forefox-bin
-%nsplugin_uninstall -d %{_libdir}/mozilla-firefox-bin/plugins libjavaplugin_oji.so
-
-%triggerin -n browser-plugin-%{name} -- netscape-common
-%nsplugin_install -d %{_libdir}/netscape/plugins libjavaplugin_oji.so
-
-%triggerun -n browser-plugin-%{name} -- netscape-common
-%nsplugin_uninstall -d %{_libdir}/netscape/plugins libjavaplugin_oji.so
-
-%triggerin -n browser-plugin-%{name} -- seamonkey
-%nsplugin_install -d %{_libdir}/seamonkey/plugins libjavaplugin_oji.so
-
-%triggerun -n browser-plugin-%{name} -- seamonkey
-%nsplugin_uninstall -d %{_libdir}/seamonkey/plugins libjavaplugin_oji.so
-
-# as rpm removes the old obsoleted package files after the triggers
-# are ran, add another trigger to make the links there.
-%triggerpostun -n browser-plugin-%{name} -- mozilla-plugin-java-sun
-%nsplugin_install -f -d %{_libdir}/mozilla/plugins libjavaplugin_oji.so
-
-%triggerpostun -n browser-plugin-%{name} -- mozilla-firefox-plugin-java-sun
-%nsplugin_install -f -d %{_libdir}/mozilla-firefox/plugins libjavaplugin_oji.so
+%postun -n browser-plugin-%{name}
+if [ "$1" = 0 ]; then
+	%update_browser_plugins
+fi
 
 %files
 %defattr(644,root,root,755)
@@ -426,7 +442,9 @@ fi
 %ifarch %{ix86}
 %attr(755,root,root) %{_bindir}/HtmlConverter
 %attr(755,root,root) %{_bindir}/java-rmi.cgi
+%attr(755,root,root) %{_bindir}/jcontrol
 %endif
+%attr(755,root,root) %{_bindir}/apt
 %attr(755,root,root) %{_bindir}/extcheck
 %attr(755,root,root) %{_bindir}/idlj
 %attr(755,root,root) %{_bindir}/jarsigner
@@ -434,21 +452,27 @@ fi
 %attr(755,root,root) %{_bindir}/javadoc
 %attr(755,root,root) %{_bindir}/javah
 %attr(755,root,root) %{_bindir}/javap
+%attr(755,root,root) %{_bindir}/jconsole
 %attr(755,root,root) %{_bindir}/jdb
+%attr(755,root,root) %{_bindir}/jhat
 %attr(755,root,root) %{_bindir}/jinfo
 %attr(755,root,root) %{_bindir}/jmap
 %attr(755,root,root) %{_bindir}/jps
+%attr(755,root,root) %{_bindir}/jrunscript
 %attr(755,root,root) %{_bindir}/jsadebugd
 %attr(755,root,root) %{_bindir}/jstack
 %attr(755,root,root) %{_bindir}/jstat
 %attr(755,root,root) %{_bindir}/jstatd
 %attr(755,root,root) %{_bindir}/native2ascii
 %attr(755,root,root) %{_bindir}/serialver
+%attr(755,root,root) %{_bindir}/schemagen
+%attr(755,root,root) %{_bindir}/wsgen
+%attr(755,root,root) %{_bindir}/wsimport
+%attr(755,root,root) %{_bindir}/xjc
 %ifarch %{ix86}
 %attr(755,root,root) %{javadir}/bin/HtmlConverter
-%attr(755,root,root) %{javadir}/bin/ControlPanel
 %attr(755,root,root) %{javadir}/bin/java-rmi.cgi
-%attr(755,root,root) %{javadir}/bin/javaws
+%attr(755,root,root) %{javadir}/bin/jcontrol
 %endif
 %attr(755,root,root) %{javadir}/bin/apt
 %attr(755,root,root) %{javadir}/bin/extcheck
@@ -460,9 +484,11 @@ fi
 %attr(755,root,root) %{javadir}/bin/javap
 %attr(755,root,root) %{javadir}/bin/jconsole
 %attr(755,root,root) %{javadir}/bin/jdb
+%attr(755,root,root) %{javadir}/bin/jhat
 %attr(755,root,root) %{javadir}/bin/jinfo
 %attr(755,root,root) %{javadir}/bin/jmap
 %attr(755,root,root) %{javadir}/bin/jps
+%attr(755,root,root) %{javadir}/bin/jrunscript
 %attr(755,root,root) %{javadir}/bin/jsadebugd
 %attr(755,root,root) %{javadir}/bin/jstack
 %attr(755,root,root) %{javadir}/bin/jstat
@@ -470,14 +496,19 @@ fi
 %attr(755,root,root) %{javadir}/bin/keytool
 %attr(755,root,root) %{javadir}/bin/native2ascii
 %attr(755,root,root) %{javadir}/bin/orbd
-%attr(755,root,root) %{javadir}/bin/policytool
 %attr(755,root,root) %{javadir}/bin/rmid
 %attr(755,root,root) %{javadir}/bin/rmiregistry
+%attr(755,root,root) %{javadir}/bin/schemagen
 %attr(755,root,root) %{javadir}/bin/serialver
 %attr(755,root,root) %{javadir}/bin/servertool
 %attr(755,root,root) %{javadir}/bin/tnameserv
+%attr(755,root,root) %{javadir}/bin/wsgen
+%attr(755,root,root) %{javadir}/bin/wsimport
+%attr(755,root,root) %{javadir}/bin/xjc
 %{javadir}/include
 %dir %{javadir}/lib
+%attr(755,root,root) %{javadir}/lib/jexec
+%{javadir}/lib/ct.sym
 %{javadir}/lib/*.jar
 %{javadir}/lib/*.idl
 %{_mandir}/man1/apt.1*
@@ -488,17 +519,23 @@ fi
 %{_mandir}/man1/javadoc.1*
 %{_mandir}/man1/javah.1*
 %{_mandir}/man1/javap.1*
+%{_mandir}/man1/jconsole.1*
 %{_mandir}/man1/jdb.1*
+%{_mandir}/man1/jhat.1*
 %{_mandir}/man1/jinfo.1*
 %{_mandir}/man1/jmap.1*
 %{_mandir}/man1/jps.1*
+%{_mandir}/man1/jrunscript.1*
 %{_mandir}/man1/jsadebugd.1*
 %{_mandir}/man1/jstack.1*
 %{_mandir}/man1/jstat.1*
 %{_mandir}/man1/jstatd.1*
 %{_mandir}/man1/native2ascii.1*
 %{_mandir}/man1/serialver.1*
-%{_mandir}/man1/jconsole.1*
+%{_mandir}/man1/schemagen.1*
+%{_mandir}/man1/wsgen.1*
+%{_mandir}/man1/wsimport.1*
+%{_mandir}/man1/xjc.1*
 %lang(ja) %{_mandir}/ja/man1/apt.1*
 %lang(ja) %{_mandir}/ja/man1/extcheck.1*
 %lang(ja) %{_mandir}/ja/man1/idlj.1*
@@ -507,17 +544,23 @@ fi
 %lang(ja) %{_mandir}/ja/man1/javadoc.1*
 %lang(ja) %{_mandir}/ja/man1/javah.1*
 %lang(ja) %{_mandir}/ja/man1/javap.1*
+%lang(ja) %{_mandir}/ja/man1/jconsole.1*
 %lang(ja) %{_mandir}/ja/man1/jdb.1*
+%lang(ja) %{_mandir}/ja/man1/jhat.1*
 %lang(ja) %{_mandir}/ja/man1/jinfo.1*
 %lang(ja) %{_mandir}/ja/man1/jmap.1*
 %lang(ja) %{_mandir}/ja/man1/jps.1*
+%lang(ja) %{_mandir}/ja/man1/jrunscript.1*
 %lang(ja) %{_mandir}/ja/man1/jsadebugd.1*
 %lang(ja) %{_mandir}/ja/man1/jstack.1*
 %lang(ja) %{_mandir}/ja/man1/jstat.1*
 %lang(ja) %{_mandir}/ja/man1/jstatd.1*
 %lang(ja) %{_mandir}/ja/man1/native2ascii.1*
 %lang(ja) %{_mandir}/ja/man1/serialver.1*
-%lang(ja) %{_mandir}/ja/man1/jconsole.1*
+%lang(ja) %{_mandir}/ja/man1/schemagen.1*
+%lang(ja) %{_mandir}/ja/man1/wsgen.1*
+%lang(ja) %{_mandir}/ja/man1/wsimport.1*
+%lang(ja) %{_mandir}/ja/man1/xjc.1*
 
 %files appletviewer
 %defattr(644,root,root,755)
@@ -528,12 +571,7 @@ fi
 
 %files jre-jdbc
 %defattr(644,root,root,755)
-%ifarch %{ix86}
-%attr(755,root,root) %{jredir}/lib/i386/libJdbcOdbc.so
-%endif
-%ifarch %{x8664}
-%attr(755,root,root) %{jredir}/lib/amd64/libJdbcOdbc.so
-%endif
+%attr(755,root,root) %{jredir}/lib/%{arch}/libJdbcOdbc.so
 
 %files jre
 %defattr(644,root,root,755)
@@ -541,14 +579,15 @@ fi
 %doc jre/Welcome.html
 %{_jvmdir}/jre
 %{_jvmjardir}/jre
+%{_jvmjardir}/jsse
 %attr(755,root,root) %{_bindir}/java
-%attr(755,root,root) %{_bindir}/java_vm
 %attr(755,root,root) %{_bindir}/keytool
-%attr(755,root,root) %{_bindir}/ktab
 %attr(755,root,root) %{_bindir}/orbd
 %attr(755,root,root) %{_bindir}/rmid
 %attr(755,root,root) %{_bindir}/servertool
 %attr(755,root,root) %{_bindir}/tnameserv
+%attr(755,root,root) %{_bindir}/pack200
+%attr(755,root,root) %{_bindir}/unpack200
 %attr(755,root,root) %{jredir}/bin/pack200
 %attr(755,root,root) %{jredir}/bin/unpack200
 %attr(755,root,root) %{javadir}/bin/pack200
@@ -558,9 +597,6 @@ fi
 %attr(755,root,root) %{javadir}/bin/java
 %dir %{jredir}
 %dir %{jredir}/bin
-%ifarch %{ix86}
-%attr(755,root,root) %{jredir}/bin/java_vm
-%endif
 %attr(755,root,root) %{jredir}/bin/java
 %attr(755,root,root) %{jredir}/bin/keytool
 %attr(755,root,root) %{jredir}/bin/orbd
@@ -572,29 +608,30 @@ fi
 %{jredir}/lib/audio
 %{jredir}/lib/cmm
 %{jredir}/lib/ext
+
+%dir %{jredir}/lib/%{arch}
+%dir %{jredir}/lib/%{arch}/headless
+%dir %{jredir}/lib/%{arch}/jli
+%attr(755,root,root) %{jredir}/lib/%{arch}/native_threads
+%attr(755,root,root) %{jredir}/lib/%{arch}/server
+%attr(755,root,root) %{jredir}/lib/%{arch}/jli/libjli.so
+%{jredir}/lib/%{arch}/jvm.cfg
+%attr(755,root,root) %{jredir}/lib/%{arch}/lib[acdfhijmnrvz]*.so
+%exclude %{jredir}/lib/%{arch}/libjsoundalsa.so
 %ifarch %{ix86}
-%dir %{jredir}/lib/i386
-%dir %{jredir}/lib/i386/headless
-%attr(755,root,root) %{jredir}/lib/i386/client
-%attr(755,root,root) %{jredir}/lib/i386/native_threads
-%attr(755,root,root) %{jredir}/lib/i386/server
-%{jredir}/lib/i386/jvm.cfg
-%attr(755,root,root) %{jredir}/lib/i386/lib[acdfhijmnrvz]*.so
-%exclude %{jredir}/lib/i386/libjsoundalsa.so
-%exclude %{jredir}/lib/i386/libjavaplugin*.so
+%attr(755,root,root) %{jredir}/lib/%{arch}/client
+%attr(755,root,root) %{jredir}/lib/%{arch}/libsplashscreen.so
+%exclude %{jredir}/lib/%{arch}/libjavaplugin*.so
 %endif
-%ifarch %{x8664}
-%dir %{jredir}/lib/amd64
-%attr(755,root,root) %dir %{jredir}/lib/amd64/headless
-#%attr(755,root,root) %{jredir}/lib/i386/client
-%attr(755,root,root) %{jredir}/lib/amd64/native_threads
-%attr(755,root,root) %{jredir}/lib/amd64/server
-%{jredir}/lib/amd64/jvm.cfg
-%attr(755,root,root) %{jredir}/lib/amd64/lib[acdfhijmnrvz]*.so
-%exclude %{jredir}/lib/amd64/libjsoundalsa.so
+
+%ifarch %{ix86}
+%{jredir}/lib/deploy
+%{jredir}/lib/desktop
 %endif
 %{jredir}/lib/im
 %{jredir}/lib/images
+%attr(755,root,root) %{jredir}/lib/jexec
+%{jredir}/lib/meta-index
 %dir %{jredir}/lib/security
 %{jredir}/lib/security/*.*
 %verify(not md5 mtime size) %config(noreplace) %{jredir}/lib/security/cacerts
@@ -628,17 +665,9 @@ fi
 %{jredir}/lib/fontconfig.Turbo.properties.src
 %{jredir}/lib/fontconfig.bfc
 %{jredir}/lib/fontconfig.properties.src
-%ifarch %{ix86}
-%attr(755,root,root) %{jredir}/lib/i386/headless/libmawt.so
-%attr(755,root,root) %{jredir}/lib/i386/libsaproc.so
-%attr(755,root,root) %{jredir}/lib/i386/libunpack.so
-%endif
-%ifarch %{x8664}
-%attr(755,root,root) %{jredir}/lib/amd64/gtkhelper
-%attr(755,root,root) %{jredir}/lib/amd64/headless/libmawt.so
-%attr(755,root,root) %{jredir}/lib/amd64/libsaproc.so
-%attr(755,root,root) %{jredir}/lib/amd64/libunpack.so
-%endif
+%attr(755,root,root) %{jredir}/lib/%{arch}/headless/libmawt.so
+%attr(755,root,root) %{jredir}/lib/%{arch}/libsaproc.so
+%attr(755,root,root) %{jredir}/lib/%{arch}/libunpack.so
 %dir %{jredir}/lib/management
 %{jredir}/lib/management/jmxremote.access
 %{jredir}/lib/management/jmxremote.password.template
@@ -649,7 +678,6 @@ fi
 %{_desktopdir}/sun_java.desktop
 %{_pixmapsdir}/sun_java.png
 %endif
-%{_mandir}/man1/javaws.1*
 %{_mandir}/man1/keytool.1*
 %{_mandir}/man1/orbd.1*
 %{_mandir}/man1/rmid.1*
@@ -669,35 +697,33 @@ fi
 %ifarch %{ix86}
 %doc jre/Xusage*
 %attr(755,root,root) %{_bindir}/ControlPanel
-%endif
-%attr(755,root,root) %{_bindir}/policytool
-%ifarch %{ix86}
+%attr(755,root,root) %{_bindir}/javaws
 %attr(755,root,root) %{jredir}/bin/javaws
 %attr(755,root,root) %{jredir}/bin/ControlPanel
-%endif
-%ifarch %{ix86}
+%attr(755,root,root) %{jredir}/bin/jcontrol
+%attr(755,root,root) %{_bindir}/java_vm
 %attr(755,root,root) %{jredir}/bin/java_vm
+%attr(755,root,root) %{javadir}/bin/ControlPanel
+%attr(755,root,root) %{javadir}/bin/javaws
 %endif
+%attr(755,root,root) %{_bindir}/policytool
 %attr(755,root,root) %{jredir}/bin/policytool
+%{_mandir}/man1/policytool.1*
+%lang(ja) %{_mandir}/ja/man1/policytool.1*
 %{jredir}/lib/fonts
 %{jredir}/lib/oblique-fonts
+%dir %{jredir}/lib/%{arch}/xawt
+%dir %{jredir}/lib/%{arch}/motif21
+%attr(755,root,root) %{jredir}/lib/%{arch}/libsplashscreen.so
 %ifarch %{ix86}
-%dir %{jredir}/lib/i386/xawt
-%dir %{jredir}/lib/i386/motif21
-%attr(755,root,root) %{jredir}/lib/i386/libjavaplugin*.so
-%endif
-%ifarch %{x8664}
-%dir %{jredir}/lib/amd64
-%attr(755,root,root) %dir %{jredir}/lib/amd64/xawt
-%attr(755,root,root) %dir %{jredir}/lib/amd64/motif21
-%attr(755,root,root) %{jredir}/lib/amd64/awt_robot
+%attr(755,root,root) %{jredir}/lib/%{arch}/libjavaplugin*.so
 %endif
 %ifarch %{ix86}
 %{jvmjardir}/javaws.jar
 %endif
+%attr(755,root,root) %{jredir}/lib/%{arch}/motif21/libmawt.so
+%attr(755,root,root) %{jredir}/lib/%{arch}/xawt/libmawt.so
 %ifarch %{ix86}
-%attr(755,root,root) %{jredir}/lib/i386/motif21/libmawt.so
-%attr(755,root,root) %{jredir}/lib/i386/xawt/libmawt.so
 %dir %{jredir}/lib/locale
 %lang(de) %{jredir}/lib/locale/de
 %lang(de) %{_datadir}/locale/de/LC_MESSAGES/sunw_java_plugin.mo
@@ -720,28 +746,16 @@ fi
 %lang(zh_CN) %{_datadir}/locale/zh_CN/LC_MESSAGES/sunw_java_plugin.mo
 %lang(zh_TW) %{_datadir}/locale/zh_TW/LC_MESSAGES/sunw_java_plugin.mo
 %endif
-%ifarch %{x8664}
-%attr(755,root,root) %{jredir}/lib/amd64/motif21/libmawt.so
-%attr(755,root,root) %{jredir}/lib/amd64/xawt/libmawt.so
-%endif
-%{_mandir}/man1/policytool.1*
-%ifarch %{ix86}
-%lang(ja) %{_mandir}/ja/man1/javaws.1*
-%endif
-%lang(ja) %{_mandir}/ja/man1/policytool.1*
 %ifarch %{ix86}
 %dir %{jredir}/javaws
 %attr(755,root,root) %{jredir}/javaws/javaws
+%{_mandir}/man1/javaws.1*
+%lang(ja) %{_mandir}/ja/man1/javaws.1*
 %endif
 
 %files jre-alsa
 %defattr(644,root,root,755)
-%ifarch %{ix86}
-%attr(755,root,root) %{jredir}/lib/i386/libjsoundalsa.so
-%endif
-%ifarch %{x8664}
-%attr(755,root,root) %{jredir}/lib/amd64/libjsoundalsa.so
-%endif
+%attr(755,root,root) %{jredir}/lib/%{arch}/libjsoundalsa.so
 
 %files demos
 %defattr(644,root,root,755)
@@ -757,10 +771,12 @@ fi
 %{javadir}/demo/jvmti/*/README*
 %{javadir}/demo/jvmti/*/*.jar
 %{javadir}/demo/management
+%{javadir}/demo/nbproject
 %ifarch %{ix86}
 %{javadir}/demo/plugin
 %{javadir}/demo/applets.html
 %endif
+%{javadir}/demo/scripting
 %{javadir}/sample
 
 %files tools
@@ -783,10 +799,10 @@ fi
 %defattr(644,root,root,755)
 %dir %{jredir}/plugin
 %{jredir}/plugin/desktop
-%dir %{jredir}/plugin/i386
-%dir %{jredir}/plugin/i386/*
-%attr(755,root,root) %{jredir}/plugin/i386/*/libjavaplugin_oji.so
-%attr(755,root,root) %{_plugindir}/*.so
+%dir %{jredir}/plugin/%{arch}
+%dir %{jredir}/plugin/%{arch}/*
+%attr(755,root,root) %{jredir}/plugin/%{arch}/*/libjavaplugin_oji.so
+%attr(755,root,root) %{_browserpluginsdir}/*.so
 %endif
 
 %files sources
