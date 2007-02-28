@@ -373,6 +373,47 @@ ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_jvmjardir}/java
 ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_jvmjardir}/jre
 ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_jvmjardir}/jsse
 
+# modify RPATH so that javac and friends are able to work when /proc is not mounted
+# and we append to RPATH not to break previous behaviour.
+# for example:
+# javac: RPATH=$ORIGIN/../lib/i386/jli:$ORIGIN/../jre/lib/i386/jli
+# javac: new RPATH: /usr/lib/jvm/java-sun-1.6.0/jre/lib/i386/jli
+
+fixrpath() {
+	execlist=$(find $RPM_BUILD_ROOT%{javadir} -type f -perm +1 | xargs file | awk -F: '/ELF.*executable/{print $1}')
+	for f in $execlist; do
+		rpath=$(chrpath -l $f | awk '/RPATH=/ { gsub(/.*RPATH=/,""); gsub(/:/," "); print $0 }')
+		[ "$rpath" ] || continue
+
+		# file
+		file=${f#$RPM_BUILD_ROOT}
+		origin=${file%/*}
+
+		new=
+		# first include existing rpath
+		for a in $rpath; do
+			new=${new}${new:+:}$a
+		done
+		for a in $rpath; do
+			t=$(echo $a | sed -e "s,\$ORIGIN,$origin,g")
+			# get rid of ../../
+			t=$(t=$RPM_BUILD_ROOT${t%/*}; mkdir -p $t; cd $t; pwd)
+			t=${t#$RPM_BUILD_ROOT}
+
+			if [[ "$new" != *$t* ]]; then
+				# append it now
+				new=${new}:$t
+			fi
+		done
+		echo "update RPATH $file:"
+		echo "OLD: $rpath"
+		echo "NEW: $new"
+		chrpath -r ${new} $f
+	done
+}
+
+fixrpath
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
