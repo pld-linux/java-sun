@@ -314,7 +314,7 @@ done
 %endif
 
 # make sure all tools are available under $(JDK_HOME)/bin
-for i in ControlPanel keytool kinit klist orbd policytool rmid \
+for i in ControlPanel keytool orbd policytool rmid \
 		rmiregistry servertool tnameserv pack200 unpack200 java javaws; do
 	ln -sf ../jre/bin/$i $RPM_BUILD_ROOT%{javadir}/bin/$i
 done
