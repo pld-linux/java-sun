@@ -253,26 +253,18 @@ Sources for package JDK.
 %prep
 %setup -q -T -c -n jdk%{_dir_ver}
 cd ..
-export MORE=10000
 %ifarch %{ix86}
-sh %{SOURCE0} <<EOF
+sh %{SOURCE0} --accept-license --unpack
 %endif
 %ifarch %{x8664}
-sh %{SOURCE1} <<EOF
+sh %{SOURCE1} --accept-license --unpack
 %endif
-yes
-EOF
 cd -
 %ifarch %{ix86}
 # patch only copy of the desktop file, leave original unchanged
 cp jre/plugin/desktop/sun_java.desktop .
 %patch0 -p1
 %endif
-
-# unpack packed jar files -- in %%prep as it is done "in place"
-for pack in $(find . -name '*.pack'); do
-	bin/unpack200 -r $pack ${pack%.pack}.jar
-done
 
 %install
 rm -rf $RPM_BUILD_ROOT
