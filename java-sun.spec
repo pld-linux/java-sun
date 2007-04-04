@@ -4,6 +4,8 @@
 #
 %define		_src_ver	6
 %define		_dir_ver	%(echo %{version} | sed 's/\\.\\(..\\)$/_\\1/')
+# class data version seen with file(1) that this jvm is able to load
+%define		_classdataversion 50.0
 Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
@@ -104,6 +106,7 @@ Requires:	jpackage-utils
 Provides:	j2re = %{version}
 Provides:	jaas = %{version}
 Provides:	java
+Provides:	java(ClassDataVersion) >= %{_classdataversion}
 Provides:	java1.4
 Provides:	jaxp = 1.3
 Provides:	jaxp_parser_impl
