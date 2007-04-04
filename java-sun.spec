@@ -106,7 +106,7 @@ Requires:	jpackage-utils
 Provides:	j2re = %{version}
 Provides:	jaas = %{version}
 Provides:	java
-Provides:	java(ClassDataVersion) >= %{_classdataversion}
+Provides:	java(ClassDataVersion) = %{_classdataversion}
 Provides:	java1.4
 Provides:	jaxp = 1.3
 Provides:	jaxp_parser_impl
