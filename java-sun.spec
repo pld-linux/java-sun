@@ -5,6 +5,8 @@
 %define		_ver	1.5.0.10
 %define		_src_ver	%(echo %{_ver}|tr . _)
 %define		_dir_ver	%(echo %{_ver}|sed 's/\\.\\(..\\)$/_\\1/')
+# class data version seen with file(1) that this jvm is able to load
+%define		_classdataversion 49.0
 Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
@@ -16,6 +18,7 @@ Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-i586.bi
 # Source0-md5:	baa5f71d72d1d4d7c38374d59bedfe7c
 Source1:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-amd64.bin
 # Source1-md5:	eca3b5106aa3cb0469ea01b96dc70510
+Source2:	Test.java
 Patch0:		%{name}-ControlPanel-fix.patch
 Patch1:		%{name}-desktop.patch
 URL:		http://java.sun.com/linux/
@@ -102,6 +105,7 @@ Requires:	jpackage-utils
 Provides:	j2re = %{version}
 Provides:	jaas = %{version}
 Provides:	java
+Provides:	java(ClassDataVersion) >= %{_classdataversion}
 Provides:	java1.4
 Provides:	jaxp = 1.3
 Provides:	jaxp_parser_impl
@@ -275,6 +279,16 @@ cp jre/plugin/desktop/sun_java.desktop .
 for pack in `find . -name '*.pack'`; do
 	bin/unpack200 -r $pack `echo $pack|sed -e's/\.pack$/.jar/'`
 done
+
+cp %{SOURCE2} Test.java
+
+%build
+./bin/javac Test.java
+classver=$(file Test.class | grep -o 'compiled Java class data, version [0-9.]*' | awk '{print $NF}')
+if [ "$classver" != %{_classdataversion} ]; then
+	echo "Set %%define _classdataversion to $classver and rerun."
+	exit 1
+fi
 
 %install
 rm -rf $RPM_BUILD_ROOT
