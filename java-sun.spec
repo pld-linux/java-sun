@@ -4,17 +4,20 @@
 #
 %define		_src_ver	6
 %define		_dir_ver	%(echo %{version} | sed 's/\\.\\(..\\)$/_\\1/')
+# class data version seen with file(1) that this jvm is able to load
+%define		_classdataversion 50.0
 Summary:	Sun JDK (Java Development Kit) for Linux
-Summary(pl.UTF-8):	Sun JDK - Å›rodowisko programistyczne Javy dla Linuksa
+Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	1.6.0
-Release:	6
+Release:	7
 License:	restricted, distributable
 Group:		Development/Languages/Java
 Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-i586.bin
 # Source0-md5:	f4481c4e064cec06a65d7751d9105c6d
 Source1:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-amd64.bin
 # Source1-md5: 2e0c075c27b09aed67f99475c3a19f83
+Source2:	Test.java
 Patch0:		%{name}-desktop.patch
 URL:		http://java.sun.com/linux/
 BuildRequires:	rpm-build >= 4.3-0.20040107.21
@@ -104,6 +107,7 @@ Requires:	jpackage-utils
 Provides:	j2re = %{version}
 Provides:	jaas = %{version}
 Provides:	java
+Provides:	java(ClassDataVersion) = %{_classdataversion}
 Provides:	java1.4
 Provides:	jaxp = 1.3
 Provides:	jaxp_parser_impl
@@ -124,6 +128,7 @@ Obsoletes:	java-blackdown-jre
 Obsoletes:	jaxp
 Obsoletes:	jce
 Obsoletes:	jdbc-stdext
+Obsoletes:	jmx
 Obsoletes:	jndi
 Obsoletes:	jndi-provider-cosnaming
 Obsoletes:	jndi-provider-dns
@@ -266,6 +271,16 @@ cp jre/plugin/desktop/sun_java.desktop .
 %patch0 -p1
 %endif
 
+cp %{SOURCE2} Test.java
+
+%build
+./bin/javac Test.java
+classver=$(file Test.class | grep -o 'compiled Java class data, version [0-9.]*' | awk '{print $NF}')
+if [ "$classver" != %{_classdataversion} ]; then
+	echo "Set %%define _classdataversion to $classver and rerun."
+	exit 1
+fi
+
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{jredir},%{javadir},%{jvmjardir},%{_javadir},%{_bindir},%{_includedir}} \
@@ -334,7 +349,8 @@ ln -sf %{jredir}/lib/jsse.jar $RPM_BUILD_ROOT%{jvmjardir}/jcert.jar
 ln -sf %{jredir}/lib/jsse.jar $RPM_BUILD_ROOT%{jvmjardir}/jnet.jar
 ln -sf %{jredir}/lib/jce.jar $RPM_BUILD_ROOT%{jvmjardir}/jce.jar
 for f in jndi jndi-ldap jndi-cos jndi-rmi jaas jdbc-stdext jdbc-stdext-3.0 \
-	sasl jaxp_parser_impl jaxp_transform_impl jaxp jmx xml-commons-apis; do
+	sasl jaxp_parser_impl jaxp_transform_impl jaxp jmx xml-commons-apis \
+	jce jndi-dns jndi-rmi jsse; do
 	ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{jvmjardir}/$f.jar
 done
 
@@ -410,7 +426,7 @@ fixrpath
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%pre jre
+%pretrans jre
 if [ -L %{jredir} ]; then
 	rm -f %{jredir}
 fi
@@ -636,6 +652,7 @@ fi
 %{jvmjardir}/jce.jar
 %{jvmjardir}/jcert.jar
 %{jvmjardir}/jdbc-stdext*.jar
+%{jvmjardir}/jmx.jar
 %{jvmjardir}/jndi*.jar
 %{jvmjardir}/jnet.jar
 %{jvmjardir}/jsse.jar
