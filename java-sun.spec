@@ -17,6 +17,7 @@ Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-i586.bi
 # Source0-md5:	f4481c4e064cec06a65d7751d9105c6d
 Source1:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-amd64.bin
 # Source1-md5: 2e0c075c27b09aed67f99475c3a19f83
+Source2:	Test.java
 Patch0:		%{name}-desktop.patch
 URL:		http://java.sun.com/linux/
 BuildRequires:	rpm-build >= 4.3-0.20040107.21
@@ -269,6 +270,16 @@ cd -
 cp jre/plugin/desktop/sun_java.desktop .
 %patch0 -p1
 %endif
+
+cp %{SOURCE2} Test.java
+
+%build
+./bin/javac Test.java
+classver=$(file Test.class | grep -o 'compiled Java class data, version [0-9.]*' | awk '{print $NF}')
+if [ "$classver" != %{_classdataversion} ]; then
+	echo "Set %%define _classdataversion to $classver and rerun."
+	exit 1
+fi
 
 %install
 rm -rf $RPM_BUILD_ROOT
