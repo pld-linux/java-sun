@@ -22,6 +22,7 @@ Source2:	Test.java
 Patch0:		%{name}-ControlPanel-fix.patch
 Patch1:		%{name}-desktop.patch
 URL:		http://java.sun.com/linux/
+BuildRequires:	file
 BuildRequires:	rpm-build >= 4.3-0.20040107.21
 BuildRequires:	rpmbuild(macros) >= 1.357
 BuildRequires:	unzip
