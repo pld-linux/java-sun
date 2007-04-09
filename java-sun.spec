@@ -415,7 +415,7 @@ fixrpath
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%pre jre
+%pretrans jre
 if [ -L %{jredir} ]; then
 	rm -f %{jredir}
 fi
