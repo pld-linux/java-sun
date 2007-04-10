@@ -1,10 +1,11 @@
+%include	/usr/lib/rpm/macros.java
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 46.0
 Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	1.4.2_14
-Release:	0.2
+Release:	0.3
 License:	restricted, non-distributable
 Group:		Development/Languages/Java
 # download through forms from http://java.sun.com/j2se/1.4.2/download.html
@@ -295,7 +296,6 @@ ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{_javadir}/jdbc-stdext-3.0.jar
 
 install -d $RPM_BUILD_ROOT%{jredir}/javaws
 cp -a jre/javaws/* $RPM_BUILD_ROOT%{jredir}/javaws
-perl -p -i -e 's#javaws\.cfg\.jre\.0\.path=.*#javaws\.cfg\.jre\.0\.path=%{jredir}/bin/java#' $RPM_BUILD_ROOT%{jredir}/javaws/javaws.cfg
 ln -sf %{jredir}/javaws/javaws.jar $RPM_BUILD_ROOT%{_javadir}/javaws.jar
 ln -sf %{jredir}/javaws/javaws-l10n.jar $RPM_BUILD_ROOT%{_javadir}/javaws-l10n.jar
 
