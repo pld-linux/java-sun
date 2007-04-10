@@ -1,24 +1,27 @@
+# class data version seen with file(1) that this jvm is able to load
+%define		_classdataversion 46.0
 Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
-Version:	1.4.2_13
-Release:	1
+Version:	1.4.2_14
+Release:	0.2
 License:	restricted, non-distributable
 Group:		Development/Languages/Java
 # download through forms from http://java.sun.com/j2se/1.4.2/download.html
-Source0:        j2sdk-%(echo %{version} | tr . _)-linux-i586.bin
-# NoSource0-md5:	e2e610267fd9ff8fc5f8a807a5606751
+Source0:	j2sdk-%(echo %{version} | tr . _)-linux-i586.bin
+# NoSource0-md5:	c5f5ae15bc73f17f22c3ddaf45ee45ad
 # Other Downloads at http://java.sun.com/j2se/1.4.2/download.html
 Source1:	jce_policy-1_4_2.zip
 # NoSource1-md5:	ff961c5f5326191c5ac2e4624d756f7e
-NoSource:       0
+Source2:	Test.java
+NoSource:	0
 Patch0:		%{name}-ControlPanel-fix.patch
 URL:		http://java.sun.com/linux/
 BuildRequires:	rpm-build >= 4.3-0.20040107.21
 BuildRequires:	unzip
 Requires:	java-sun-jre = %{version}-%{release}
-Provides:	jdk = %{version}
 Provides:	j2sdk = %{version}
+Provides:	jdk = %{version}
 Obsoletes:	blackdown-java-sdk
 Obsoletes:	ibm-java
 Obsoletes:	java-blackdown
@@ -49,7 +52,7 @@ Java Development Kit for Linux.
 %package jdbc
 Summary:	JDBC files for Sun Java
 Summary(pl):	Pliki JDBC dla Javy Suna
-Group:		Development/Libraries/Java
+Group:		Development/Languages/Java
 Requires:	%{name} = %{version}-%{release}
 Requires:	libodbc.so.1
 Requires:	libodbcinst.so.1
@@ -66,31 +69,32 @@ Summary(pl):	Sun JRE - ¶rodowisko uruchomieniowe Javy dla Linuksa
 Group:		Development/Languages/Java
 Requires:	XFree86-libs
 Requires:	java-shared
-Provides:	java1.4
-Provides:	jre = %{version}
-Provides:	java
-Provides:	javaws = %{version}
-Provides:	jndi = %{version}
-Provides:	jndi-ldap = %{version}
-Provides:	jndi-cos = %{version}
-Provides:	jndi-rmi = %{version}
-Provides:	jndi-dns = %{version}
 Provides:	jaas = %{version}
-Provides:	jsse = %{version}
+Provides:	java
+Provides:	java(ClassDataVersion) = %{_classdataversion}
+Provides:	java1.4
+Provides:	javaws = %{version}
 Provides:	jce = %{version}
-Provides:	jdbc-stdext = 3.0
 Provides:	jdbc-stdext = %{version}
-Obsoletes:	jre
-Obsoletes:	java-blackdown-jre
-Obsoletes:	jndi
-Obsoletes:	jndi-provider-ldap
-Obsoletes:	jndi-provider-cosnaming
-Obsoletes:	jndi-provider-rmiregistry
-Obsoletes:	jndi-provider-dns
+Provides:	jdbc-stdext = 3.0
+Provides:	jndi = %{version}
+Provides:	jndi-cos = %{version}
+Provides:	jndi-dns = %{version}
+Provides:	jndi-ldap = %{version}
+Provides:	jndi-rmi = %{version}
+Provides:	jre = %{version}
+Provides:	jsse = %{version}
 Obsoletes:	jaas
-Obsoletes:	jsse
+Obsoletes:	java-blackdown-jre
 Obsoletes:	jce
 Obsoletes:	jdbc-stdext
+Obsoletes:	jndi
+Obsoletes:	jndi-provider-cosnaming
+Obsoletes:	jndi-provider-dns
+Obsoletes:	jndi-provider-ldap
+Obsoletes:	jndi-provider-rmiregistry
+Obsoletes:	jre
+Obsoletes:	jsse
 
 %description jre
 Java Runtime Environment for Linux.
@@ -117,9 +121,9 @@ Group:		Development/Languages/Java
 Requires:	%{name}-jre = %{version}-%{release}
 Provides:	jar
 Provides:	java-shared
-Obsoletes:	java-shared
-Obsoletes:	jar
 Obsoletes:	fastjar
+Obsoletes:	jar
+Obsoletes:	java-shared
 
 %description tools
 This package contains tools that are common for every Java(TM)
@@ -150,9 +154,9 @@ Group:		Development/Languages/Java
 Requires:	%{name}-jre = %{version}-%{release}
 Requires:	netscape-common >= 4.0
 Obsoletes:	blackdown-java-sdk-netscape4-plugin
-Obsoletes:	netscape4-plugin-java-blackdown
 Obsoletes:	java-sun-nn4-plugin
 Obsoletes:	jre-netscape4-plugin
+Obsoletes:	netscape4-plugin-java-blackdown
 
 %description -n netscape4-plugin-%{name}
 Java plugin for Netscape 4.x.
@@ -164,15 +168,15 @@ Wtyczka z obs³ug± Javy dla Netscape 4.x.
 Summary:	Mozilla Java plugin
 Summary(pl):	Wtyczka Javy do Mozilli
 Group:		Development/Languages/Java
-PreReq:		mozilla-embedded
 Requires:	jre = %{version}-%{release}
+Requires:	mozilla-embedded
 Obsoletes:	blackdown-java-sdk-mozilla-plugin
 Obsoletes:	java-sun-moz-plugin
 Obsoletes:	jre-mozilla-plugin
 Obsoletes:	mozilla-plugin-blackdown-java-sdk
+Obsoletes:	mozilla-plugin-gcc32-java-sun
 Obsoletes:	mozilla-plugin-java-blackdown
 Obsoletes:	mozilla-plugin-java-sun
-Obsoletes:	mozilla-plugin-gcc32-%{name}
 
 %description -n mozilla-plugin-gcc2-%{name}
 Java plugin for Mozilla compiled using gcc 2.9x.
@@ -184,15 +188,15 @@ Wtyczka z obs³ug± Javy dla Mozilli skompilowana przy u¿yciu gcc 2.9x.
 Summary:	Mozilla Java plugin
 Summary(pl):	Wtyczka Javy do Mozilli
 Group:		Development/Languages/Java
-PreReq:		mozilla-embedded
 Requires:	jre = %{version}-%{release}
+Requires:	mozilla-embedded
 Obsoletes:	blackdown-java-sdk-mozilla-plugin
 Obsoletes:	java-sun-moz-plugin
 Obsoletes:	jre-mozilla-plugin
 Obsoletes:	mozilla-plugin-blackdown-java-sdk
+Obsoletes:	mozilla-plugin-gcc2-java-sun
 Obsoletes:	mozilla-plugin-java-blackdown
 Obsoletes:	mozilla-plugin-java-sun
-Obsoletes:	mozilla-plugin-gcc2-%{name}
 
 %description -n mozilla-plugin-gcc32-%{name}
 Java plugin for Mozilla compiled using gcc 3.2.
@@ -208,7 +212,16 @@ sh %{SOURCE0} <<EOF
 yes
 EOF
 cd j2sdk%{version}
-%patch -p1
+%patch0 -p1
+cp %{SOURCE2} Test.java
+
+%build
+./bin/javac Test.java
+classver=$(file Test.class | grep -o 'compiled Java class data, version [0-9.]*' | awk '{print $NF}')
+if [ "$classver" != %{_classdataversion} ]; then
+	echo "Set %%define _classdataversion to $classver and rerun."
+	exit 1
+fi
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -280,7 +293,7 @@ ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{_javadir}/jaas.jar
 ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{_javadir}/jdbc-stdext.jar
 ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{_javadir}/jdbc-stdext-3.0.jar
 
-install -d -m 755 $RPM_BUILD_ROOT%{jredir}/javaws
+install -d $RPM_BUILD_ROOT%{jredir}/javaws
 cp -a jre/javaws/* $RPM_BUILD_ROOT%{jredir}/javaws
 perl -p -i -e 's#javaws\.cfg\.jre\.0\.path=.*#javaws\.cfg\.jre\.0\.path=%{jredir}/bin/java#' $RPM_BUILD_ROOT%{jredir}/javaws/javaws.cfg
 ln -sf %{jredir}/javaws/javaws.jar $RPM_BUILD_ROOT%{_javadir}/javaws.jar
@@ -407,7 +420,7 @@ fi
 %{jredir}/lib/images
 %dir %{jredir}/lib/security
 %{jredir}/lib/security/*.*
-%verify(not md5 size mtime) %config(noreplace) %{jredir}/lib/security/cacerts
+%verify(not md5 mtime size) %config(noreplace) %{jredir}/lib/security/cacerts
 %{jredir}/lib/zi
 %{jredir}/lib/*.jar
 %{jredir}/lib/*.properties
