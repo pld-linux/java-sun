@@ -5,7 +5,7 @@ Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	1.4.2_14
-Release:	0.3
+Release:	0.5
 License:	restricted, non-distributable
 Group:		Development/Languages/Java
 # download through forms from http://java.sun.com/j2se/1.4.2/download.html
@@ -40,9 +40,11 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_noautoprov	'\\.\\./.*' '/export/.*'
 # these with SUNWprivate.* are found as required, but not provided
 # the rest is because -jdbc wants unixODBC-devel(?)
-%define		_noautoreq	'libjava.so(SUNWprivate_1.1)' 'libnet.so(SUNWprivate_1.1)' 'libverify.so(SUNWprivate_1.1)' 'libodbcinst.so' 'libodbc.so'
+%define		_noautoreq	'libjava.so(SUNWprivate_1.1)' 'libnet.so(SUNWprivate_1.1)' 'libverify.so(SUNWprivate_1.1)' 'libodbcinst.so' 'libodbc.so'  %{_noautoreqdep_java}
 # don't depend on other JRE/JDK installed on build host
 %define		_noautoreqdep	libjava.so libjvm.so
+# Those generate ClassDataVersion deps 48.0
+%define		_noautoreqfiles htmlconverter.jar tools.jar charsets.jar dnsns.jar ldapsec.jar localedata.jar indicim.jar thaiim.jar plugin.jar rt.jar sunrsasign.jar
 
 %description
 Java Development Kit for Linux.
@@ -216,6 +218,12 @@ cd j2sdk%{version}
 %patch0 -p1
 cp %{SOURCE2} Test.java
 
+mv -f jre/lib/i386/client/Xusage.txt jre/Xusage.client
+mv -f jre/lib/i386/server/Xusage.txt jre/Xusage.server
+mv -f jre/lib/*.txt jre
+mv jre/lib/font.properties{,.orig}
+mv jre/lib/font.properties{.Redhat6.1,}
+
 %build
 ./bin/javac Test.java
 classver=$(file Test.class | grep -o 'compiled Java class data, version [0-9.]*' | awk '{print $NF}')
@@ -230,21 +238,13 @@ install -d $RPM_BUILD_ROOT{%{jredir},%{_javadir},%{_bindir},%{_includedir}} \
 	$RPM_BUILD_ROOT%{_mandir}/{,ja/}man1
 
 cp -rf bin demo include lib $RPM_BUILD_ROOT%{javadir}
+cp -rf jre/{bin,lib} $RPM_BUILD_ROOT%{jredir}
+install jce/*.jar $RPM_BUILD_ROOT%{jredir}/lib/security
 install man/man1/* $RPM_BUILD_ROOT%{_mandir}/man1
 install man/ja/man1/* $RPM_BUILD_ROOT%{_mandir}/ja/man1
 
-mv -f jre/lib/i386/client/Xusage.txt jre/Xusage.client
-mv -f jre/lib/i386/server/Xusage.txt jre/Xusage.server
-mv -f jre/lib/*.txt jre
-mv jre/lib/font.properties{,.orig}
-mv jre/lib/font.properties{.Redhat6.1,}
-
-cp -rf jre/{bin,lib} $RPM_BUILD_ROOT%{jredir}
-
-install jce/*.jar $RPM_BUILD_ROOT%{jredir}/lib/security
-
 # conflict with heimdal
-for i in kinit klist ; do
+for i in kinit klist; do
 	ln -sf %{jredir}/bin/$i $RPM_BUILD_ROOT%{_bindir}/j$i
 	mv -f $RPM_BUILD_ROOT%{_mandir}/man1/${i}.1 $RPM_BUILD_ROOT%{_mandir}/man1/j${i}.1
 	mv -f $RPM_BUILD_ROOT%{_mandir}/ja/man1/${i}.1 $RPM_BUILD_ROOT%{_mandir}/ja/man1/j${i}.1
@@ -265,7 +265,7 @@ ln -sf %{jredir}/bin/java $RPM_BUILD_ROOT%{javadir}/bin/java
 
 install -d $RPM_BUILD_ROOT%{netscape4dir}/{plugins,java/classes}
 install jre/plugin/i386/ns4/libjavaplugin.so $RPM_BUILD_ROOT%{netscape4dir}/plugins
-for i in javaplugin rt sunrsasign ; do
+for i in javaplugin rt sunrsasign; do
 	ln -sf %{jredir}/lib/$i.jar $RPM_BUILD_ROOT%{netscape4dir}/java/classes
 done
 
@@ -302,7 +302,7 @@ ln -sf %{jredir}/javaws/javaws-l10n.jar $RPM_BUILD_ROOT%{_javadir}/javaws-l10n.j
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%pre jre
+%pretrans jre
 if [ -L %{jredir} ]; then
 	rm -f %{jredir}
 fi
