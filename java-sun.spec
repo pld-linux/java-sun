@@ -40,7 +40,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_noautoprov	'\\.\\./.*' '/export/.*'
 # these with SUNWprivate.* are found as required, but not provided
 # the rest is because -jdbc wants unixODBC-devel(?)
-%define		_noautoreq	'libjava.so(SUNWprivate_1.1)' 'libnet.so(SUNWprivate_1.1)' 'libverify.so(SUNWprivate_1.1)' 'libodbcinst.so' 'libodbc.so'  %{_noautoreqdep_java}
+%define		_noautoreq	'libjava.so(SUNWprivate_1.1)' 'libnet.so(SUNWprivate_1.1)' 'libverify.so(SUNWprivate_1.1)' 'libodbcinst.so' 'libodbc.so'
 # don't depend on other JRE/JDK installed on build host
 %define		_noautoreqdep	libjava.so libjvm.so
 # Those generate ClassDataVersion deps 48.0
