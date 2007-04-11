@@ -2,28 +2,30 @@
 #	- better way to choose preferred jvm (currently the symlinks are hardcoded)
 #	  Maybe a package containing only the symlinks?
 #
-%define		_ver	1.5.0.10
+%define		_ver	1.5.0.11
 %define		_src_ver	%(echo %{_ver}|tr . _)
 %define		_dir_ver	%(echo %{_ver}|sed 's/\\.\\(..\\)$/_\\1/')
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 49.0
+%include	/usr/lib/rpm/macros.java
 Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	%{_ver}
-Release:	2
+Release:	0.1
 License:	restricted, distributable
 Group:		Development/Languages/Java
 Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-i586.bin
-# Source0-md5:	baa5f71d72d1d4d7c38374d59bedfe7c
+# Source0-md5:	9dfdad6a166ed403513c0a5509d82e4b
 Source1:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-amd64.bin
-# Source1-md5:	eca3b5106aa3cb0469ea01b96dc70510
+# Source1-md5:	ace2fc1b8c9d381b4e297c66c5a9caa7
 Source2:	Test.java
 Patch0:		%{name}-ControlPanel-fix.patch
 Patch1:		%{name}-desktop.patch
-URL:		http://java.sun.com/linux/
+URL:		https://jdk-distros.dev.java.net/developer.html
 BuildRequires:	file
 BuildRequires:	rpm-build >= 4.3-0.20040107.21
+BuildRequires:	rpm-javaprov
 BuildRequires:	rpmbuild(macros) >= 1.357
 BuildRequires:	unzip
 Requires:	%{name}-jre = %{version}-%{release}
@@ -253,27 +255,19 @@ Sources for package JDK.
 %prep
 %setup -q -T -c -n jdk%{_dir_ver}
 cd ..
-export MORE=10000
 %ifarch %{ix86}
-sh %{SOURCE0} <<EOF
+sh %{SOURCE0} --accept-license --unpack
 %endif
 %ifarch %{x8664}
-sh %{SOURCE1} <<EOF
+sh %{SOURCE1} --accept-license --unpack
 %endif
-yes
-EOF
-cd jdk%{_dir_ver}
+cd -
 %ifnarch %{x8664}
 %patch0 -p1
 # patch only copy of the desktop file, leave original unchanged
 cp jre/plugin/desktop/sun_java.desktop .
 %patch1 -p1
 %endif
-
-# unpack packed jar files -- in %%prep as it is done "in place"
-for pack in `find . -name '*.pack'`; do
-	bin/unpack200 -r $pack `echo $pack|sed -e's/\.pack$/.jar/'`
-done
 
 cp %{SOURCE2} Test.java
 
@@ -579,7 +573,7 @@ fi
 %endif
 %ifarch %{x8664}
 %dir %{jredir}/lib/amd64
-%attr(755,root,root) %dir %{jredir}/lib/amd64/headless
+%dir %{jredir}/lib/amd64/headless
 #%attr(755,root,root) %{jredir}/lib/i386/client
 %attr(755,root,root) %{jredir}/lib/amd64/native_threads
 %attr(755,root,root) %{jredir}/lib/amd64/server
@@ -699,8 +693,8 @@ fi
 %endif
 %ifarch %{x8664}
 %dir %{jredir}/lib/amd64
-%attr(755,root,root) %dir %{jredir}/lib/amd64/xawt
-%attr(755,root,root) %dir %{jredir}/lib/amd64/motif21
+%dir %{jredir}/lib/amd64/xawt
+%dir %{jredir}/lib/amd64/motif21
 %attr(755,root,root) %{jredir}/lib/amd64/awt_robot
 %endif
 %ifarch %{ix86}
