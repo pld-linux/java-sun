@@ -7,7 +7,7 @@
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 50.0
 Summary:	Sun JDK (Java Development Kit) for Linux
-Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
+Summary(pl):	Sun JDK - Å›rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	1.6.0
 Release:	7
