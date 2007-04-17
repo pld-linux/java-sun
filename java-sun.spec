@@ -1,6 +1,7 @@
 # TODO:
 # - better way to choose preferred jvm (currently the symlinks are hardcoded)
 #   Maybe a package containing only the symlinks?
+# - there's 1.6u1 but not for dlj
 #
 %define		_src_ver	6
 %define		_dir_ver	%(echo %{version} | sed 's/\\.\\(..\\)$/_\\1/')
@@ -19,7 +20,7 @@ Source1:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-amd64.b
 # Source1-md5: 2e0c075c27b09aed67f99475c3a19f83
 Source2:	Test.java
 Patch0:		%{name}-desktop.patch
-URL:		http://java.sun.com/linux/
+URL:		https://jdk-distros.dev.java.net/developer.html
 BuildRequires:	file
 BuildRequires:	rpm-build >= 4.3-0.20040107.21
 BuildRequires:	rpmbuild(macros) >= 1.357
