@@ -3,21 +3,21 @@
 #   Maybe a package containing only the symlinks?
 # - there's 1.6u1 but not for dlj
 #
-%define		_src_ver	6
+%define		_src_ver	6u2
 %define		_dir_ver	%(echo %{version} | sed 's/\\.\\(..\\)$/_\\1/')
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 50.0
 Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl.UTF-8):	Sun JDK - środowisko programistyczne Javy dla Linuksa
 Name:		java-sun
-Version:	1.6.0
-Release:	7
+Version:	1.6.0.02
+Release:	1
 License:	restricted, distributable
 Group:		Development/Languages/Java
 Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-i586.bin
-# Source0-md5:	f4481c4e064cec06a65d7751d9105c6d
+# Source0-md5:	31fb431b22906344b4b0121e50bef84a
 Source1:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-amd64.bin
-# Source1-md5: 2e0c075c27b09aed67f99475c3a19f83
+# Source1-md5:	fd1ccd16ec899bf189f327b206e801f1
 Source2:	Test.java
 Patch0:		%{name}-desktop.patch
 URL:		https://jdk-distros.dev.java.net/developer.html
