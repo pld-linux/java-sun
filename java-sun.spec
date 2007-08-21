@@ -1,8 +1,9 @@
 # TODO:
-#	- better way to choose preferred jvm (currently the symlinks are hardcoded)
-#	  Maybe a package containing only the symlinks?
+# - better way to choose preferred jvm (currently the symlinks are hardcoded)
+#   Maybe a package containing only the symlinks?
+# - package? /usr/lib/jvm/java-sun-1.5.0.12/jre/lib/deploy/ffjcext.zip
 #
-%define		_ver	1.5.0.11
+%define		_ver	1.5.0.12
 %define		_src_ver	%(echo %{_ver}|tr . _)
 %define		_dir_ver	%(echo %{_ver}|sed 's/\\.\\(..\\)$/_\\1/')
 # class data version seen with file(1) that this jvm is able to load
@@ -12,13 +13,13 @@ Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl):	Sun JDK - ¶rodowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	%{_ver}
-Release:	0.1
+Release:	1
 License:	restricted, distributable
 Group:		Development/Languages/Java
 Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-i586.bin
-# Source0-md5:	9dfdad6a166ed403513c0a5509d82e4b
+# Source0-md5:	9b0d717810953e78d5c40969e382e1ae
 Source1:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-amd64.bin
-# Source1-md5:	ace2fc1b8c9d381b4e297c66c5a9caa7
+# Source1-md5:	948295f3e252670eb9328cbbc422e3a6
 Source2:	Test.java
 Patch0:		%{name}-ControlPanel-fix.patch
 Patch1:		%{name}-desktop.patch
@@ -256,10 +257,10 @@ Sources for package JDK.
 %setup -q -T -c -n jdk%{_dir_ver}
 cd ..
 %ifarch %{ix86}
-sh %{SOURCE0} --accept-license --unpack
+%{__unzip} -q %{SOURCE0} || :
 %endif
 %ifarch %{x8664}
-sh %{SOURCE1} --accept-license --unpack
+%{__unzip} -q %{SOURCE1} || :
 %endif
 cd -
 %ifnarch %{x8664}
@@ -268,6 +269,11 @@ cd -
 cp jre/plugin/desktop/sun_java.desktop .
 %patch1 -p1
 %endif
+
+# unpack packed jar files -- in %%prep as it is done "in place"
+for pack in $(find . -name '*.pack'); do
+	bin/unpack200 -r $pack ${pack%.pack}.jar
+done
 
 cp %{SOURCE2} Test.java
 
