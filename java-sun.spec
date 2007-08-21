@@ -1,7 +1,6 @@
 # TODO:
 # - better way to choose preferred jvm (currently the symlinks are hardcoded)
 #   Maybe a package containing only the symlinks?
-# - there's 1.6u1 but not for dlj
 #
 %define		_src_ver	6u2
 %define		_dir_ver	%(echo %{version} | sed 's/\\.\\(..\\)$/_\\1/')
