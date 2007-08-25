@@ -26,7 +26,7 @@ BuildRequires:	rpmbuild(macros) >= 1.357
 BuildRequires:	unzip
 Requires:	%{name}-jre = %{version}-%{release}
 Requires:	java-shared
-Requires:	jpackage-utils >= 0:1.6.6-5
+Requires:	jpackage-utils >= 0:1.6.6-4
 Provides:	j2sdk = %{version}
 Provides:	jdk = %{version}
 Obsoletes:	blackdown-java-sdk
@@ -104,7 +104,7 @@ Summary:	Sun JRE (Java Runtime Environment) for Linux
 Summary(pl.UTF-8):	Sun JRE - środowisko uruchomieniowe Javy dla Linuksa
 Group:		Development/Languages/Java
 Requires:	java-jre-tools
-Requires:	jpackage-utils
+Requires:	jpackage-utils >= 0:1.6.6-14
 Provides:	j2re = %{version}
 Provides:	jaas = %{version}
 Provides:	java
