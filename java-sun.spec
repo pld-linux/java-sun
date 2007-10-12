@@ -10,7 +10,7 @@ Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl.UTF-8):	Sun JDK - środowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	1.6.0.02
-Release:	1
+Release:	2
 License:	restricted, distributable
 Group:		Development/Languages/Java
 Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-i586.bin
@@ -280,6 +280,8 @@ done
 cp %{SOURCE2} Test.java
 
 %build
+# $ORIGIN does not work on PLD builders. workaround.
+export LD_LIBRARY_PATH=$(pwd)/jre/lib/%{arch}/jli
 ./bin/javac Test.java
 classver=$(file Test.class | grep -o 'compiled Java class data, version [0-9.]*' | awk '{print $NF}')
 if [ "$classver" != %{_classdataversion} ]; then
