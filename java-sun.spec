@@ -1,6 +1,9 @@
 # TODO:
 # - better way to choose preferred jvm (currently the symlinks are hardcoded)
 #   Maybe a package containing only the symlinks?
+# - 1.6.0.03 still broken and fails with libxcb enabled X11 libs:
+#   java_vm: xcb_xlib.c:82: xcb_xlib_unlock: Assertion `c->xlib.lock' failed.
+#   Use export LIBXCB_ALLOW_SLOPPY_LOCK=1 runtime as workaround.
 #
 %define		_src_ver	6u3
 %define		_dir_ver	%(echo %{version} | sed 's/\\.\\(..\\)$/_\\1/')
