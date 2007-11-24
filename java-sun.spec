@@ -3,7 +3,9 @@
 #   Maybe a package containing only the symlinks?
 # - 1.6.0.03 still broken and fails with libxcb enabled X11 libs:
 #   java_vm: xcb_xlib.c:82: xcb_xlib_unlock: Assertion `c->xlib.lock' failed.
-#   Use export LIBXCB_ALLOW_SLOPPY_LOCK=1 runtime as workaround.
+#   There are two ways to workaround this: 1) use export LIBXCB_ALLOW_SLOPPY_LOCK=1
+#   runtime or 2) prevent java from finding Xinerama extension. For now we do ugly 2).
+#   See http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6532373 for details.
 #
 %define		_src_ver	6u3
 %define		_dir_ver	%(echo %{version} | sed 's/\\.\\(..\\)$/_\\1/')
@@ -13,7 +15,7 @@ Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl.UTF-8):	Sun JDK - środowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	1.6.0.03
-Release:	1
+Release:	2
 License:	restricted, distributable
 Group:		Development/Languages/Java
 Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-i586.bin
@@ -391,6 +393,10 @@ ln -s %{jrereldir} $RPM_BUILD_ROOT%{_jvmdir}/jre
 ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_jvmjardir}/java
 ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_jvmjardir}/jre
 ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_jvmjardir}/jsse
+
+# UGLY HACK UGLY HACK
+# Prevent java from finding Xinerama extension. See TODO at beginning of this spec.
+find $RPM_BUILD_ROOT -name 'libmawt.so' -exec sed -i 's/XINERAMA/FAKEEXTN/g' "{}" ";"
 
 # modify RPATH so that javac and friends are able to work when /proc is not
 # mounted and we can't append to RPATH (for example to keep previous lookup
