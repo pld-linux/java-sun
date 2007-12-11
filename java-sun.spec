@@ -15,7 +15,7 @@ Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl.UTF-8):	Sun JDK - środowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	1.6.0.03
-Release:	2
+Release:	3
 License:	restricted, distributable
 Group:		Development/Languages/Java
 Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-i586.bin
@@ -112,6 +112,7 @@ Requires:	java-jre-tools
 Requires:	jpackage-utils >= 0:1.6.6-14
 Provides:	j2re = %{version}
 Provides:	jaas = %{version}
+Provides:	jaf = 1.1.1
 Provides:	java
 Provides:	java(ClassDataVersion) = %{_classdataversion}
 Provides:	java1.4
