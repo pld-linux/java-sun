@@ -121,7 +121,7 @@ Provides:	jaxp_parser_impl
 Provides:	jce = %{version}
 Provides:	jdbc-stdext = %{version}
 Provides:	jdbc-stdext = 3.0
-Provides:	jmx = %{version}
+Provides:	jmx = 1.4
 Provides:	jndi = %{version}
 Provides:	jndi-cos = %{version}
 Provides:	jndi-dns = %{version}
