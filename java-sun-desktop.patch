@@ -9,7 +9,7 @@
  Comment=Java Control Panel
 -Exec=jcontrol
 -Icon=sun-jcontrol.png
-+Exec=ControlPanel
++Exec=jcontrol
 +Icon=sun_java.png
  Terminal=false
  Type=Application
