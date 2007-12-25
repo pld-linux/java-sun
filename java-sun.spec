@@ -15,7 +15,7 @@ Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl.UTF-8):	Sun JDK - środowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	1.6.0.03
-Release:	6
+Release:	7
 License:	restricted, distributable
 Group:		Development/Languages/Java
 Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-i586.bin
@@ -301,7 +301,7 @@ install -d $RPM_BUILD_ROOT{%{jredir},%{javadir},%{jvmjardir},%{_javadir},%{_bind
 	$RPM_BUILD_ROOT{%{_mandir}/{,ja/}man1,%{_prefix}/src/%{name}-sources} \
 	$RPM_BUILD_ROOT{%{_desktopdir},%{_pixmapsdir},%{_browserpluginsdir}}
 
-cp -rf bin sample demo include lib $RPM_BUILD_ROOT%{javadir}
+cp -a bin sample demo include lib $RPM_BUILD_ROOT%{javadir}
 install man/man1/* $RPM_BUILD_ROOT%{_mandir}/man1
 install man/ja/man1/* $RPM_BUILD_ROOT%{_mandir}/ja/man1
 
@@ -315,10 +315,11 @@ if test -f jre/lib/*.txt; then
 	mv -f jre/lib/*.txt jre
 fi
 
-cp -rf jre/{bin,lib} $RPM_BUILD_ROOT%{jredir}
+cp -af jre/{bin,lib} $RPM_BUILD_ROOT%{jredir}
 
-for i in ControlPanel java javaws java_vm keytool orbd policytool \
-	rmid rmiregistry servertool tnameserv pack200 unpack200 jconsole; do
+for i in java javaws java_vm keytool orbd policytool \
+	rmid rmiregistry servertool tnameserv pack200 unpack200; do
+	[ -f $RPM_BUILD_ROOT%{jredir}/bin/$i ] || exit 1
 	ln -sf %{jredir}/bin/$i $RPM_BUILD_ROOT%{_bindir}/$i
 done
 
@@ -326,17 +327,20 @@ for i in appletviewer extcheck idlj jar jarsigner \
 	javac javadoc javah javap jconsole jdb jhat jinfo jmap jps \
 	jrunscript jsadebugd jstack jstat jstatd native2ascii rmic serialver \
 	schemagen wsgen wsimport xjc apt; do
+	[ -f $RPM_BUILD_ROOT%{javadir}/bin/$i ] || exit 1
 	ln -sf %{javadir}/bin/$i $RPM_BUILD_ROOT%{_bindir}/$i
 done
 %ifarch %{ix86}
 for i in HtmlConverter jcontrol java-rmi.cgi; do
+	[ -f $RPM_BUILD_ROOT%{javadir}/bin/$i ] || exit 1
 	ln -sf %{javadir}/bin/$i $RPM_BUILD_ROOT%{_bindir}/$i
 done
 %endif
 
 # make sure all tools are available under $(JDK_HOME)/bin
-for i in ControlPanel keytool orbd policytool rmid \
+for i in keytool orbd policytool rmid java_vm \
 		rmiregistry servertool tnameserv pack200 unpack200 java javaws; do
+	[ -f $RPM_BUILD_ROOT%{jredir}/bin/$i ] || exit 1
 	ln -sf ../jre/bin/$i $RPM_BUILD_ROOT%{javadir}/bin/$i
 done
 
@@ -348,14 +352,14 @@ rm -f $RPM_BUILD_ROOT%{_mandir}/man1/javaws.1
 %ifarch %{ix86}
 # copy _all_ plugin files (even those incompatible with PLD) --
 # license restriction
-cp -R jre/plugin $RPM_BUILD_ROOT%{jredir}
+cp -a jre/plugin $RPM_BUILD_ROOT%{jredir}
 
 # Install plugin for browsers
 # Plugin in regular location simply does not work (is seen by browsers):
 ln -sf %{jredir}/plugin/i386/ns7/libjavaplugin_oji.so $RPM_BUILD_ROOT%{_browserpluginsdir}
 
-install *.desktop $RPM_BUILD_ROOT%{_desktopdir}
-install jre/plugin/desktop/*.png $RPM_BUILD_ROOT%{_pixmapsdir}
+cp -a *.desktop $RPM_BUILD_ROOT%{_desktopdir}
+cp -a jre/plugin/desktop/*.png $RPM_BUILD_ROOT%{_pixmapsdir}
 %endif
 
 ln -sf %{jredir}/lib/jsse.jar $RPM_BUILD_ROOT%{jvmjardir}/jsse.jar
@@ -375,7 +379,7 @@ ln -sf %{jredir}/lib/javaws.jar $RPM_BUILD_ROOT%{jvmjardir}/javaws.jar
 
 # leave all locale files unchanged in the original location (license
 # restrictions) and only link them at the proper locations
-for loc in `ls $RPM_BUILD_ROOT%{jredir}/lib/locale` ; do
+for loc in $(ls $RPM_BUILD_ROOT%{jredir}/lib/locale); do
 	install -d $RPM_BUILD_ROOT%{_datadir}/locale/$loc/LC_MESSAGES
 	ln -sf %{jredir}/lib/locale/$loc/LC_MESSAGES/sunw_java_plugin.mo \
 		$RPM_BUILD_ROOT%{_datadir}/locale/$loc/LC_MESSAGES
@@ -468,7 +472,6 @@ fi
 %ifarch %{ix86}
 %attr(755,root,root) %{_bindir}/HtmlConverter
 %attr(755,root,root) %{_bindir}/java-rmi.cgi
-%attr(755,root,root) %{_bindir}/jcontrol
 %endif
 %attr(755,root,root) %{_bindir}/apt
 %attr(755,root,root) %{_bindir}/extcheck
@@ -498,7 +501,6 @@ fi
 %ifarch %{ix86}
 %attr(755,root,root) %{javadir}/bin/HtmlConverter
 %attr(755,root,root) %{javadir}/bin/java-rmi.cgi
-%attr(755,root,root) %{javadir}/bin/jcontrol
 %endif
 %attr(755,root,root) %{javadir}/bin/apt
 %attr(755,root,root) %{javadir}/bin/extcheck
@@ -702,10 +704,6 @@ fi
 %{jredir}/lib/management/management.properties
 %{jredir}/lib/management/snmp.acl.template
 %{_mandir}/man1/java.1*
-%ifarch %{ix86}
-%{_desktopdir}/sun_java.desktop
-%{_pixmapsdir}/sun_java.png
-%endif
 %{_mandir}/man1/keytool.1*
 %{_mandir}/man1/orbd.1*
 %{_mandir}/man1/rmid.1*
@@ -724,18 +722,23 @@ fi
 %defattr(644,root,root,755)
 %ifarch %{ix86}
 %doc jre/Xusage*
-%attr(755,root,root) %{_bindir}/ControlPanel
-%attr(755,root,root) %{_bindir}/javaws
-%attr(755,root,root) %{jredir}/bin/javaws
-%attr(755,root,root) %{jredir}/bin/ControlPanel
-%attr(755,root,root) %{jredir}/bin/jcontrol
 %attr(755,root,root) %{_bindir}/java_vm
+%attr(755,root,root) %{_bindir}/javaws
+%attr(755,root,root) %{_bindir}/jcontrol
+%attr(755,root,root) %{jredir}/bin/ControlPanel
 %attr(755,root,root) %{jredir}/bin/java_vm
+%attr(755,root,root) %{jredir}/bin/javaws
+%attr(755,root,root) %{jredir}/bin/jcontrol
 %attr(755,root,root) %{javadir}/bin/ControlPanel
+%attr(755,root,root) %{javadir}/bin/java_vm
 %attr(755,root,root) %{javadir}/bin/javaws
+%attr(755,root,root) %{javadir}/bin/jcontrol
+%{_desktopdir}/sun_java.desktop
+%{_pixmapsdir}/sun_java.png
 %endif
 %attr(755,root,root) %{_bindir}/policytool
 %attr(755,root,root) %{jredir}/bin/policytool
+%attr(755,root,root) %{javadir}/bin/policytool
 %{_mandir}/man1/policytool.1*
 %lang(ja) %{_mandir}/ja/man1/policytool.1*
 %{jredir}/lib/fonts
@@ -743,9 +746,6 @@ fi
 %dir %{jredir}/lib/%{arch}/xawt
 %dir %{jredir}/lib/%{arch}/motif21
 %attr(755,root,root) %{jredir}/lib/%{arch}/libsplashscreen.so
-%ifarch %{ix86}
-%attr(755,root,root) %{jredir}/lib/%{arch}/libjavaplugin*.so
-%endif
 %ifarch %{ix86}
 %{jvmjardir}/javaws.jar
 %endif
@@ -826,10 +826,12 @@ fi
 %files -n browser-plugin-%{name}
 %defattr(644,root,root,755)
 %dir %{jredir}/plugin
-%{jredir}/plugin/desktop
 %dir %{jredir}/plugin/%{arch}
-%dir %{jredir}/plugin/%{arch}/*
+%dir %{jredir}/plugin/%{arch}/ns7
+%dir %{jredir}/plugin/%{arch}/ns7-gcc29
+%attr(755,root,root) %{jredir}/lib/%{arch}/libjavaplugin*.so
 %attr(755,root,root) %{jredir}/plugin/%{arch}/*/libjavaplugin_oji.so
+%{jredir}/plugin/desktop
 %attr(755,root,root) %{_browserpluginsdir}/*.so
 %endif
 
