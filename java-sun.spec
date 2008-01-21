@@ -1,27 +1,22 @@
 # TODO:
 # - better way to choose preferred jvm (currently the symlinks are hardcoded)
 #   Maybe a package containing only the symlinks?
-# - 1.6.0.03 still broken and fails with libxcb enabled X11 libs:
-#   java_vm: xcb_xlib.c:82: xcb_xlib_unlock: Assertion `c->xlib.lock' failed.
-#   There are two ways to workaround this: 1) use export LIBXCB_ALLOW_SLOPPY_LOCK=1
-#   runtime or 2) prevent java from finding Xinerama extension. For now we do ugly 2).
-#   See http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6532373 for details.
 #
-%define		_src_ver	6u3
+%define		_src_ver	6u4
 %define		_dir_ver	%(echo %{version} | sed 's/\\.\\(..\\)$/_\\1/')
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 50.0
 Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl.UTF-8):	Sun JDK - środowisko programistyczne Javy dla Linuksa
 Name:		java-sun
-Version:	1.6.0.03
-Release:	7
+Version:	1.6.0.04
+Release:	1
 License:	restricted, distributable
 Group:		Development/Languages/Java
 Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-i586.bin
-# Source0-md5:	e39a322d8e3c89d3e679047cdeab50f7
+# Source0-md5:	d5bba61ea1e0b76090b855ff49ec1d6a
 Source1:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-amd64.bin
-# Source1-md5:	f0bf3837b2ba7965ad932e06321a172e
+# Source1-md5:	f64a636c6e516992fd1840c5b2419b53
 Source2:	Test.java
 Patch0:		%{name}-desktop.patch
 URL:		https://jdk-distros.dev.java.net/developer.html
@@ -317,7 +312,10 @@ fi
 
 cp -af jre/{bin,lib} $RPM_BUILD_ROOT%{jredir}
 
-for i in java javaws java_vm keytool orbd policytool \
+for i in java keytool orbd policytool \
+%ifarch %{ix86}
+	java_vm javaws \
+%endif
 	rmid rmiregistry servertool tnameserv pack200 unpack200; do
 	[ -f $RPM_BUILD_ROOT%{jredir}/bin/$i ] || exit 1
 	ln -sf %{jredir}/bin/$i $RPM_BUILD_ROOT%{_bindir}/$i
@@ -338,13 +336,16 @@ done
 %endif
 
 # make sure all tools are available under $(JDK_HOME)/bin
-for i in keytool orbd policytool rmid java_vm \
-		rmiregistry servertool tnameserv pack200 unpack200 java javaws; do
+for i in keytool orbd policytool rmid \
+%ifarch %{ix86}
+		java_vm javaws \
+%endif
+		rmiregistry servertool tnameserv pack200 unpack200 java; do
 	[ -f $RPM_BUILD_ROOT%{jredir}/bin/$i ] || exit 1
 	ln -sf ../jre/bin/$i $RPM_BUILD_ROOT%{javadir}/bin/$i
 done
 
-%ifarch %{x8664}
+%ifnarch %{ix86}
 # only manual available on this platform
 rm -f $RPM_BUILD_ROOT%{_mandir}/man1/javaws.1
 %endif
@@ -398,10 +399,6 @@ ln -s %{jrereldir} $RPM_BUILD_ROOT%{_jvmdir}/jre
 ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_jvmjardir}/java
 ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_jvmjardir}/jre
 ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_jvmjardir}/jsse
-
-# UGLY HACK UGLY HACK
-# Prevent java from finding Xinerama extension. See TODO at beginning of this spec.
-find $RPM_BUILD_ROOT -name 'libmawt.so' -exec sed -i 's/XINERAMA/FAKEEXTN/g' "{}" ";"
 
 # modify RPATH so that javac and friends are able to work when /proc is not
 # mounted and we can't append to RPATH (for example to keep previous lookup
@@ -770,6 +767,7 @@ fi
 %lang(zh_CN) %{jredir}/lib/locale/zh
 %lang(zh_CN) %{jredir}/lib/locale/zh.*
 %lang(zh_HK) %{jredir}/lib/locale/zh_HK*
+%lang(zh_HK) %{_datadir}/locale/zh_HK/LC_MESSAGES/sunw_java_plugin.mo
 %lang(zh_TW) %{jredir}/lib/locale/zh_TW*
 %lang(zh_CN) %{_datadir}/locale/zh_CN/LC_MESSAGES/sunw_java_plugin.mo
 %lang(zh_TW) %{_datadir}/locale/zh_TW/LC_MESSAGES/sunw_java_plugin.mo
