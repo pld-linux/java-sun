@@ -1,27 +1,27 @@
 # TODO:
 # - better way to choose preferred jvm (currently the symlinks are hardcoded)
 #   Maybe a package containing only the symlinks?
-# - 1.6.0.04 still broken and fails with libxcb enabled X11 libs:
+# - 1.6.0.05 still broken and fails with libxcb enabled X11 libs:
 #   java_vm: xcb_xlib.c:82: xcb_xlib_unlock: Assertion `c->xlib.lock' failed.
 #   There are two ways to workaround this: 1) use export LIBXCB_ALLOW_SLOPPY_LOCK=1
 #   runtime or 2) prevent java from finding Xinerama extension. For now we do ugly 2).
 #   See http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6532373 for details.
 #
-%define		_src_ver	6u4
+%define		_src_ver	6u5
 %define		_dir_ver	%(echo %{version} | sed 's/\\.\\(..\\)$/_\\1/')
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 50.0
 Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl.UTF-8):	Sun JDK - środowisko programistyczne Javy dla Linuksa
 Name:		java-sun
-Version:	1.6.0.04
-Release:	2
+Version:	1.6.0.05
+Release:	1
 License:	restricted, distributable
 Group:		Development/Languages/Java
 Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-i586.bin
-# Source0-md5:	d5bba61ea1e0b76090b855ff49ec1d6a
+# Source0-md5:	958f0b7e7465346e164770d360e60dd6
 Source1:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-amd64.bin
-# Source1-md5:	f64a636c6e516992fd1840c5b2419b53
+# Source1-md5:	16d8c5cf8dc705cbb04334aff9592aa1
 Source2:	Test.java
 Patch0:		%{name}-desktop.patch
 URL:		https://jdk-distros.dev.java.net/developer.html
