@@ -7,21 +7,21 @@
 #   runtime or 2) prevent java from finding Xinerama extension. For now we do ugly 2).
 #   See http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6532373 for details.
 #
-%define		_src_ver	6u5
+%define		_src_ver	6u6
 %define		_dir_ver	%(echo %{version} | sed 's/\\.\\(..\\)$/_\\1/')
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 50.0
 Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl.UTF-8):	Sun JDK - środowisko programistyczne Javy dla Linuksa
 Name:		java-sun
-Version:	1.6.0.05
-Release:	2
+Version:	1.6.0.06
+Release:	1
 License:	restricted, distributable
 Group:		Development/Languages/Java
 Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-i586.bin
-# Source0-md5:	958f0b7e7465346e164770d360e60dd6
+# Source0-md5:	0efe7120ffb9a3379bc66d993056d80d
 Source1:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-amd64.bin
-# Source1-md5:	16d8c5cf8dc705cbb04334aff9592aa1
+# Source1-md5:	6f3036a444ff0015d1f2db4fd0db1951
 Source2:	Test.java
 Patch0:		%{name}-desktop.patch
 URL:		https://jdk-distros.dev.java.net/developer.html
