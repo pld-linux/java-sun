@@ -7,21 +7,21 @@
 #   runtime or 2) prevent java from finding Xinerama extension. For now we do ugly 2).
 #   See http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6532373 for details.
 #
-%define		_src_ver	6u6
+%define		_src_ver	6u7
 %define		_dir_ver	%(echo %{version} | sed 's/\\.\\(..\\)$/_\\1/')
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 50.0
 Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl.UTF-8):	Sun JDK - środowisko programistyczne Javy dla Linuksa
 Name:		java-sun
-Version:	1.6.0.06
+Version:	1.6.0.07
 Release:	1
 License:	restricted, distributable
 Group:		Development/Languages/Java
 Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-i586.bin
-# Source0-md5:	0efe7120ffb9a3379bc66d993056d80d
+# Source0-md5:	169c7fdf20eb37359b0f6235bd3c0ec0
 Source1:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-amd64.bin
-# Source1-md5:	6f3036a444ff0015d1f2db4fd0db1951
+# Source1-md5:	b94bbdefeb6c97f1799583dec49e090f
 Source2:	Test.java
 Patch0:		%{name}-desktop.patch
 URL:		https://jdk-distros.dev.java.net/developer.html
@@ -289,8 +289,10 @@ cp %{SOURCE2} Test.java
 # $ORIGIN does not work on PLD builders. workaround.
 export LD_LIBRARY_PATH=$(pwd)/jre/lib/%{arch}/jli
 ./bin/javac Test.java
+
 classver=$(file Test.class | grep -o 'compiled Java class data, version [0-9.]*' | awk '{print $NF}')
-if [ "$classver" != %{_classdataversion} ]; then
+# DROPME: file 4.24 is broken so temporaily test for -n .... Drop after file is fixed.
+if [ -n "$classver" -a "$classver" != %{_classdataversion} ]; then
 	echo "Set %%define _classdataversion to $classver and rerun."
 	exit 1
 fi
@@ -329,7 +331,7 @@ done
 for i in appletviewer extcheck idlj jar jarsigner \
 	javac javadoc javah javap jconsole jdb jhat jinfo jmap jps \
 	jrunscript jsadebugd jstack jstat jstatd native2ascii rmic serialver \
-	schemagen wsgen wsimport xjc apt; do
+	jvisualvm schemagen wsgen wsimport xjc apt; do
 	[ -f $RPM_BUILD_ROOT%{javadir}/bin/$i ] || exit 1
 	ln -sf %{javadir}/bin/$i $RPM_BUILD_ROOT%{_bindir}/$i
 done
@@ -742,11 +744,15 @@ fi
 %{_desktopdir}/sun_java.desktop
 %{_pixmapsdir}/sun_java.png
 %endif
+%attr(755,root,root) %{_bindir}/jvisualvm
 %attr(755,root,root) %{_bindir}/policytool
 %attr(755,root,root) %{jredir}/bin/policytool
 %attr(755,root,root) %{javadir}/bin/policytool
 %{_mandir}/man1/policytool.1*
 %lang(ja) %{_mandir}/ja/man1/policytool.1*
+%attr(755,root,root) %{javadir}/bin/jvisualvm
+%{_mandir}/man1/jvisualvm.1*
+%{javadir}/lib/visualvm
 %{jredir}/lib/fonts
 %{jredir}/lib/oblique-fonts
 %dir %{jredir}/lib/%{arch}/xawt
