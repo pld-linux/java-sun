@@ -1,0 +1,2 @@
+- use u10 snap (it fixes few nasty segfaults when using eclipse)
+- drop xinerama hack, seems no longer needed
