@@ -1,27 +1,28 @@
 # TODO:
 # - better way to choose preferred jvm (currently the symlinks are hardcoded)
 #   Maybe a package containing only the symlinks?
-# - 1.6.0.05 still broken and fails with libxcb enabled X11 libs:
-#   java_vm: xcb_xlib.c:82: xcb_xlib_unlock: Assertion `c->xlib.lock' failed.
-#   There are two ways to workaround this: 1) use export LIBXCB_ALLOW_SLOPPY_LOCK=1
-#   runtime or 2) prevent java from finding Xinerama extension. For now we do ugly 2).
-#   See http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6532373 for details.
 #
-%define		_src_ver	6u7
+%define		_enable_debug_packages 0
+#
+%define		_src_ver	6u10
 %define		_dir_ver	%(echo %{version} | sed 's/\\.\\(..\\)$/_\\1/')
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 50.0
 Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl.UTF-8):	Sun JDK - środowisko programistyczne Javy dla Linuksa
 Name:		java-sun
-Version:	1.6.0.07
+Version:	1.6.0.10
 Release:	1
 License:	restricted, distributable
 Group:		Development/Languages/Java
-Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-i586.bin
-# Source0-md5:	169c7fdf20eb37359b0f6235bd3c0ec0
-Source1:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-amd64.bin
-# Source1-md5:	b94bbdefeb6c97f1799583dec49e090f
+# Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-i586.bin
+# http://www.java.net/download/jdk6/6u10/promoted/b27/binaries/jdk-6u10-rc-bin-b27-linux-amd64-08_jul_2008.bin
+Source0:	jdk-6u10-rc-bin-b27-linux-amd64-08_jul_2008.bin
+# Source0-md5:	652ab3d6753ec7d0851c8a25ccfbec24
+# Source1:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-amd64.bin
+# http://www.java.net/download/jdk6/6u10/promoted/b27/binaries/jdk-6u10-rc-bin-b27-linux-i586-08_jul_2008.bin
+Source1:	jdk-6u10-rc-bin-b27-linux-i586-08_jul_2008.bin
+# Source1-md5:	e450db9dd0077502585d9bb8c4112e4a
 Source2:	Test.java
 Patch0:		%{name}-desktop.patch
 URL:		https://jdk-distros.dev.java.net/developer.html
@@ -406,10 +407,6 @@ ln -s %{jrereldir} $RPM_BUILD_ROOT%{_jvmdir}/jre
 ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_jvmjardir}/java
 ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_jvmjardir}/jre
 ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_jvmjardir}/jsse
-
-# UGLY HACK UGLY HACK
-# Prevent java from finding Xinerama extension. See TODO at beginning of this spec.
-find $RPM_BUILD_ROOT -name 'libmawt.so' -exec sed -i 's/XINERAMA/FAKEEXTN/g' "{}" ";"
 
 # modify RPATH so that javac and friends are able to work when /proc is not
 # mounted and we can't append to RPATH (for example to keep previous lookup
