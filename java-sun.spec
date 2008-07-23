@@ -1,6 +1,12 @@
 # TODO:
 # - better way to choose preferred jvm (currently the symlinks are hardcoded)
 #   Maybe a package containing only the symlinks?
+# - warning: Installed (but unpackaged) file(s) found:
+#   /usr/lib/jvm/java-sun-1.6.0.10/demo/jvmti/index.html
+#   /usr/lib/jvm/java-sun-1.6.0.10/jre/lib/fontconfig.RedHat.4.bfc
+#   /usr/lib/jvm/java-sun-1.6.0.10/jre/lib/fontconfig.RedHat.4.properties.src
+#   /usr/lib/jvm/java-sun-1.6.0.10/jre/lib/servicetag/jdk_header.png
+#   /usr/share/man/ja/man1/jvisualvm.1.gz
 #
 %define		_enable_debug_packages 0
 #
