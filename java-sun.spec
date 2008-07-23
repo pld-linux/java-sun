@@ -12,17 +12,17 @@ Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl.UTF-8):	Sun JDK - środowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	1.6.0.10
-Release:	1
+Release:	2
 License:	restricted, distributable
 Group:		Development/Languages/Java
 # Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-i586.bin
-# http://www.java.net/download/jdk6/6u10/promoted/b27/binaries/jdk-6u10-rc-bin-b27-linux-amd64-08_jul_2008.bin
-Source0:	jdk-6u10-rc-bin-b27-linux-amd64-08_jul_2008.bin
-# Source0-md5:	652ab3d6753ec7d0851c8a25ccfbec24
-# Source1:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-amd64.bin
 # http://www.java.net/download/jdk6/6u10/promoted/b27/binaries/jdk-6u10-rc-bin-b27-linux-i586-08_jul_2008.bin
-Source1:	jdk-6u10-rc-bin-b27-linux-i586-08_jul_2008.bin
-# Source1-md5:	e450db9dd0077502585d9bb8c4112e4a
+Source0:	jdk-6u10-rc-bin-b27-linux-i586-08_jul_2008.bin
+# Source0-md5:	e450db9dd0077502585d9bb8c4112e4a
+# Source1:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-amd64.bin
+# http://www.java.net/download/jdk6/6u10/promoted/b27/binaries/jdk-6u10-rc-bin-b27-linux-amd64-08_jul_2008.bin
+Source1:	jdk-6u10-rc-bin-b27-linux-amd64-08_jul_2008.bin
+# Source1-md5:	652ab3d6753ec7d0851c8a25ccfbec24
 Source2:	Test.java
 Patch0:		%{name}-desktop.patch
 URL:		https://jdk-distros.dev.java.net/developer.html
