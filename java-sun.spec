@@ -7,6 +7,8 @@
 #   /usr/lib/jvm/java-sun-1.6.0.10/jre/lib/fontconfig.RedHat.4.properties.src
 #   /usr/lib/jvm/java-sun-1.6.0.10/jre/lib/servicetag/jdk_header.png
 #   /usr/share/man/ja/man1/jvisualvm.1.gz
+# - dep loop (can be solved by moving shared libs to java-sun-libs):
+#   java-sun-jre>java-sun-tools
 #
 %define		_enable_debug_packages 0
 #
@@ -18,7 +20,7 @@ Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl.UTF-8):	Sun JDK - środowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	1.6.0.10
-Release:	3
+Release:	4
 License:	restricted, distributable
 Group:		Development/Languages/Java
 # Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-i586.bin
@@ -117,6 +119,7 @@ Summary(pl.UTF-8):	Sun JRE - środowisko uruchomieniowe Javy dla Linuksa
 Group:		Development/Languages/Java
 Requires:	java-jre-tools
 Requires:	jpackage-utils >= 0:1.6.6-14
+Requires:	rpm-whiteout >= 1.8
 Provides:	j2re = %{version}
 Provides:	jaas = %{version}
 Provides:	jaf = 1.1.1
@@ -195,6 +198,7 @@ Summary:	Shared Java tools
 Summary(pl.UTF-8):	Współdzielone narzędzia Javy
 Group:		Development/Languages/Java
 Requires:	%{name}-jre = %{version}-%{release}
+Requires:	rpm-whiteout >= 1.8
 Provides:	jar
 Provides:	java-jre-tools
 Provides:	java-shared
