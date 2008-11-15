@@ -6,7 +6,6 @@
 #   /usr/lib/jvm/java-sun-1.6.0.10/jre/lib/fontconfig.RedHat.4.bfc
 #   /usr/lib/jvm/java-sun-1.6.0.10/jre/lib/fontconfig.RedHat.4.properties.src
 #   /usr/lib/jvm/java-sun-1.6.0.10/jre/lib/servicetag/jdk_header.png
-#   /usr/share/man/ja/man1/jvisualvm.1.gz
 # - dep loop (can be solved by moving shared libs to java-sun-libs):
 #   java-sun-jre>java-sun-tools
 #
@@ -755,6 +754,7 @@ fi
 %lang(ja) %{_mandir}/ja/man1/policytool.1*
 %attr(755,root,root) %{javadir}/bin/jvisualvm
 %{_mandir}/man1/jvisualvm.1*
+%lang(ja) %{_mandir}/ja/man1/jvisualvm.1*
 %{javadir}/lib/visualvm
 %{jredir}/lib/fonts
 %{jredir}/lib/oblique-fonts
