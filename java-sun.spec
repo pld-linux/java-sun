@@ -11,21 +11,24 @@
 #
 %define		_enable_debug_packages 0
 #
-%define		_src_ver	6u11
+%define		_src_ver	6u12
+%define		_src_build	b03
 %define		_dir_ver	%(echo %{version} | sed 's/\\.\\(..\\)$/_\\1/')
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 50.0
 Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl.UTF-8):	Sun JDK - środowisko programistyczne Javy dla Linuksa
 Name:		java-sun
-Version:	1.6.0.11
-Release:	1
+Version:	1.6.0.12
+Release:	0.%{_src_build}.1
 License:	restricted, distributable
 Group:		Development/Languages/Java
-Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-i586.bin
-# Source0-md5:	e5eef98bc477675c66e053fc3635e645
-Source1:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-amd64.bin
-# Source1-md5:	0f687b6dbfe54e117bb0d9e090fda20b
+#Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-i586.bin
+Source0:	http://www.java.net/download/jdk6/%{_src_ver}/promoted/%{_src_build}/binaries/jdk-%{_src_ver}-ea-bin-b03-linux-i586-22_dec_2008.bin
+# Source0-md5:	7d8411fdf38a4987ad5473a0db62528c
+#Source1:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-amd64.bin
+Source1:	http://www.java.net/download/jdk6/%{_src_ver}/promoted/%{_src_build}/binaries/jdk-%{_src_ver}-ea-bin-b03-linux-amd64-22_dec_2008.bin
+# Source1-md5:	2e27ab1fecc6f27f38f8df3c996f3805
 Source2:	Test.java
 Patch0:		%{name}-desktop.patch
 URL:		https://jdk-distros.dev.java.net/developer.html
@@ -163,9 +166,7 @@ Summary(pl.UTF-8):	Sun JRE - środowisko uruchomieniowe Javy dla Linuksa, częś
 Group:		Development/Languages/Java
 Requires:	%{name}-jre = %{version}-%{release}
 Provides:	jre-X11 = %{version}
-%ifarch %{ix86}
 Provides:	javaws = %{version}
-%endif
 
 %description jre-X11
 X11-related part of Java Runtime Environment for Linux.
@@ -278,11 +279,9 @@ cd ..
 %{__unzip} -q %{SOURCE1} || :
 %endif
 cd -
-%ifarch %{ix86}
 # patch only copy of the desktop file, leave original unchanged
 cp jre/plugin/desktop/sun_java.desktop .
 %patch0 -p1
-%endif
 
 # unpack packed jar files -- in %%prep as it is done "in place"
 for pack in $(find . -name '*.pack'); do
@@ -326,9 +325,7 @@ fi
 cp -af jre/{bin,lib} $RPM_BUILD_ROOT%{jredir}
 
 for i in java keytool orbd policytool \
-%ifarch %{ix86}
 	java_vm javaws \
-%endif
 	rmid rmiregistry servertool tnameserv pack200 unpack200; do
 	[ -f $RPM_BUILD_ROOT%{jredir}/bin/$i ] || exit 1
 	ln -sf %{jredir}/bin/$i $RPM_BUILD_ROOT%{_bindir}/$i
@@ -341,8 +338,15 @@ for i in appletviewer extcheck idlj jar jarsigner \
 	[ -f $RPM_BUILD_ROOT%{javadir}/bin/$i ] || exit 1
 	ln -sf %{javadir}/bin/$i $RPM_BUILD_ROOT%{_bindir}/$i
 done
+
 %ifarch %{ix86}
 for i in HtmlConverter jcontrol java-rmi.cgi; do
+	[ -f $RPM_BUILD_ROOT%{javadir}/bin/$i ] || exit 1
+	ln -sf %{javadir}/bin/$i $RPM_BUILD_ROOT%{_bindir}/$i
+done
+%endif
+%ifarch %{x8664}
+for i in HtmlConverter jcontrol; do
 	[ -f $RPM_BUILD_ROOT%{javadir}/bin/$i ] || exit 1
 	ln -sf %{javadir}/bin/$i $RPM_BUILD_ROOT%{_bindir}/$i
 done
@@ -350,31 +354,27 @@ done
 
 # make sure all tools are available under $(JDK_HOME)/bin
 for i in keytool orbd policytool rmid \
-%ifarch %{ix86}
 		java_vm javaws \
-%endif
 		rmiregistry servertool tnameserv pack200 unpack200 java; do
 	[ -f $RPM_BUILD_ROOT%{jredir}/bin/$i ] || exit 1
 	ln -sf ../jre/bin/$i $RPM_BUILD_ROOT%{javadir}/bin/$i
 done
 
-%ifnarch %{ix86}
-# only manual available on this platform
-rm -f $RPM_BUILD_ROOT%{_mandir}/man1/javaws.1
-%endif
-
-%ifarch %{ix86}
 # copy _all_ plugin files (even those incompatible with PLD) --
 # license restriction
 cp -a jre/plugin $RPM_BUILD_ROOT%{jredir}
 
 # Install plugin for browsers
 # Plugin in regular location simply does not work (is seen by browsers):
+%ifarch %{ix86}
 ln -sf %{jredir}/plugin/i386/ns7/libjavaplugin_oji.so $RPM_BUILD_ROOT%{_browserpluginsdir}
+%endif
+%ifarch %{x8664}
+ln -sf %{jredir}/lib/amd64/libnpjp2.so $RPM_BUILD_ROOT%{_browserpluginsdir}
+%endif
 
 cp -a *.desktop $RPM_BUILD_ROOT%{_desktopdir}
 cp -a jre/plugin/desktop/*.png $RPM_BUILD_ROOT%{_pixmapsdir}
-%endif
 
 ln -sf %{jredir}/lib/jsse.jar $RPM_BUILD_ROOT%{jvmjardir}/jsse.jar
 ln -sf %{jredir}/lib/jsse.jar $RPM_BUILD_ROOT%{jvmjardir}/jcert.jar
@@ -386,7 +386,6 @@ for f in jndi jndi-ldap jndi-cos jndi-rmi jaas jdbc-stdext jdbc-stdext-3.0 \
 	ln -sf %{jredir}/lib/rt.jar $RPM_BUILD_ROOT%{jvmjardir}/$f.jar
 done
 
-%ifarch %{ix86}
 install -d $RPM_BUILD_ROOT%{jredir}/javaws
 cp -a jre/javaws/* $RPM_BUILD_ROOT%{jredir}/javaws
 ln -sf %{jredir}/lib/javaws.jar $RPM_BUILD_ROOT%{jvmjardir}/javaws.jar
@@ -403,7 +402,6 @@ done
 mv -f $RPM_BUILD_ROOT%{_datadir}/locale/{zh,zh_CN}
 mv -f $RPM_BUILD_ROOT%{_datadir}/locale/{zh_HK.BIG5HK,zh_HK}
 rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/{ko.UTF-8,zh.GBK,zh_TW.BIG5}
-%endif
 
 cp -a src.zip $RPM_BUILD_ROOT%{_prefix}/src/%{name}-sources
 
@@ -479,8 +477,8 @@ fi
 %doc COPYRIGHT LICENSE README.html
 %{_jvmdir}/java
 %{_jvmjardir}/java
-%ifarch %{ix86}
 %attr(755,root,root) %{_bindir}/HtmlConverter
+%ifarch %{ix86}
 %attr(755,root,root) %{_bindir}/java-rmi.cgi
 %endif
 %attr(755,root,root) %{_bindir}/apt
@@ -508,8 +506,8 @@ fi
 %attr(755,root,root) %{_bindir}/wsgen
 %attr(755,root,root) %{_bindir}/wsimport
 %attr(755,root,root) %{_bindir}/xjc
-%ifarch %{ix86}
 %attr(755,root,root) %{javadir}/bin/HtmlConverter
+%ifarch %{ix86}
 %attr(755,root,root) %{javadir}/bin/java-rmi.cgi
 %endif
 %attr(755,root,root) %{javadir}/bin/apt
@@ -658,14 +656,12 @@ fi
 %exclude %{jredir}/lib/%{arch}/libjsoundalsa.so
 %ifarch %{ix86}
 %attr(755,root,root) %{jredir}/lib/%{arch}/client
+%endif
 %attr(755,root,root) %{jredir}/lib/%{arch}/libsplashscreen.so
 %exclude %{jredir}/lib/%{arch}/libjavaplugin*.so
-%endif
 
-%ifarch %{ix86}
 %{jredir}/lib/deploy
 %{jredir}/lib/desktop
-%endif
 %{jredir}/lib/im
 %{jredir}/lib/images
 %attr(755,root,root) %{jredir}/lib/jexec
@@ -732,6 +728,7 @@ fi
 %defattr(644,root,root,755)
 %ifarch %{ix86}
 %doc jre/Xusage*
+%endif
 %attr(755,root,root) %{_bindir}/java_vm
 %attr(755,root,root) %{_bindir}/javaws
 %attr(755,root,root) %{_bindir}/jcontrol
@@ -745,7 +742,6 @@ fi
 %attr(755,root,root) %{javadir}/bin/jcontrol
 %{_desktopdir}/sun_java.desktop
 %{_pixmapsdir}/sun_java.png
-%endif
 %attr(755,root,root) %{_bindir}/jvisualvm
 %attr(755,root,root) %{_bindir}/policytool
 %attr(755,root,root) %{jredir}/bin/policytool
@@ -761,12 +757,9 @@ fi
 %dir %{jredir}/lib/%{arch}/xawt
 %dir %{jredir}/lib/%{arch}/motif21
 %attr(755,root,root) %{jredir}/lib/%{arch}/libsplashscreen.so
-%ifarch %{ix86}
 %{jvmjardir}/javaws.jar
-%endif
 %attr(755,root,root) %{jredir}/lib/%{arch}/motif21/libmawt.so
 %attr(755,root,root) %{jredir}/lib/%{arch}/xawt/libmawt.so
-%ifarch %{ix86}
 %dir %{jredir}/lib/locale
 %lang(de) %{jredir}/lib/locale/de
 %lang(de) %{_datadir}/locale/de/LC_MESSAGES/sunw_java_plugin.mo
@@ -789,11 +782,10 @@ fi
 %lang(zh_TW) %{jredir}/lib/locale/zh_TW*
 %lang(zh_CN) %{_datadir}/locale/zh_CN/LC_MESSAGES/sunw_java_plugin.mo
 %lang(zh_TW) %{_datadir}/locale/zh_TW/LC_MESSAGES/sunw_java_plugin.mo
-%endif
-%ifarch %{ix86}
 %dir %{jredir}/javaws
 %attr(755,root,root) %{jredir}/javaws/javaws
 %{_mandir}/man1/javaws.1*
+%ifarch %{ix86}
 %lang(ja) %{_mandir}/ja/man1/javaws.1*
 %endif
 
@@ -816,10 +808,8 @@ fi
 %{javadir}/demo/jvmti/*/*.jar
 %{javadir}/demo/management
 %{javadir}/demo/nbproject
-%ifarch %{ix86}
 %{javadir}/demo/plugin
 %{javadir}/demo/applets.html
-%endif
 %{javadir}/demo/scripting
 %{javadir}/sample
 
@@ -838,18 +828,21 @@ fi
 %lang(ja) %{_mandir}/ja/man1/rmic.1*
 %lang(ja) %{_mandir}/ja/man1/rmiregistry.1*
 
-%ifarch %{ix86}
 %files -n browser-plugin-%{name}
 %defattr(644,root,root,755)
 %dir %{jredir}/plugin
+%attr(755,root,root) %{jredir}/lib/%{arch}/libjavaplugin*.so
+%ifarch %{x8664}
+%attr(755,root,root) %{jredir}/lib/%{arch}/libnpjp2.so
+%endif
+%ifarch %{ix86}
 %dir %{jredir}/plugin/%{arch}
 %dir %{jredir}/plugin/%{arch}/ns7
 %dir %{jredir}/plugin/%{arch}/ns7-gcc29
-%attr(755,root,root) %{jredir}/lib/%{arch}/libjavaplugin*.so
 %attr(755,root,root) %{jredir}/plugin/%{arch}/*/libjavaplugin_oji.so
+%endif
 %{jredir}/plugin/desktop
 %attr(755,root,root) %{_browserpluginsdir}/*.so
-%endif
 
 %files sources
 %defattr(644,root,root,755)
