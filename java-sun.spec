@@ -331,8 +331,7 @@ export LD_LIBRARY_PATH=$(pwd)/jre/lib/%{arch}/jli
 ./bin/javac Test.java
 
 classver=$(file Test.class | grep -o 'compiled Java class data, version [0-9.]*' | awk '{print $NF}')
-# DROPME: file 4.24 is broken so temporaily test for -n .... Drop after file is fixed.
-if [ -n "$classver" -a "$classver" != %{_classdataversion} ]; then
+if [ "$classver" != %{_classdataversion} ]; then
 	echo "Set %%define _classdataversion to $classver and rerun."
 	exit 1
 fi
