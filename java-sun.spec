@@ -401,12 +401,9 @@ cp -a jre/plugin $RPM_BUILD_ROOT%{jredir}
 # Install plugin for browsers
 # Plugin in regular location simply does not work (is seen by browsers):
 %ifarch %{ix86}
-ln -sf %{jredir}/plugin/i386/ns7/libjavaplugin_oji.so $RPM_BUILD_ROOT%{_browserpluginsdir}
-ln -sf %{jredir}/lib/amd64/libnpjp2.so $RPM_BUILD_ROOT%{_browserpluginsdir}
+ln -sf %{jredir}/plugin/%{arch}/ns7/libjavaplugin_oji.so $RPM_BUILD_ROOT%{_browserpluginsdir}
 %endif
-%ifarch %{x8664}
-ln -sf %{jredir}/lib/amd64/libnpjp2.so $RPM_BUILD_ROOT%{_browserpluginsdir}
-%endif
+ln -sf %{jredir}/lib/%{arch}/libnpjp2.so $RPM_BUILD_ROOT%{_browserpluginsdir}
 
 cp -a *.desktop $RPM_BUILD_ROOT%{_desktopdir}
 cp -a jre/plugin/desktop/*.png $RPM_BUILD_ROOT%{_pixmapsdir}
