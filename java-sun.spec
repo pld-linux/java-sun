@@ -8,8 +8,6 @@
 #   /usr/lib/jvm/java-sun-1.6.0.10/jre/lib/servicetag/jdk_header.png
 # - dep loop (can be solved by moving shared libs to java-sun-libs):
 #   java-sun-jre>java-sun-tools
-# - package both old and new browser plugin for x86 (x86_64 has only new
-#   plugin)
 #
 %define		_enable_debug_packages 0
 #
@@ -21,7 +19,7 @@ Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl.UTF-8):	Sun JDK - środowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	1.6.0.12
-Release:	0.1
+Release:	0.2
 License:	restricted, distributable
 Group:		Development/Languages/Java
 #Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-i586.bin
@@ -228,7 +226,7 @@ Programy demonstracyjne do JDK.
 
 %package -n browser-plugin-%{name}
 Summary:	Java plugin for WWW browsers
-Summary(pl.UTF-8):	Wtyczki Javy do przeglądarek WWW
+Summary(pl.UTF-8):	Wtyczka Javy do przeglądarek WWW
 Group:		Development/Languages/Java
 Requires:	%{name}-jre-X11 = %{version}-%{release}
 Requires:	browser-plugins >= 2.0
@@ -237,6 +235,7 @@ Provides:	java-sun-mozilla-plugin
 Provides:	mozilla-firefox-plugin-java-sun
 Provides:	mozilla-plugin-java-sun
 Obsoletes:	blackdown-java-sdk-mozilla-plugin
+Obsoletes:	browser-plugin-ng-%{name}
 Obsoletes:	java-blackdown-mozilla-plugin
 Obsoletes:	java-sun-moz-plugin
 Obsoletes:	java-sun-mozilla-plugin
@@ -256,7 +255,42 @@ Obsoletes:	mozilla-plugin-java-sun
 Java plugin for WWW browsers.
 
 %description -n browser-plugin-%{name} -l pl.UTF-8
-Wtyczki z obsługą Javy dla przeglądarek WWW.
+Wtyczka z obsługą Javy dla przeglądarek WWW.
+
+%package -n browser-plugin-ng-%{name}
+Summary:	Next-Generation Java plugin for WWW browsers
+Summary(pl.UTF-8):	Wtyczka Javy Nowej Generacji do przeglądarek WWW
+Group:		Development/Languages/Java
+Requires:	%{name}-jre-X11 = %{version}-%{release}
+Requires:	browser-plugins >= 2.0
+Requires:	browser-plugins(%{_target_base_arch})
+Provides:	java-sun-mozilla-plugin
+Provides:	mozilla-firefox-plugin-java-sun
+Provides:	mozilla-plugin-java-sun
+Obsoletes:	blackdown-java-sdk-mozilla-plugin
+Obsoletes:	browser-plugin-%{name}
+Obsoletes:	java-blackdown-mozilla-plugin
+Obsoletes:	java-sun-moz-plugin
+Obsoletes:	java-sun-mozilla-plugin
+Obsoletes:	jre-mozilla-plugin
+Obsoletes:	mozilla-firefox-plugin-gcc2-java-sun
+Obsoletes:	mozilla-firefox-plugin-gcc3-java-sun
+Obsoletes:	mozilla-firefox-plugin-java-blackdown
+Obsoletes:	mozilla-firefox-plugin-java-sun
+Obsoletes:	mozilla-plugin-blackdown-java-sdk
+Obsoletes:	mozilla-plugin-gcc2-java-sun
+Obsoletes:	mozilla-plugin-gcc3-java-sun
+Obsoletes:	mozilla-plugin-gcc32-java-sun
+Obsoletes:	mozilla-plugin-java-blackdown
+Obsoletes:	mozilla-plugin-java-sun
+
+%description -n browser-plugin-ng-%{name}
+Next-Generation Java plugin for WWW browsers. Works only with
+Firefox/Iceweasel 3.x.
+
+%description -n browser-plugin-ng-%{name} -l pl.UTF-8
+Wtyczka Nowej Generacji z obsługą Javy dla przeglądarek WWW. Działa
+tylko z Firefoxem/Iceweaselem 3.x.
 
 %package sources
 Summary:	JDK sources
@@ -369,6 +403,7 @@ cp -a jre/plugin $RPM_BUILD_ROOT%{jredir}
 # Plugin in regular location simply does not work (is seen by browsers):
 %ifarch %{ix86}
 ln -sf %{jredir}/plugin/i386/ns7/libjavaplugin_oji.so $RPM_BUILD_ROOT%{_browserpluginsdir}
+ln -sf %{jredir}/lib/amd64/libnpjp2.so $RPM_BUILD_ROOT%{_browserpluginsdir}
 %endif
 %ifarch %{x8664}
 ln -sf %{jredir}/lib/amd64/libnpjp2.so $RPM_BUILD_ROOT%{_browserpluginsdir}
@@ -469,6 +504,14 @@ fi
 %update_browser_plugins
 
 %postun -n browser-plugin-%{name}
+if [ "$1" = 0 ]; then
+	%update_browser_plugins
+fi
+
+%post -n browser-plugin-ng-%{name}
+%update_browser_plugins
+
+%postun -n browser-plugin-ng-%{name}
 if [ "$1" = 0 ]; then
 	%update_browser_plugins
 fi
@@ -829,21 +872,26 @@ fi
 %lang(ja) %{_mandir}/ja/man1/rmic.1*
 %lang(ja) %{_mandir}/ja/man1/rmiregistry.1*
 
+%ifarch %{ix86}
 %files -n browser-plugin-%{name}
 %defattr(644,root,root,755)
 %dir %{jredir}/plugin
-%attr(755,root,root) %{jredir}/lib/%{arch}/libjavaplugin*.so
-%ifarch %{x8664}
-%attr(755,root,root) %{jredir}/lib/%{arch}/libnpjp2.so
-%endif
-%ifarch %{ix86}
 %dir %{jredir}/plugin/%{arch}
 %dir %{jredir}/plugin/%{arch}/ns7
 %dir %{jredir}/plugin/%{arch}/ns7-gcc29
+%attr(755,root,root) %{jredir}/lib/%{arch}/libjavaplugin*.so
 %attr(755,root,root) %{jredir}/plugin/%{arch}/*/libjavaplugin_oji.so
-%endif
+%attr(755,root,root) %{_browserpluginsdir}/libjavaplugin_oji.so
 %{jredir}/plugin/desktop
-%attr(755,root,root) %{_browserpluginsdir}/*.so
+%endif
+
+%files -n browser-plugin-ng-%{name}
+%defattr(644,root,root,755)
+%dir %{jredir}/plugin
+%attr(755,root,root) %{jredir}/lib/%{arch}/libjavaplugin*.so
+%attr(755,root,root) %{jredir}/lib/%{arch}/libnpjp2.so
+%attr(755,root,root) %{_browserpluginsdir}/libnpjp2.so
+%{jredir}/plugin/desktop
 
 %files sources
 %defattr(644,root,root,755)
