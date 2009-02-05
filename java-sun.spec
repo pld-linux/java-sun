@@ -164,8 +164,8 @@ Summary:	Sun JRE (Java Runtime Environment) for Linux, X11 related parts
 Summary(pl.UTF-8):	Sun JRE - środowisko uruchomieniowe Javy dla Linuksa, części korzystające z X11
 Group:		Development/Languages/Java
 Requires:	%{name}-jre = %{version}-%{release}
-Provides:	jre-X11 = %{version}
 Provides:	javaws = %{version}
+Provides:	jre-X11 = %{version}
 
 %description jre-X11
 X11-related part of Java Runtime Environment for Linux.
@@ -235,7 +235,7 @@ Provides:	java-sun-mozilla-plugin
 Provides:	mozilla-firefox-plugin-java-sun
 Provides:	mozilla-plugin-java-sun
 Obsoletes:	blackdown-java-sdk-mozilla-plugin
-Obsoletes:	browser-plugin-ng-%{name}
+Obsoletes:	browser-plugin-java-sun-ng
 Obsoletes:	java-blackdown-mozilla-plugin
 Obsoletes:	java-sun-moz-plugin
 Obsoletes:	java-sun-mozilla-plugin
@@ -257,7 +257,7 @@ Java plugin for WWW browsers.
 %description -n browser-plugin-%{name} -l pl.UTF-8
 Wtyczka z obsługą Javy dla przeglądarek WWW.
 
-%package -n browser-plugin-ng-%{name}
+%package -n browser-plugin-%{name}-ng
 Summary:	Next-Generation Java plugin for WWW browsers
 Summary(pl.UTF-8):	Wtyczka Javy Nowej Generacji do przeglądarek WWW
 Group:		Development/Languages/Java
@@ -268,7 +268,7 @@ Provides:	java-sun-mozilla-plugin
 Provides:	mozilla-firefox-plugin-java-sun
 Provides:	mozilla-plugin-java-sun
 Obsoletes:	blackdown-java-sdk-mozilla-plugin
-Obsoletes:	browser-plugin-%{name}
+Obsoletes:	browser-plugin-java-sun
 Obsoletes:	java-blackdown-mozilla-plugin
 Obsoletes:	java-sun-moz-plugin
 Obsoletes:	java-sun-mozilla-plugin
@@ -284,11 +284,11 @@ Obsoletes:	mozilla-plugin-gcc32-java-sun
 Obsoletes:	mozilla-plugin-java-blackdown
 Obsoletes:	mozilla-plugin-java-sun
 
-%description -n browser-plugin-ng-%{name}
+%description -n browser-plugin-%{name}-ng
 Next-Generation Java plugin for WWW browsers. Works only with
 Firefox/Iceweasel 3.x.
 
-%description -n browser-plugin-ng-%{name} -l pl.UTF-8
+%description -n browser-plugin-%{name}-ng -l pl.UTF-8
 Wtyczka Nowej Generacji z obsługą Javy dla przeglądarek WWW. Działa
 tylko z Firefoxem/Iceweaselem 3.x.
 
@@ -508,10 +508,10 @@ if [ "$1" = 0 ]; then
 	%update_browser_plugins
 fi
 
-%post -n browser-plugin-ng-%{name}
+%post -n browser-plugin-%{name}-ng
 %update_browser_plugins
 
-%postun -n browser-plugin-ng-%{name}
+%postun -n browser-plugin-%{name}-ng
 if [ "$1" = 0 ]; then
 	%update_browser_plugins
 fi
@@ -879,15 +879,17 @@ fi
 %dir %{jredir}/plugin/%{arch}
 %dir %{jredir}/plugin/%{arch}/ns7
 %dir %{jredir}/plugin/%{arch}/ns7-gcc29
+# XXX: duplicate
 %attr(755,root,root) %{jredir}/lib/%{arch}/libjavaplugin*.so
 %attr(755,root,root) %{jredir}/plugin/%{arch}/*/libjavaplugin_oji.so
 %attr(755,root,root) %{_browserpluginsdir}/libjavaplugin_oji.so
 %{jredir}/plugin/desktop
 %endif
 
-%files -n browser-plugin-ng-%{name}
+%files -n browser-plugin-%{name}-ng
 %defattr(644,root,root,755)
 %dir %{jredir}/plugin
+# XXX: duplicate
 %attr(755,root,root) %{jredir}/lib/%{arch}/libjavaplugin*.so
 %attr(755,root,root) %{jredir}/lib/%{arch}/libnpjp2.so
 %attr(755,root,root) %{_browserpluginsdir}/libnpjp2.so
