@@ -19,15 +19,13 @@ Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl.UTF-8):	Sun JDK - środowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	1.6.0.12
-Release:	0.2
+Release:	1
 License:	restricted, distributable
 Group:		Development/Languages/Java
-#Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-i586.bin
-Source0:	jdk-%{_src_ver}-linux-i586.bin
-# Source0-md5:	1ee8b1952cf5143631dcd883f02a8bc0
-#Source1:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-amd64.bin
-Source1:	jdk-%{_src_ver}-linux-x64.bin
-# Source1-md5:	4a4103b3d50d01f9a97cb62fb544d135
+Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-i586.bin
+# Source0-md5:	560a51cfeecc4918d01ca29abc858d52
+Source1:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-amd64.bin
+# Source1-md5:	9dce878be77b4a93337fa85b40b29069
 Source2:	Test.java
 Patch0:		%{name}-desktop.patch
 URL:		https://jdk-distros.dev.java.net/developer.html
