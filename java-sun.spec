@@ -29,7 +29,7 @@ Source1:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-amd64.b
 Source2:	Test.java
 Patch0:		%{name}-desktop.patch
 URL:		https://jdk-distros.dev.java.net/developer.html
-BuildRequires:	file
+BuildRequires:	file >= 4.26-4
 BuildRequires:	rpm-build >= 4.3-0.20040107.21
 BuildRequires:	rpmbuild(macros) >= 1.357
 BuildRequires:	unzip
