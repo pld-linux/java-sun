@@ -4,7 +4,7 @@
 # - package? /usr/lib/jvm/java-sun-1.5.0.12/jre/lib/deploy/ffjcext.zip
 #
 %define		_ver	1.5.0.18
-%define		_src_ver	%(echo %{_ver}|sed 's/^1\\.\\(.\\..\\)\\.\\(..\\)$/\\1u\\2/')
+%define		_src_ver	5.0u18
 %define		_dir_ver	%(echo %{_ver}|sed 's/\\.\\(..\\)$/_\\1/')
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 49.0
