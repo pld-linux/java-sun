@@ -3,8 +3,8 @@
 #   Maybe a package containing only the symlinks?
 # - package? /usr/lib/jvm/java-sun-1.5.0.12/jre/lib/deploy/ffjcext.zip
 #
-%define		_ver	1.5.0.12
-%define		_src_ver	%(echo %{_ver}|tr . _)
+%define		_ver	1.5.0.18
+%define		_src_ver	%(echo %{_ver}|sed 's/^1\\.\\(.\\..\\)\\.\\(..\\)$/\\1u\\2/')
 %define		_dir_ver	%(echo %{_ver}|sed 's/\\.\\(..\\)$/_\\1/')
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 49.0
@@ -17,9 +17,9 @@ Release:	1
 License:	restricted, distributable
 Group:		Development/Languages/Java
 Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-i586.bin
-# Source0-md5:	9b0d717810953e78d5c40969e382e1ae
+# Source0-md5:	c7bacbd3022f7071d3b29413b52cf63b
 Source1:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-amd64.bin
-# Source1-md5:	948295f3e252670eb9328cbbc422e3a6
+# Source1-md5:	3b3379d348a44767f39d617872a1e0af
 Source2:	Test.java
 Patch0:		%{name}-ControlPanel-fix.patch
 Patch1:		%{name}-desktop.patch
@@ -420,6 +420,7 @@ fi
 %attr(755,root,root) %{_bindir}/javadoc
 %attr(755,root,root) %{_bindir}/javah
 %attr(755,root,root) %{_bindir}/javap
+%attr(755,root,root) %{_bindir}/jconsole
 %attr(755,root,root) %{_bindir}/jdb
 %attr(755,root,root) %{_bindir}/jinfo
 %attr(755,root,root) %{_bindir}/jmap
