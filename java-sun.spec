@@ -8,6 +8,9 @@
 #   /usr/lib/jvm/java-sun-1.6.0.10/jre/lib/servicetag/jdk_header.png
 # - dep loop (can be solved by moving shared libs to java-sun-libs):
 #   java-sun-jre>java-sun-tools
+# - 1.6.0.12 problem with RSA II:
+#  - http://forums.sun.com/thread.jspa?threadID=5375681&tstart=2
+#  - http://www.ibm.com/developerworks/forums/thread.jspa?messageID=14252965
 #
 %define		_enable_debug_packages 0
 #
