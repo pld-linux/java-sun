@@ -3,8 +3,8 @@
 #   Maybe a package containing only the symlinks?
 # - package? /usr/lib/jvm/java-sun-1.5.0.12/jre/lib/deploy/ffjcext.zip
 #
-%define		_ver	1.5.0.18
-%define		_src_ver	5.0u18
+%define		_ver	1.5.0.19
+%define		_src_ver	5.0u19
 %define		_dir_ver	%(echo %{_ver}|sed 's/\\.\\(..\\)$/_\\1/')
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 49.0
@@ -17,9 +17,9 @@ Release:	1
 License:	restricted, distributable
 Group:		Development/Languages/Java
 Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-i586.bin
-# Source0-md5:	c7bacbd3022f7071d3b29413b52cf63b
+# Source0-md5:	2e2db12a21c395e8d831cb795e0489a4
 Source1:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-amd64.bin
-# Source1-md5:	3b3379d348a44767f39d617872a1e0af
+# Source1-md5:	027c613964bc84188214df3f37fa39d3
 Source2:	Test.java
 Patch0:		%{name}-ControlPanel-fix.patch
 Patch1:		%{name}-desktop.patch
