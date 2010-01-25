@@ -12,7 +12,9 @@
 #  - http://forums.sun.com/thread.jspa?threadID=5375681&tstart=2
 #  - http://www.ibm.com/developerworks/forums/thread.jspa?messageID=14252965
 #
-%define		_enable_debug_packages 0
+# Conditional build:
+%bcond_without	tests		# build without tests
+#
 #
 %define		_src_ver	6u18
 %define		_dir_ver	%(echo %{version} | sed 's/\\.\\(..\\)$/_\\1/')
@@ -22,7 +24,7 @@ Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl.UTF-8):	Sun JDK - środowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	1.6.0.18
-Release:	1
+Release:	2
 License:	restricted, distributable
 Group:		Development/Languages/Java
 Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-i586.bin
@@ -68,7 +70,6 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		arch	amd64
 %endif
 
-
 # rpm doesn't like strange version definitions provided by Sun's libs
 %define		_noautoprov	'\\.\\./.*' '/export/.*'
 # these with SUNWprivate.* are found as required, but not provided
@@ -76,6 +77,9 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_noautoreq	'libjava.so(SUNWprivate_1.1)' 'libnet.so(SUNWprivate_1.1)' 'libverify.so(SUNWprivate_1.1)' 'libodbcinst.so' 'libodbc.so' 'libjava_crw_demo_g\.so.*'
 # don't depend on other JRE/JDK installed on build host
 %define		_noautoreqdep	libjava.so libjvm.so
+
+# binary packages already stripped
+%define		_enable_debug_packages 0
 
 %description
 Java Development Kit for Linux.
@@ -332,6 +336,14 @@ done
 cp %{SOURCE2} Test.java
 
 %build
+%if %{with tests}
+# Make sure we have /proc mounted,
+# javac Test.java fails to get lock otherwise and runs forever:
+# Java HotSpot(TM) Client VM warning: Can't detect initial thread stack location - find_vma failed
+if [ ! -f /proc/cpuinfo ]; then
+	echo >&2 "WARNING: /proc not mounted -- compile test may fail"
+fi
+
 # $ORIGIN does not work on PLD builders. workaround.
 export LD_LIBRARY_PATH=$(pwd)/jre/lib/%{arch}/jli
 ./bin/javac Test.java
@@ -341,6 +353,7 @@ if [ "$classver" != %{_classdataversion} ]; then
 	echo "Set %%define _classdataversion to $classver and rerun."
 	exit 1
 fi
+%endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
