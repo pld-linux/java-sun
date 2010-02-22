@@ -198,6 +198,18 @@ JRE module for ALSA sound support.
 %description jre-alsa -l pl.UTF-8
 Moduł JRE do obsługi dźwięku poprzez ALSA.
 
+%package visualvm
+Summary:	VisualVM is a tool to monitor and troubleshoot Java applications
+Group:		Development/Languages/Java
+URL:		https://visualvm.dev.java.net/
+Requires:	%{name}-jre-X11 = %{version}-%{release}
+
+%description visualvm
+VisualVM is a visual tool integrating several commandline JDK tools
+and lightweight profiling capabilities. Designed for both production
+and development time use, it further enhances the capability of
+monitoring and performance analysis for the Java SE platform.
+
 %package tools
 Summary:	Shared Java tools
 Summary(pl.UTF-8):	Współdzielone narzędzia Javy
@@ -804,16 +816,11 @@ fi
 %attr(755,root,root) %{javadir}/bin/jcontrol
 %{_desktopdir}/sun_java.desktop
 %{_pixmapsdir}/sun_java.png
-%attr(755,root,root) %{_bindir}/jvisualvm
 %attr(755,root,root) %{_bindir}/policytool
 %attr(755,root,root) %{jredir}/bin/policytool
 %attr(755,root,root) %{javadir}/bin/policytool
 %{_mandir}/man1/policytool.1*
 %lang(ja) %{_mandir}/ja/man1/policytool.1*
-%attr(755,root,root) %{javadir}/bin/jvisualvm
-%{_mandir}/man1/jvisualvm.1*
-%lang(ja) %{_mandir}/ja/man1/jvisualvm.1*
-%{javadir}/lib/visualvm
 %{jredir}/lib/fonts
 %{jredir}/lib/oblique-fonts
 %dir %{jredir}/lib/%{arch}/xawt
@@ -854,6 +861,14 @@ fi
 %files jre-alsa
 %defattr(644,root,root,755)
 %attr(755,root,root) %{jredir}/lib/%{arch}/libjsoundalsa.so
+
+%files visualvm
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/jvisualvm
+%attr(755,root,root) %{javadir}/bin/jvisualvm
+%{_mandir}/man1/jvisualvm.1*
+%lang(ja) %{_mandir}/ja/man1/jvisualvm.1*
+%{javadir}/lib/visualvm
 
 %files demos
 %defattr(644,root,root,755)
