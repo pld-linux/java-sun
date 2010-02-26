@@ -354,7 +354,8 @@ if [ ! -f /proc/cpuinfo ]; then
 fi
 
 # $ORIGIN does not work on PLD builders. workaround with LD_LIBARY_PATH
-classver=$(LD_LIBRARY_PATH=$(pwd)/jre/lib/%{arch}/jli ./bin/java Test)
+LD_LIBRARY_PATH=$(pwd)/jre/lib/%{arch}/jli ./bin/java Test 2> classver >/dev/null
+classver=$(cat classver)
 
 if [ "$classver" != %{_classdataversion} ]; then
 	echo "Set %%define _classdataversion to $classver and rerun."
