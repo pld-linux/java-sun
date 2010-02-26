@@ -24,7 +24,7 @@ Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl.UTF-8):	Sun JDK - środowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	1.6.0.18
-Release:	3
+Release:	4
 License:	restricted, distributable
 Group:		Development/Languages/Java
 Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-i586.bin
@@ -32,13 +32,9 @@ Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-i586.bi
 Source1:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-amd64.bin
 # Source1-md5:	870ab3588f4d50405a2747fe968d0481
 Source2:	Test.java
+Source3:	Test.class
 Patch0:		%{name}-desktop.patch
 URL:		https://jdk-distros.dev.java.net/developer.html
-%if %{pld_release} == "ac"
-BuildRequires:	file
-%else
-BuildRequires:	file >= 4.26-4
-%endif
 BuildRequires:	rpm >= 4.4.9-56
 BuildRequires:	rpm-build >= 4.3-0.20040107.21
 BuildRequires:	rpmbuild(macros) >= 1.453
@@ -346,6 +342,7 @@ for pack in $(find . -name '*.pack'); do
 done
 
 cp %{SOURCE2} Test.java
+cp %{SOURCE3} Test.class
 
 %build
 %if %{with tests}
@@ -356,11 +353,9 @@ if [ ! -f /proc/cpuinfo ]; then
 	echo >&2 "WARNING: /proc not mounted -- compile test may fail"
 fi
 
-# $ORIGIN does not work on PLD builders. workaround.
-export LD_LIBRARY_PATH=$(pwd)/jre/lib/%{arch}/jli
-./bin/javac Test.java
+# $ORIGIN does not work on PLD builders. workaround with LD_LIBARY_PATH
+classver=$(LD_LIBRARY_PATH=$(pwd)/jre/lib/%{arch}/jli ./bin/java Test)
 
-classver=$(file Test.class | grep -o 'compiled Java class data, version [0-9.]*' | awk '{print $NF}')
 if [ "$classver" != %{_classdataversion} ]; then
 	echo "Set %%define _classdataversion to $classver and rerun."
 	exit 1
