@@ -16,21 +16,21 @@
 %bcond_without	tests		# build without tests
 #
 #
-%define		_src_ver	6u18
+%define		_src_ver	6u19
 %define		_dir_ver	%(echo %{version} | sed 's/\\.\\(..\\)$/_\\1/')
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 50.0
 Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl.UTF-8):	Sun JDK - środowisko programistyczne Javy dla Linuksa
 Name:		java-sun
-Version:	1.6.0.18
-Release:	4
+Version:	1.6.0.19
+Release:	1
 License:	restricted, distributable
 Group:		Development/Languages/Java
 Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-i586.bin
-# Source0-md5:	38ebeb49b85668b56305409db2e2eb6a
+# Source0-md5:	fb881b88b78770c519b4306ff1ead7a2
 Source1:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-amd64.bin
-# Source1-md5:	870ab3588f4d50405a2747fe968d0481
+# Source1-md5:	a828c0bc26474060d7514b8948819b8b
 Source2:	Test.java
 Source3:	Test.class
 Patch0:		%{name}-desktop.patch
@@ -739,6 +739,7 @@ fi
 %{jredir}/lib/meta-index
 %dir %{jredir}/lib/security
 %{jredir}/lib/security/*.*
+%verify(not md5 mtime size) %{jredir}/lib/security/blacklist
 %verify(not md5 mtime size) %config(noreplace) %{jredir}/lib/security/cacerts
 %{jredir}/lib/zi
 %{jredir}/lib/*.jar
