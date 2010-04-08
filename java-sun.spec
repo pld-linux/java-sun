@@ -190,7 +190,8 @@ JRE module for ALSA sound support.
 Moduł JRE do obsługi dźwięku poprzez ALSA.
 
 %package visualvm
-Summary:	VisualVM is a tool to monitor and troubleshoot Java applications
+Summary:	VisualVM - a tool to monitor and troubleshoot Java applications
+Summary(pl.UTF-8):	VisualVM - narzędzie do monitorowania i diagnostyki aplikacji w Javie
 Group:		Development/Languages/Java
 URL:		https://visualvm.dev.java.net/
 Requires:	%{name}-jre-X11 = %{version}-%{release}
@@ -200,6 +201,13 @@ VisualVM is a visual tool integrating several commandline JDK tools
 and lightweight profiling capabilities. Designed for both production
 and development time use, it further enhances the capability of
 monitoring and performance analysis for the Java SE platform.
+
+%description visualvm -l pl.UTF-8
+VisualVM to graficzne narzędzie integrujące kilka narzędzi JDK
+działających z linii poleceń oraz proste możliwości profilowania.
+Zaprojektowane jest do użytku zarówno produkcyjnego, jak i w czasie
+tworzenia aplikacji; rozszerza możliwości monitorowania i analizy
+wydajności dla platformy Java SE.
 
 %package tools
 Summary:	Shared Java tools
