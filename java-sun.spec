@@ -1,11 +1,6 @@
 # TODO:
 # - better way to choose preferred jvm (currently the symlinks are hardcoded)
 #   Maybe a package containing only the symlinks?
-# - warning: Installed (but unpackaged) file(s) found:
-#   /usr/lib/jvm/java-sun-1.6.0.10/demo/jvmti/index.html
-#   /usr/lib/jvm/java-sun-1.6.0.10/jre/lib/fontconfig.RedHat.4.bfc
-#   /usr/lib/jvm/java-sun-1.6.0.10/jre/lib/fontconfig.RedHat.4.properties.src
-#   /usr/lib/jvm/java-sun-1.6.0.10/jre/lib/servicetag/jdk_header.png
 # - dep loop (can be solved by moving shared libs to java-sun-libs):
 #   java-sun-jre>java-sun-tools
 # - 1.6.0.12 problem with RSA II:
@@ -353,6 +348,8 @@ if [ ! -f /proc/cpuinfo ]; then
 	echo >&2 "WARNING: /proc not mounted -- compile test may fail"
 fi
 
+# CLASSPATH prevents finding Test.class in .
+unset CLASSPATH || :
 # $ORIGIN does not work on PLD builders. workaround with LD_LIBRARY_PATH
 export LD_LIBRARY_PATH=$(pwd)/jre/lib/%{arch}/jli
 ./bin/java Test
@@ -763,6 +760,8 @@ fi
 %{jredir}/lib/fontconfig.RedHat.2.1.properties.src
 %{jredir}/lib/fontconfig.RedHat.3.bfc
 %{jredir}/lib/fontconfig.RedHat.3.properties.src
+%{jredir}/lib/fontconfig.RedHat.4.bfc
+%{jredir}/lib/fontconfig.RedHat.4.properties.src
 %{jredir}/lib/fontconfig.RedHat.bfc
 %{jredir}/lib/fontconfig.RedHat.properties.src
 %{jredir}/lib/fontconfig.SuSE.bfc
@@ -773,6 +772,7 @@ fi
 %{jredir}/lib/fontconfig.Turbo.properties.src
 %{jredir}/lib/fontconfig.bfc
 %{jredir}/lib/fontconfig.properties.src
+%{jredir}/lib/servicetag
 %attr(755,root,root) %{jredir}/lib/%{arch}/headless/libmawt.so
 %attr(755,root,root) %{jredir}/lib/%{arch}/libsaproc.so
 %attr(755,root,root) %{jredir}/lib/%{arch}/libunpack.so
@@ -881,6 +881,7 @@ fi
 %{javadir}/demo/jvmti/*/src
 %{javadir}/demo/jvmti/*/README*
 %{javadir}/demo/jvmti/*/*.jar
+%{javadir}/demo/jvmti/index.html
 %{javadir}/demo/management
 %{javadir}/demo/nbproject
 %{javadir}/demo/plugin
