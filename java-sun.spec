@@ -353,7 +353,7 @@ if [ ! -f /proc/cpuinfo ]; then
 	echo >&2 "WARNING: /proc not mounted -- compile test may fail"
 fi
 
-# $ORIGIN does not work on PLD builders. workaround with LD_LIBARY_PATH
+# $ORIGIN does not work on PLD builders. workaround with LD_LIBRARY_PATH
 export LD_LIBRARY_PATH=$(pwd)/jre/lib/%{arch}/jli
 ./bin/java Test
 
@@ -739,7 +739,7 @@ fi
 %{jredir}/lib/meta-index
 %dir %{jredir}/lib/security
 %{jredir}/lib/security/*.*
-%verify(not md5 mtime size) %{jredir}/lib/security/blacklist
+%{jredir}/lib/security/blacklist
 %verify(not md5 mtime size) %config(noreplace) %{jredir}/lib/security/cacerts
 %{jredir}/lib/zi
 %{jredir}/lib/*.jar
