@@ -868,6 +868,17 @@ fi
 %ifarch %{ix86}
 %lang(ja) %{_mandir}/ja/man1/javaws.1*
 %endif
+%lang(de) %{_datadir}/locale/de/LC_MESSAGES/sunw_java_plugin.mo
+%lang(es) %{_datadir}/locale/es/LC_MESSAGES/sunw_java_plugin.mo
+%lang(fr) %{_datadir}/locale/fr/LC_MESSAGES/sunw_java_plugin.mo
+%lang(it) %{_datadir}/locale/it/LC_MESSAGES/sunw_java_plugin.mo
+%lang(ja) %{_datadir}/locale/ja/LC_MESSAGES/sunw_java_plugin.mo
+%lang(ko) %{_datadir}/locale/ko/LC_MESSAGES/sunw_java_plugin.mo
+%lang(sv) %{_datadir}/locale/sv/LC_MESSAGES/sunw_java_plugin.mo
+%lang(zh_HK) %{_datadir}/locale/zh_HK/LC_MESSAGES/sunw_java_plugin.mo
+%lang(zh_CN) %{_datadir}/locale/zh_CN/LC_MESSAGES/sunw_java_plugin.mo
+%lang(zh_TW) %{_datadir}/locale/zh_TW/LC_MESSAGES/sunw_java_plugin.mo
+
 
 %files jre-base-X11
 %defattr(644,root,root,755)
@@ -889,26 +900,16 @@ fi
 %attr(755,root,root) %{jredir}/lib/%{arch}/xawt/libmawt.so
 %dir %{jredir}/lib/locale
 %lang(de) %{jredir}/lib/locale/de
-%lang(de) %{_datadir}/locale/de/LC_MESSAGES/sunw_java_plugin.mo
 %lang(es) %{jredir}/lib/locale/es
-%lang(es) %{_datadir}/locale/es/LC_MESSAGES/sunw_java_plugin.mo
 %lang(fr) %{jredir}/lib/locale/fr
-%lang(fr) %{_datadir}/locale/fr/LC_MESSAGES/sunw_java_plugin.mo
 %lang(it) %{jredir}/lib/locale/it
-%lang(it) %{_datadir}/locale/it/LC_MESSAGES/sunw_java_plugin.mo
 %lang(ja) %{jredir}/lib/locale/ja
-%lang(ja) %{_datadir}/locale/ja/LC_MESSAGES/sunw_java_plugin.mo
 %lang(ko) %{jredir}/lib/locale/ko*
-%lang(ko) %{_datadir}/locale/ko/LC_MESSAGES/sunw_java_plugin.mo
 %lang(sv) %{jredir}/lib/locale/sv
-%lang(sv) %{_datadir}/locale/sv/LC_MESSAGES/sunw_java_plugin.mo
 %lang(zh_CN) %{jredir}/lib/locale/zh
 %lang(zh_CN) %{jredir}/lib/locale/zh.*
 %lang(zh_HK) %{jredir}/lib/locale/zh_HK*
-%lang(zh_HK) %{_datadir}/locale/zh_HK/LC_MESSAGES/sunw_java_plugin.mo
 %lang(zh_TW) %{jredir}/lib/locale/zh_TW*
-%lang(zh_CN) %{_datadir}/locale/zh_CN/LC_MESSAGES/sunw_java_plugin.mo
-%lang(zh_TW) %{_datadir}/locale/zh_TW/LC_MESSAGES/sunw_java_plugin.mo
 %dir %{jredir}/javaws
 %attr(755,root,root) %{jredir}/javaws/javaws
 
