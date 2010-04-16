@@ -840,6 +840,8 @@ fi
 %{jredir}/lib/fontconfig.Sun.properties.src
 %{jredir}/lib/fontconfig.Turbo.bfc
 %{jredir}/lib/fontconfig.Turbo.properties.src
+%{jredir}/lib/fontconfig.Ubuntu.bfc
+%{jredir}/lib/fontconfig.Ubuntu.properties.src
 %{jredir}/lib/fontconfig.bfc
 %{jredir}/lib/fontconfig.properties.src
 %{jredir}/lib/servicetag
