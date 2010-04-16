@@ -764,19 +764,22 @@ fi
 
 %files jre-base
 %defattr(644,root,root,755)
-%attr(755,root,root) %{jredir}/bin/pack200
-%attr(755,root,root) %{jredir}/bin/unpack200
-%attr(755,root,root) %{javadir}/bin/pack200
-%attr(755,root,root) %{javadir}/bin/unpack200
 %dir %{javadir}
 %dir %{javadir}/bin
+%attr(755,root,root) %{javadir}/bin/pack200
+%attr(755,root,root) %{javadir}/bin/unpack200
 %attr(755,root,root) %{javadir}/bin/java
+%attr(755,root,root) %{javadir}/bin/jar
+%attr(755,root,root) %{javadir}/bin/rmic
 %dir %{jredir}
 %dir %{jredir}/bin
+%attr(755,root,root) %{jredir}/bin/pack200
+%attr(755,root,root) %{jredir}/bin/unpack200
 %attr(755,root,root) %{jredir}/bin/java
 %attr(755,root,root) %{jredir}/bin/keytool
 %attr(755,root,root) %{jredir}/bin/orbd
 %attr(755,root,root) %{jredir}/bin/rmid
+%attr(755,root,root) %{jredir}/bin/rmiregistry
 %attr(755,root,root) %{jredir}/bin/servertool
 %attr(755,root,root) %{jredir}/bin/tnameserv
 %dir %{jredir}/lib
@@ -955,9 +958,6 @@ fi
 %attr(755,root,root) %{_bindir}/jar
 %attr(755,root,root) %{_bindir}/rmic
 %attr(755,root,root) %{_bindir}/rmiregistry
-%attr(755,root,root) %{jredir}/bin/rmiregistry
-%attr(755,root,root) %{javadir}/bin/jar
-%attr(755,root,root) %{javadir}/bin/rmic
 %{_mandir}/man1/jar.1*
 %{_mandir}/man1/rmic.1*
 %{_mandir}/man1/rmiregistry.1*
