@@ -32,6 +32,7 @@ BuildRequires:	rpmbuild(macros) >= 1.453
 BuildRequires:	unzip
 Requires:	%{name}-jdk-base = %{version}-%{release}
 Requires:	%{name}-jre = %{version}-%{release}
+Requires:	%{name}-jre-base = %{version}-%{release}
 Provides:	j2sdk = %{version}
 Provides:	jdk = %{version}
 Obsoletes:	blackdown-java-sdk
@@ -95,6 +96,7 @@ Ten pakiet zawiera przeglądarkę appletów dla Javy Suna.
 Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl.UTF-8):	Sun JDK - środowisko programistyczne Javy dla Linuksa
 Group:		Development/Languages/Java
+Requires:	%{name}-jre-base = %{version}-%{release}
 Requires:	%{name}-tools = %{version}-%{release}
 Requires:	jpackage-utils >= 0:1.6.6-14
 
