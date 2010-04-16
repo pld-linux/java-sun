@@ -132,7 +132,7 @@ Group:		Development/Languages/Java
 Requires:	%{name}-jre-base = %{version}-%{release}
 Requires:	%{name}-tools = %{version}-%{release}
 Requires:	jpackage-utils >= 0:1.6.6-14
-Suggests:	%{name}-X11
+Suggests:	%{name}-jre-X11
 Provides:	j2re = %{version}
 Provides:	jaas = %{version}
 Provides:	jaf = 1.1.1
