@@ -30,8 +30,8 @@ BuildRequires:	rpm >= 4.4.9-56
 BuildRequires:	rpm-build >= 4.3-0.20040107.21
 BuildRequires:	rpmbuild(macros) >= 1.453
 BuildRequires:	unzip
-Requires:	%{name}-jre = %{version}-%{release}
 Requires:	%{name}-jdk-base = %{version}-%{release}
+Requires:	%{name}-jre = %{version}-%{release}
 Provides:	j2sdk = %{version}
 Provides:	jdk = %{version}
 Obsoletes:	blackdown-java-sdk
@@ -69,14 +69,15 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
 This package symlinks Java SUN development tools provided by
-%{name}-jdk-base to system-wide directories like %{_bindir}, making Java SUN
-default JDK.
+%{name}-jdk-base to system-wide directories like %{_bindir}, making
+Java SUN default JDK.
 
 %description -l pl.UTF-8
 Ten pakiet tworzy symboliczne dowiązania do narzędzi programistycznych
-uruchomieniowego Java SUN, dostarczanych przez pakiet %{name}-jdk-base, w
-standardowych systemowych ścieżkach takich jak %{_bindir}, sprawiając tym
-samym, że Java SUN staje się domyślnym JDK w systemie.
+uruchomieniowego Java SUN, dostarczanych przez pakiet
+%{name}-jdk-base, w standardowych systemowych ścieżkach takich jak
+%{_bindir}, sprawiając tym samym, że Java SUN staje się domyślnym JDK
+w systemie.
 
 %package appletviewer
 Summary:	Java applet viewer from Sun Java
@@ -128,9 +129,10 @@ Ten pakiet zawiera pliki JDBC dla Javy Suna.
 Summary:	Sun JRE (Java Runtime Environment) for Linux
 Summary(pl.UTF-8):	Sun JRE - środowisko uruchomieniowe Javy dla Linuksa
 Group:		Development/Languages/Java
-Requires:	%{name}-tools = %{version}-%{release}
 Requires:	%{name}-jre-base = %{version}-%{release}
+Requires:	%{name}-tools = %{version}-%{release}
 Requires:	jpackage-utils >= 0:1.6.6-14
+Suggests:	%{name}-X11
 Provides:	j2re = %{version}
 Provides:	jaas = %{version}
 Provides:	jaf = 1.1.1
@@ -164,18 +166,18 @@ Obsoletes:	jndi-provider-ldap
 Obsoletes:	jndi-provider-rmiregistry
 Obsoletes:	jre
 Obsoletes:	jsse
-Suggests:	%{name}-X11
 
 %description jre
 This package symlinks Java SUN runtime environment tools provided by
-%{name}-jre-base to system-wide directories like %{_bindir}, making Java SUN
-default JRE.
+%{name}-jre-base to system-wide directories like %{_bindir}, making
+Java SUN default JRE.
 
 %description jre -l pl.UTF-8
 Ten pakiet tworzy symboliczne dowiązania do narzędzi środowiska
-uruchomieniowego Java SUN, dostarczanych przez pakiet %{name}-jre-base, w
-standardowych systemowych ścieżkach takich jak %{_bindir}, sprawiając tym
-samym, że Java SUN staje się domyślnym JRE w systemie.
+uruchomieniowego Java SUN, dostarczanych przez pakiet
+%{name}-jre-base, w standardowych systemowych ścieżkach takich jak
+%{_bindir}, sprawiając tym samym, że Java SUN staje się domyślnym JRE
+w systemie.
 
 %package jre-base
 Summary:	Sun JRE (Java Runtime Environment) for Linux
