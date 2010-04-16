@@ -97,7 +97,6 @@ Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl.UTF-8):	Sun JDK - środowisko programistyczne Javy dla Linuksa
 Group:		Development/Languages/Java
 Requires:	%{name}-jre-base = %{version}-%{release}
-Requires:	%{name}-tools = %{version}-%{release}
 Requires:	jpackage-utils >= 0:1.6.6-14
 
 %description jdk-base
