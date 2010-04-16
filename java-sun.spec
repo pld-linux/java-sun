@@ -68,10 +68,15 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_enable_debug_packages 0
 
 %description
-Java Development Kit for Linux.
+This package symlinks Java SUN development tools provided by
+%{name}-jdk-base to system-wide directories like %{_bindir}, making Java SUN
+default JDK.
 
 %description -l pl.UTF-8
-Środowisko programistyczne Javy dla Linuksa.
+Ten pakiet tworzy symboliczne dowiązania do narzędzi programistycznych
+uruchomieniowego Java SUN, dostarczanych przez pakiet %{name}-jdk-base, w
+standardowych systemowych ścieżkach takich jak %{_bindir}, sprawiając tym
+samym, że Java SUN staje się domyślnym JDK w systemie.
 
 %package appletviewer
 Summary:	Java applet viewer from Sun Java
@@ -162,12 +167,15 @@ Obsoletes:	jsse
 Suggests:	%{name}-X11
 
 %description jre
-Java Runtime Environment for Linux. Does not contain any X11-related
-compontents.
+This package symlinks Java SUN runtime environment tools provided by
+%{name}-jre-base to system-wide directories like %{_bindir}, making Java SUN
+default JRE.
 
 %description jre -l pl.UTF-8
-Środowisko uruchomieniowe Javy dla Linuksa. Nie zawiera żadnych
-elementów związanych ze środowiskiem X11.
+Ten pakiet tworzy symboliczne dowiązania do narzędzi środowiska
+uruchomieniowego Java SUN, dostarczanych przez pakiet %{name}-jre-base, w
+standardowych systemowych ścieżkach takich jak %{_bindir}, sprawiając tym
+samym, że Java SUN staje się domyślnym JRE w systemie.
 
 %package jre-base
 Summary:	Sun JRE (Java Runtime Environment) for Linux
