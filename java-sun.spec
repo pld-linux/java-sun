@@ -134,39 +134,33 @@ Requires:	%{name}-jre-base = %{version}-%{release}
 Requires:	%{name}-tools = %{version}-%{release}
 Requires:	jpackage-utils >= 0:1.6.6-14
 Suggests:	%{name}-jre-X11
-Provides:	j2re = %{version}
-Provides:	jaas = %{version}
-Provides:	jaf = 1.1.1
 Provides:	java
 Provides:	java(ClassDataVersion) = %{_classdataversion}
+Provides:	java(jaas) = %{version}
+Provides:	java(jaf) = 1.1.1
+Provides:	java(jaxp) = 1.3
+Provides:	java(jaxp_parser_impl)
+Provides:	java(jce) = %{version}
+Provides:	java(jdbc-stdext) = %{version}
+Provides:	java(jdbc-stdext) = 3.0
+Provides:	java(jmx) = 1.4
+Provides:	java(jndi) = %{version}
+Provides:	java(jsse) = %{version}
 Provides:	java1.4
-Provides:	jaxp = 1.3
-Provides:	jaxp_parser_impl
-Provides:	jce = %{version}
-Provides:	jdbc-stdext = %{version}
-Provides:	jdbc-stdext = 3.0
-Provides:	jmx = 1.4
-Provides:	jndi = %{version}
-Provides:	jndi-cos = %{version}
-Provides:	jndi-dns = %{version}
-Provides:	jndi-ldap = %{version}
-Provides:	jndi-rmi = %{version}
 Provides:	jre = %{version}
-Provides:	jsse = %{version}
-Provides:	xml-commons-apis
-Obsoletes:	jaas
 Obsoletes:	java-blackdown-jre
-Obsoletes:	jaxp
-Obsoletes:	jce
-Obsoletes:	jdbc-stdext
-Obsoletes:	jmx
-Obsoletes:	jndi
-Obsoletes:	jndi-provider-cosnaming
-Obsoletes:	jndi-provider-dns
-Obsoletes:	jndi-provider-ldap
-Obsoletes:	jndi-provider-rmiregistry
 Obsoletes:	jre
-Obsoletes:	jsse
+Obsoletes:	java(jaas)
+Obsoletes:	java(jaf)
+Obsoletes:	java(jaxp)
+Obsoletes:	java(jaxp_parser_impl)
+Obsoletes:	java(jce)
+Obsoletes:	java(jdbc-stdext)
+Obsoletes:	java(jdbc-stdext)
+Obsoletes:	java(jmx)
+Obsoletes:	java(jndi)
+Obsoletes:	java(jsse)
+
 
 %description jre
 This package symlinks Java SUN runtime environment tools provided by
