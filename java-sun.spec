@@ -303,7 +303,7 @@ Programy demonstracyjne do JDK.
 Summary:	Java plugin for WWW browsers
 Summary(pl.UTF-8):	Wtyczka Javy do przeglądarek WWW
 Group:		Development/Languages/Java
-Requires:	%{name}-jre-X11 = %{version}-%{release}
+Requires:	%{name}-jre-base-X11 = %{version}-%{release}
 Requires:	browser-plugins >= 2.0
 Requires:	browser-plugins(%{_target_base_arch})
 Provides:	java-sun-mozilla-plugin
@@ -336,7 +336,7 @@ Wtyczka z obsługą Javy dla przeglądarek WWW.
 Summary:	Next-Generation Java plugin for WWW browsers
 Summary(pl.UTF-8):	Wtyczka Javy Nowej Generacji do przeglądarek WWW
 Group:		Development/Languages/Java
-Requires:	%{name}-jre-X11 = %{version}-%{release}
+Requires:	%{name}-jre-base-X11 = %{version}-%{release}
 Requires:	browser-plugins >= 2.0
 Requires:	browser-plugins(%{_target_base_arch})
 Provides:	java-sun-mozilla-plugin
