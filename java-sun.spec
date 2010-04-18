@@ -98,6 +98,7 @@ Summary(pl.UTF-8):	Sun JDK - środowisko programistyczne Javy dla Linuksa
 Group:		Development/Languages/Java
 Requires:	%{name}-jre-base = %{version}-%{release}
 Requires:	jpackage-utils >= 0:1.6.6-14
+Provides:	jdk(%{name})
 
 %description jdk-base
 Java Development Kit for Linux.
@@ -179,6 +180,7 @@ Summary:	Sun JRE (Java Runtime Environment) for Linux
 Summary(pl.UTF-8):	Sun JRE - środowisko uruchomieniowe Javy dla Linuksa
 Group:		Development/Languages/Java
 Requires:	jpackage-utils >= 0:1.6.6-14
+Provides:	jre(%{name})
 
 %description jre-base
 Java Runtime Environment for Linux. Does not contain any X11-related
@@ -521,7 +523,9 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/{ko.UTF-8,zh.GBK,zh_TW.BIG5}
 cp -a src.zip $RPM_BUILD_ROOT%{_prefix}/src/%{name}-sources
 
 ln -s %{javareldir} $RPM_BUILD_ROOT%{_jvmdir}/java
+ln -s %{javareldir} $RPM_BUILD_ROOT%{_jvmdir}/java-sun
 ln -s %{jrereldir} $RPM_BUILD_ROOT%{_jvmdir}/jre
+ln -s %{jrereldir} $RPM_BUILD_ROOT%{_jvmdir}/java-sun-jre
 ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_jvmjardir}/java
 ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_jvmjardir}/jre
 ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_jvmjardir}/jsse
@@ -682,6 +686,7 @@ fi
 
 %files jdk-base
 %defattr(644,root,root,755)
+%{_jvmdir}/%{name}
 %attr(755,root,root) %{javadir}/bin/HtmlConverter
 %ifarch %{ix86}
 %attr(755,root,root) %{javadir}/bin/java-rmi.cgi
@@ -768,6 +773,7 @@ fi
 
 %files jre-base
 %defattr(644,root,root,755)
+%{_jvmdir}/%{name}-jre
 %dir %{javadir}
 %dir %{javadir}/bin
 %attr(755,root,root) %{javadir}/bin/pack200
