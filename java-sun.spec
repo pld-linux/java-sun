@@ -149,8 +149,6 @@ Provides:	java(jndi) = %{version}
 Provides:	java(jsse) = %{version}
 Provides:	java1.4
 Provides:	jre = %{version}
-Obsoletes:	java-blackdown-jre
-Obsoletes:	jre
 Obsoletes:	java(jaas)
 Obsoletes:	java(jaf)
 Obsoletes:	java(jaxp)
@@ -161,6 +159,8 @@ Obsoletes:	java(jdbc-stdext)
 Obsoletes:	java(jmx)
 Obsoletes:	java(jndi)
 Obsoletes:	java(jsse)
+Obsoletes:	java-blackdown-jre
+Obsoletes:	jre
 
 
 %description jre
@@ -201,12 +201,12 @@ Provides:	jre-X11 = %{version}
 
 %description jre-X11
 This package symlinks Java SUN X11 libraries provided by
-java5-sun-jre-base-X11 to system-wide directories like /usr/bin,
-making Java SUN default JRE-X11.
+java-sun-jre-base-X11 to system-wide directories like /usr/bin, making
+Java SUN default JRE-X11.
 
 %description jre-X11 -l pl.UTF-8
 Ten pakiet tworzy symboliczne dowiązania do narzędzi X11 Java SUN,
-dostarczanych przez pakiet java5-sun-jre-base-X11, w standardowych
+dostarczanych przez pakiet java-sun-jre-base-X11, w standardowych
 systemowych ścieżkach takich jak /usr/bin, sprawiając tym samym, że
 Java SUN staje się domyślnym JRE-X11 w systemie.
 
@@ -536,7 +536,7 @@ ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_jvmjardir}/jsse
 #
 # for example:
 # old javac: RPATH=$ORIGIN/../lib/i386/jli:$ORIGIN/../jre/lib/i386/jli
-# new javac: RPATH=/usr/lib/jvm/java-sun-1.6.0/jre/lib/i386/jli
+# new javac: RPATH=%{_prefix}/lib/jvm/java-sun-1.6.0/jre/lib/i386/jli
 
 # silly rpath: jre/bin/unpack200: RPATH=$ORIGIN
 chrpath -d $RPM_BUILD_ROOT%{jredir}/bin/unpack200
