@@ -110,6 +110,7 @@ Java Development Kit for Linux.
 Summary:	JDBC files for Sun Java
 Summary(pl.UTF-8):	Pliki JDBC dla Javy Suna
 Group:		Development/Languages/Java
+Requires:	%{name}-jre = %{version}-%{release}
 Requires:	%{name}-jre-base = %{version}-%{release}
 %ifarch %{x8664}
 Requires:	libodbc.so.1()(64bit)
@@ -194,6 +195,7 @@ elementów związanych ze środowiskiem X11.
 Summary:	Sun JRE (Java Runtime Environment) for Linux, X11 related parts
 Summary(pl.UTF-8):	Sun JRE - środowisko uruchomieniowe Javy dla Linuksa, części korzystające z X11
 Group:		Development/Languages/Java
+Requires:	%{name}-jre = %{version}-%{release}
 Requires:	%{name}-jre-base = %{version}-%{release}
 Requires:	%{name}-jre-base-X11 = %{version}-%{release}
 Provides:	javaws = %{version}
