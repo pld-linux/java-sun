@@ -805,14 +805,17 @@ fi
 %dir %{jredir}/lib/%{arch}/jli
 %attr(755,root,root) %{jredir}/lib/%{arch}/native_threads
 %attr(755,root,root) %{jredir}/lib/%{arch}/server
-%attr(755,root,root) %{jredir}/lib/%{arch}/jli/libjli.so
-%{jredir}/lib/%{arch}/jvm.cfg
-%attr(755,root,root) %{jredir}/lib/%{arch}/lib[acdfhijmnrvz]*.so
-%exclude %{jredir}/lib/%{arch}/libjsoundalsa.so
 %ifarch %{ix86}
 %attr(755,root,root) %{jredir}/lib/%{arch}/client
 %endif
+%attr(755,root,root) %{jredir}/lib/%{arch}/jli/libjli.so
+%{jredir}/lib/%{arch}/jvm.cfg
+%attr(755,root,root) %{jredir}/lib/%{arch}/lib*.so
 %exclude %{jredir}/lib/%{arch}/libjavaplugin*.so
+%exclude %{jredir}/lib/%{arch}/libJdbcOdbc.so
+%exclude %{jredir}/lib/%{arch}/libjsoundalsa.so
+%exclude %{jredir}/lib/%{arch}/libnpjp2.so
+%exclude %{jredir}/lib/%{arch}/libsplashscreen.so
 
 %{jredir}/lib/deploy
 %{jredir}/lib/desktop
@@ -862,8 +865,6 @@ fi
 %{jredir}/lib/fontconfig.properties.src
 %{jredir}/lib/servicetag
 %attr(755,root,root) %{jredir}/lib/%{arch}/headless/libmawt.so
-%attr(755,root,root) %{jredir}/lib/%{arch}/libsaproc.so
-%attr(755,root,root) %{jredir}/lib/%{arch}/libunpack.so
 %dir %{jredir}/lib/management
 %{jredir}/lib/management/jmxremote.access
 %{jredir}/lib/management/jmxremote.password.template
