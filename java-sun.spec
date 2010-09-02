@@ -801,15 +801,19 @@ fi
 %{jredir}/lib/ext
 
 %dir %{jredir}/lib/%{arch}
-%dir %{jredir}/lib/%{arch}/headless
-%dir %{jredir}/lib/%{arch}/jli
-%attr(755,root,root) %{jredir}/lib/%{arch}/native_threads
-%attr(755,root,root) %{jredir}/lib/%{arch}/server
-%ifarch %{ix86}
-%attr(755,root,root) %{jredir}/lib/%{arch}/client
-%endif
-%attr(755,root,root) %{jredir}/lib/%{arch}/jli/libjli.so
 %{jredir}/lib/%{arch}/jvm.cfg
+%attr(755,root,root) %{jredir}/lib/%{arch}/native_threads
+%dir %{jredir}/lib/%{arch}/server
+%attr(755,root,root) %{jredir}/lib/%{arch}/server/*
+%ifarch %{ix86}
+%dir %{jredir}/lib/%{arch}/client
+%attr(755,root,root) %{jredir}/lib/%{arch}/client/*
+%endif
+%dir %{jredir}/lib/%{arch}/jli
+%attr(755,root,root) %{jredir}/lib/%{arch}/jli/libjli.so
+%dir %{jredir}/lib/%{arch}/headless
+%attr(755,root,root) %{jredir}/lib/%{arch}/headless/libmawt.so
+
 %attr(755,root,root) %{jredir}/lib/%{arch}/lib*.so
 %exclude %{jredir}/lib/%{arch}/libjavaplugin*.so
 %exclude %{jredir}/lib/%{arch}/libJdbcOdbc.so
@@ -864,7 +868,6 @@ fi
 %{jredir}/lib/fontconfig.bfc
 %{jredir}/lib/fontconfig.properties.src
 %{jredir}/lib/servicetag
-%attr(755,root,root) %{jredir}/lib/%{arch}/headless/libmawt.so
 %dir %{jredir}/lib/management
 %{jredir}/lib/management/jmxremote.access
 %{jredir}/lib/management/jmxremote.password.template
