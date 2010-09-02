@@ -2,11 +2,14 @@
 # - 1.6.0.12 problem with RSA II:
 #  - http://forums.sun.com/thread.jspa?threadID=5375681&tstart=2
 #  - http://www.ibm.com/developerworks/forums/thread.jspa?messageID=14252965
+# NOTE
+#  - the packaging is messy, but if you've built package, check that no file is packaged to two diferent packages:
+#	 rpm -qp --qf '[%{FILENAMES} %{name}\n]' *.rpm > fl; awk '{print $1}' fl | sort | uniq -c | grep -v ' 1 '
+#	 unless _duplicate_files_terminate_build macro gets implemented :P
 #
 # Conditional build:
 %bcond_without	tests		# build without tests
-#
-#
+
 %define		_src_ver	6u21
 %define		_dir_ver	%(echo %{version} | sed 's/\\.\\(..\\)$/_\\1/')
 # class data version seen with file(1) that this jvm is able to load
