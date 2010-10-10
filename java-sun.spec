@@ -72,15 +72,15 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_enable_debug_packages 0
 
 %description
-This package symlinks Java SUN development tools provided by
+This package symlinks Sun Java development tools provided by
 java-sun-jdk-base to system-wide directories like /usr/bin, making
-Java SUN default JDK.
+Sun Java the default JDK.
 
 %description -l pl.UTF-8
 Ten pakiet tworzy symboliczne dowiązania do narzędzi programistycznych
-uruchomieniowego Java SUN, dostarczanych przez pakiet
+uruchomieniowego Javy firmy Sun, dostarczanych przez pakiet
 java-sun-jdk-base, w standardowych systemowych ścieżkach takich jak
-/usr/bin, sprawiając tym samym, że Java SUN staje się domyślnym JDK w
+/usr/bin, sprawiając tym samym, że Sun Java staje się domyślnym JDK w
 systemie.
 
 %package appletviewer
@@ -90,7 +90,7 @@ Group:		Development/Languages/Java
 Requires:	%{name}-jdk-base = %{version}-%{release}
 
 %description appletviewer
-This package applet viewer for Sun Java.
+This package contains applet viewer for Sun Java.
 
 %description appletviewer -l pl.UTF-8
 Ten pakiet zawiera przeglądarkę appletów dla Javy Suna.
@@ -166,17 +166,16 @@ Obsoletes:	java(jsse)
 Obsoletes:	java-blackdown-jre
 Obsoletes:	jre
 
-
 %description jre
-This package symlinks Java SUN runtime environment tools provided by
+This package symlinks Sun Java runtime environment tools provided by
 java-sun-jre-base to system-wide directories like /usr/bin, making
-Java SUN default JRE.
+Sun Java the default JRE.
 
 %description jre -l pl.UTF-8
 Ten pakiet tworzy symboliczne dowiązania do narzędzi środowiska
-uruchomieniowego Java SUN, dostarczanych przez pakiet
+uruchomieniowego Javy firmy Sun, dostarczanych przez pakiet
 java-sun-jre-base, w standardowych systemowych ścieżkach takich jak
-/usr/bin, sprawiając tym samym, że Java SUN staje się domyślnym JRE w
+/usr/bin, sprawiając tym samym, że Sun Java staje się domyślnym JRE w
 systemie.
 
 %package jre-base
@@ -205,22 +204,15 @@ Provides:	javaws = %{version}
 Provides:	jre-X11 = %{version}
 
 %description jre-X11
-This package symlinks Java SUN X11 libraries provided by
+This package symlinks Sun Java X11 libraries provided by
 java-sun-jre-base-X11 to system-wide directories like /usr/bin, making
-Java SUN default JRE-X11.
+Sun Java the default JRE-X11.
 
 %description jre-X11 -l pl.UTF-8
-Ten pakiet tworzy symboliczne dowiązania do narzędzi X11 Java SUN,
-dostarczanych przez pakiet java-sun-jre-base-X11, w standardowych
+Ten pakiet tworzy symboliczne dowiązania do narzędzi X11 Javy firmy
+Sun, dostarczanych przez pakiet java-sun-jre-base-X11, w standardowych
 systemowych ścieżkach takich jak /usr/bin, sprawiając tym samym, że
-Java SUN staje się domyślnym JRE-X11 w systemie.
-
-%description jre-X11
-X11-related part of Java Runtime Environment for Linux.
-
-%description jre-X11 -l pl.UTF-8
-Środowisko uruchomieniowe Javy dla Linuksa, część związana ze
-środowiskiem graficznym X11.
+Sun Java staje się domyślnym JRE-X11 w systemie.
 
 %package jre-base-X11
 Summary:	Sun JRE (Java Runtime Environment) for Linux, X11 related parts
@@ -366,7 +358,7 @@ Firefox/Iceweasel 3.x.
 
 %description -n browser-plugin-%{name}-ng -l pl.UTF-8
 Wtyczka Nowej Generacji z obsługą Javy dla przeglądarek WWW. Działa
-tylko z Firefoxem/Iceweaselem 3.x.
+tylko z Firefoksem/Iceweaselem 3.x.
 
 %package sources
 Summary:	JRE standard library sources
