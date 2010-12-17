@@ -1,18 +1,22 @@
+# TODO
+# - unpackaged
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 46.0
 %include	/usr/lib/rpm/macros.java
 Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl.UTF-8):	Sun JDK - środowisko programistyczne Javy dla Linuksa
 Name:		java-sun
-Version:	1.4.2_14
-Release:	0.5
+Version:	1.4.2_19
+Release:	1
 License:	restricted, non-distributable
 Group:		Development/Languages/Java
-# download through forms from http://java.sun.com/j2se/1.4.2/download.html
+# download through forms from http://java.sun.com/javase/downloads/jdk/142/
+# http://java.sun.com/products/archive/j2se/1.4.2_19/index.html
 Source0:	j2sdk-%(echo %{version} | tr . _)-linux-i586.bin
-# NoSource0-md5:	c5f5ae15bc73f17f22c3ddaf45ee45ad
+# NoSource0-md5:	14d86c12cd312ad635232390bf28b9a8
 # Other Downloads at http://java.sun.com/j2se/1.4.2/download.html
-Source1:	jce_policy-1_4_2.zip
+# http://java.sun.com/products/jce/index-14.html
+Source1:	ftp://ftp.su.se/pub/buildit/source-archive/jce_policy-1_4_2.zip
 # NoSource1-md5:	ff961c5f5326191c5ac2e4624d756f7e
 Source2:	Test.java
 NoSource:	0
@@ -222,7 +226,8 @@ mv -f jre/lib/i386/client/Xusage.txt jre/Xusage.client
 mv -f jre/lib/i386/server/Xusage.txt jre/Xusage.server
 mv -f jre/lib/*.txt jre
 mv jre/lib/font.properties{,.orig}
-mv jre/lib/font.properties{.Redhat6.1,}
+mv jre/lib/font.properties{.Redhat8.0,}
+rm -f jre/lib/font.properties.*
 
 %build
 ./bin/javac Test.java
@@ -465,7 +470,7 @@ fi
 %{jredir}/javaws/resources
 %attr(755,root,root) %{jredir}/javaws/javaws
 %attr(755,root,root) %{jredir}/javaws/javawsbin
-%{jredir}/javaws/cacerts
+#%{jredir}/javaws/cacerts
 %{jredir}/javaws/*.gif
 %{jredir}/javaws/*.jar
 %{jredir}/javaws/*.policy
