@@ -9,23 +9,22 @@
 #
 # Conditional build:
 %bcond_without	tests		# build without tests
-#
-#
-%define		_src_ver	6u20
+
+%define		_src_ver	6u24
 %define		_dir_ver	%(echo %{version} | sed 's/\\.\\(..\\)$/_\\1/')
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 50.0
 Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl.UTF-8):	Sun JDK - środowisko programistyczne Javy dla Linuksa
 Name:		java-sun
-Version:	1.6.0.20
+Version:	1.6.0.24
 Release:	1
 License:	restricted, distributable
 Group:		Development/Languages/Java
 Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-i586.bin
-# Source0-md5:	37afae8ef2481b85b4c9b0356c5d7b40
+# Source0-md5:	3acbe2368cfb5149b04f980184331e33
 Source1:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-amd64.bin
-# Source1-md5:	e0d03306f57ce1b49d972a21cbb920a0
+# Source1-md5:	51a388560b0125456d982cdab1ad4fdd
 Source2:	Test.java
 Source3:	Test.class
 Patch0:		%{name}-desktop.patch
@@ -39,6 +38,7 @@ Requires:	java-shared
 Requires:	jpackage-utils >= 0:1.6.6-14
 Provides:	j2sdk = %{version}
 Provides:	jdk = %{version}
+Provides:	jdk(%{name})
 Obsoletes:	blackdown-java-sdk
 Obsoletes:	ibm-java
 Obsoletes:	java-blackdown
@@ -65,7 +65,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_noautoprov	'\\.\\./.*' '/export/.*'
 # these with SUNWprivate.* are found as required, but not provided
 # the rest is because -jdbc wants unixODBC-devel(?)
-%define		_noautoreq	'libjava.so(SUNWprivate_1.1)' 'libnet.so(SUNWprivate_1.1)' 'libverify.so(SUNWprivate_1.1)' 'libodbcinst.so' 'libodbc.so' 'libjava_crw_demo_g\.so.*'
+%define		_noautoreq	'libjava.so(SUNWprivate_1.1)' 'libnet.so(SUNWprivate_1.1)' 'libverify.so(SUNWprivate_1.1)' 'libodbcinst.so' 'libodbc.so' 'libjava_crw_demo_g\.so.*' 'libmawt.so' 'java(ClassDataVersion)'
 # don't depend on other JRE/JDK installed on build host
 %define		_noautoreqdep	libjava.so libjvm.so
 
@@ -118,11 +118,22 @@ Group:		Development/Languages/Java
 Requires:	%{name}-tools = %{version}-%{release}
 Requires:	jpackage-utils >= 0:1.6.6-14
 Requires:	rpm-whiteout >= 1.8
+Suggests:	%{name}-jre-X11
 Provides:	j2re = %{version}
 Provides:	jaas = %{version}
 Provides:	jaf = 1.1.1
 Provides:	java
 Provides:	java(ClassDataVersion) = %{_classdataversion}
+Provides:	java(jaas) = %{version}
+Provides:	java(jaf) = 1.1.1
+Provides:	java(jaxp) = 1.3
+Provides:	java(jaxp_parser_impl)
+Provides:	java(jce) = %{version}
+Provides:	java(jdbc-stdext) = %{version}
+Provides:	java(jdbc-stdext) = 3.0
+Provides:	java(jmx) = 1.4
+Provides:	java(jndi) = %{version}
+Provides:	java(jsse) = %{version}
 Provides:	java1.4
 Provides:	jaxp = 1.3
 Provides:	jaxp_parser_impl
@@ -136,9 +147,19 @@ Provides:	jndi-dns = %{version}
 Provides:	jndi-ldap = %{version}
 Provides:	jndi-rmi = %{version}
 Provides:	jre = %{version}
+Provides:	jre(%{name})
 Provides:	jsse = %{version}
 Provides:	xml-commons-apis
 Obsoletes:	jaas
+Obsoletes:	java(jaas)
+Obsoletes:	java(jaf)
+Obsoletes:	java(jaxp)
+Obsoletes:	java(jaxp_parser_impl)
+Obsoletes:	java(jce)
+Obsoletes:	java(jdbc-stdext)
+Obsoletes:	java(jmx)
+Obsoletes:	java(jndi)
+Obsoletes:	java(jsse)
 Obsoletes:	java-blackdown-jre
 Obsoletes:	jaxp
 Obsoletes:	jce
@@ -235,9 +256,7 @@ Javy(TM), takie jak rmic czy jar.
 Summary:	JDK demonstration programs
 Summary(pl.UTF-8):	Programy demonstracyjne do JDK
 Group:		Development/Languages/Java
-Requires:	%{name}-jre = %{version}-%{release}
-Obsoletes:	java-blackdown-demos
-Obsoletes:	jdk-demos
+Requires:	jre
 
 %description demos
 JDK demonstration programs.
@@ -311,19 +330,18 @@ Firefox/Iceweasel 3.x.
 
 %description -n browser-plugin-%{name}-ng -l pl.UTF-8
 Wtyczka Nowej Generacji z obsługą Javy dla przeglądarek WWW. Działa
-tylko z Firefoxem/Iceweaselem 3.x.
+tylko z Firefoksem/Iceweaselem 3.x.
 
 %package sources
-Summary:	JDK sources
-Summary(pl.UTF-8):	Źródła JDK
+Summary:	JRE standard library sources
+Summary(pl.UTF-8):	Źródła standardowej biblioteki JRE
 Group:		Development/Languages/Java
-Requires:	%{name}-jre = %{version}-%{release}
 
 %description sources
-Sources for package JDK.
+Sources for the standard Java library.
 
 %description sources -l pl.UTF-8
-Źródła dla pakietu JDK.
+Źródła standardowej bilioteki Java.
 
 %prep
 %setup -q -T -c -n jdk%{_dir_ver}
@@ -379,11 +397,11 @@ cp -a bin sample demo include lib $RPM_BUILD_ROOT%{javadir}
 install man/man1/* $RPM_BUILD_ROOT%{_mandir}/man1
 install man/ja/man1/* $RPM_BUILD_ROOT%{_mandir}/ja/man1
 
-if test -f jre/lib/i386/client/Xusage.txt; then
-	mv -f jre/lib/i386/client/Xusage.txt jre/Xusage.client
+if test -f jre/lib/%{arch}/client/Xusage.txt; then
+	mv -f jre/lib/%{arch}/client/Xusage.txt jre/Xusage.client
 fi
-if test -f jre/lib/i386/server/Xusage.txt; then
-	mv -f jre/lib/i386/server/Xusage.txt jre/Xusage.server
+if test -f jre/lib/%{arch}/server/Xusage.txt; then
+	mv -f jre/lib/%{arch}/server/Xusage.txt jre/Xusage.server
 fi
 if test -f jre/lib/*.txt; then
 	mv -f jre/lib/*.txt jre
@@ -474,7 +492,9 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/{ko.UTF-8,zh.GBK,zh_TW.BIG5}
 cp -a src.zip $RPM_BUILD_ROOT%{_prefix}/src/%{name}-sources
 
 ln -s %{javareldir} $RPM_BUILD_ROOT%{_jvmdir}/java
+ln -s %{javareldir} $RPM_BUILD_ROOT%{_jvmdir}/java-sun
 ln -s %{jrereldir} $RPM_BUILD_ROOT%{_jvmdir}/jre
+ln -s %{jrereldir} $RPM_BUILD_ROOT%{_jvmdir}/java-sun-jre
 ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_jvmjardir}/java
 ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_jvmjardir}/jre
 ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_jvmjardir}/jsse
@@ -582,47 +602,6 @@ fi
 %attr(755,root,root) %{_bindir}/wsgen
 %attr(755,root,root) %{_bindir}/wsimport
 %attr(755,root,root) %{_bindir}/xjc
-%attr(755,root,root) %{javadir}/bin/HtmlConverter
-%ifarch %{ix86}
-%attr(755,root,root) %{javadir}/bin/java-rmi.cgi
-%endif
-%attr(755,root,root) %{javadir}/bin/apt
-%attr(755,root,root) %{javadir}/bin/extcheck
-%attr(755,root,root) %{javadir}/bin/idlj
-%attr(755,root,root) %{javadir}/bin/jarsigner
-%attr(755,root,root) %{javadir}/bin/javac
-%attr(755,root,root) %{javadir}/bin/javadoc
-%attr(755,root,root) %{javadir}/bin/javah
-%attr(755,root,root) %{javadir}/bin/javap
-%attr(755,root,root) %{javadir}/bin/jconsole
-%attr(755,root,root) %{javadir}/bin/jdb
-%attr(755,root,root) %{javadir}/bin/jhat
-%attr(755,root,root) %{javadir}/bin/jinfo
-%attr(755,root,root) %{javadir}/bin/jmap
-%attr(755,root,root) %{javadir}/bin/jps
-%attr(755,root,root) %{javadir}/bin/jrunscript
-%attr(755,root,root) %{javadir}/bin/jsadebugd
-%attr(755,root,root) %{javadir}/bin/jstack
-%attr(755,root,root) %{javadir}/bin/jstat
-%attr(755,root,root) %{javadir}/bin/jstatd
-%attr(755,root,root) %{javadir}/bin/keytool
-%attr(755,root,root) %{javadir}/bin/native2ascii
-%attr(755,root,root) %{javadir}/bin/orbd
-%attr(755,root,root) %{javadir}/bin/rmid
-%attr(755,root,root) %{javadir}/bin/rmiregistry
-%attr(755,root,root) %{javadir}/bin/schemagen
-%attr(755,root,root) %{javadir}/bin/serialver
-%attr(755,root,root) %{javadir}/bin/servertool
-%attr(755,root,root) %{javadir}/bin/tnameserv
-%attr(755,root,root) %{javadir}/bin/wsgen
-%attr(755,root,root) %{javadir}/bin/wsimport
-%attr(755,root,root) %{javadir}/bin/xjc
-%{javadir}/include
-%dir %{javadir}/lib
-%attr(755,root,root) %{javadir}/lib/jexec
-%{javadir}/lib/ct.sym
-%{javadir}/lib/*.jar
-%{javadir}/lib/*.idl
 %{_mandir}/man1/apt.1*
 %{_mandir}/man1/extcheck.1*
 %{_mandir}/man1/idlj.1*
@@ -674,6 +653,50 @@ fi
 %lang(ja) %{_mandir}/ja/man1/wsimport.1*
 %lang(ja) %{_mandir}/ja/man1/xjc.1*
 
+#files jdk-base
+%{_jvmdir}/%{name}
+%attr(755,root,root) %{javadir}/bin/HtmlConverter
+%ifarch %{ix86}
+%attr(755,root,root) %{javadir}/bin/java-rmi.cgi
+%endif
+%attr(755,root,root) %{javadir}/bin/apt
+%attr(755,root,root) %{javadir}/bin/extcheck
+%attr(755,root,root) %{javadir}/bin/idlj
+%attr(755,root,root) %{javadir}/bin/jarsigner
+%attr(755,root,root) %{javadir}/bin/javac
+%attr(755,root,root) %{javadir}/bin/javadoc
+%attr(755,root,root) %{javadir}/bin/javah
+%attr(755,root,root) %{javadir}/bin/javap
+%attr(755,root,root) %{javadir}/bin/jconsole
+%attr(755,root,root) %{javadir}/bin/jdb
+%attr(755,root,root) %{javadir}/bin/jhat
+%attr(755,root,root) %{javadir}/bin/jinfo
+%attr(755,root,root) %{javadir}/bin/jmap
+%attr(755,root,root) %{javadir}/bin/jps
+%attr(755,root,root) %{javadir}/bin/jrunscript
+%attr(755,root,root) %{javadir}/bin/jsadebugd
+%attr(755,root,root) %{javadir}/bin/jstack
+%attr(755,root,root) %{javadir}/bin/jstat
+%attr(755,root,root) %{javadir}/bin/jstatd
+%attr(755,root,root) %{javadir}/bin/keytool
+%attr(755,root,root) %{javadir}/bin/native2ascii
+%attr(755,root,root) %{javadir}/bin/orbd
+%attr(755,root,root) %{javadir}/bin/rmid
+%attr(755,root,root) %{javadir}/bin/rmiregistry
+%attr(755,root,root) %{javadir}/bin/schemagen
+%attr(755,root,root) %{javadir}/bin/serialver
+%attr(755,root,root) %{javadir}/bin/servertool
+%attr(755,root,root) %{javadir}/bin/tnameserv
+%attr(755,root,root) %{javadir}/bin/wsgen
+%attr(755,root,root) %{javadir}/bin/wsimport
+%attr(755,root,root) %{javadir}/bin/xjc
+%{javadir}/include
+%dir %{javadir}/lib
+%attr(755,root,root) %{javadir}/lib/jexec
+%{javadir}/lib/ct.sym
+%{javadir}/lib/*.jar
+%{javadir}/lib/*.idl
+
 %files appletviewer
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/appletviewer
@@ -687,6 +710,7 @@ fi
 
 %files jre
 %defattr(644,root,root,755)
+%doc jre/Xusage*
 %doc jre/{COPYRIGHT,LICENSE,README,*.txt}
 %doc jre/Welcome.html
 %{_jvmdir}/jre
@@ -700,19 +724,39 @@ fi
 %attr(755,root,root) %{_bindir}/tnameserv
 %attr(755,root,root) %{_bindir}/pack200
 %attr(755,root,root) %{_bindir}/unpack200
-%attr(755,root,root) %{jredir}/bin/pack200
-%attr(755,root,root) %{jredir}/bin/unpack200
-%attr(755,root,root) %{javadir}/bin/pack200
-%attr(755,root,root) %{javadir}/bin/unpack200
+%{_mandir}/man1/java.1*
+%{_mandir}/man1/keytool.1*
+%{_mandir}/man1/orbd.1*
+%{_mandir}/man1/rmid.1*
+%{_mandir}/man1/servertool.1*
+%{_mandir}/man1/tnameserv.1*
+%{_mandir}/man1/*pack200.1*
+%lang(ja) %{_mandir}/ja/man1/*pack200.1*
+%lang(ja) %{_mandir}/ja/man1/java.1*
+%lang(ja) %{_mandir}/ja/man1/keytool.1*
+%lang(ja) %{_mandir}/ja/man1/orbd.1*
+%lang(ja) %{_mandir}/ja/man1/rmid.1*
+%lang(ja) %{_mandir}/ja/man1/servertool.1*
+%lang(ja) %{_mandir}/ja/man1/tnameserv.1*
+
+# files jre-base
+%{_jvmdir}/%{name}-jre
 %dir %{javadir}
 %dir %{javadir}/bin
+%attr(755,root,root) %{javadir}/bin/pack200
+%attr(755,root,root) %{javadir}/bin/unpack200
 %attr(755,root,root) %{javadir}/bin/java
+%attr(755,root,root) %{javadir}/bin/jar
+%attr(755,root,root) %{javadir}/bin/rmic
 %dir %{jredir}
 %dir %{jredir}/bin
+%attr(755,root,root) %{jredir}/bin/pack200
+%attr(755,root,root) %{jredir}/bin/unpack200
 %attr(755,root,root) %{jredir}/bin/java
 %attr(755,root,root) %{jredir}/bin/keytool
 %attr(755,root,root) %{jredir}/bin/orbd
 %attr(755,root,root) %{jredir}/bin/rmid
+%attr(755,root,root) %{jredir}/bin/rmiregistry
 %attr(755,root,root) %{jredir}/bin/servertool
 %attr(755,root,root) %{jredir}/bin/tnameserv
 %dir %{jredir}/lib
@@ -722,19 +766,25 @@ fi
 %{jredir}/lib/ext
 
 %dir %{jredir}/lib/%{arch}
-%dir %{jredir}/lib/%{arch}/headless
-%dir %{jredir}/lib/%{arch}/jli
-%attr(755,root,root) %{jredir}/lib/%{arch}/native_threads
-%attr(755,root,root) %{jredir}/lib/%{arch}/server
-%attr(755,root,root) %{jredir}/lib/%{arch}/jli/libjli.so
 %{jredir}/lib/%{arch}/jvm.cfg
-%attr(755,root,root) %{jredir}/lib/%{arch}/lib[acdfhijmnrvz]*.so
-%exclude %{jredir}/lib/%{arch}/libjsoundalsa.so
+%attr(755,root,root) %{jredir}/lib/%{arch}/native_threads
+%dir %{jredir}/lib/%{arch}/server
+%attr(755,root,root) %{jredir}/lib/%{arch}/server/*
+%dir %{jredir}/lib/%{arch}/jli
+%attr(755,root,root) %{jredir}/lib/%{arch}/jli/libjli.so
+%dir %{jredir}/lib/%{arch}/headless
+%attr(755,root,root) %{jredir}/lib/%{arch}/headless/libmawt.so
 %ifarch %{ix86}
-%attr(755,root,root) %{jredir}/lib/%{arch}/client
+%dir %{jredir}/lib/%{arch}/client
+%attr(755,root,root) %{jredir}/lib/%{arch}/client/*
 %endif
-%attr(755,root,root) %{jredir}/lib/%{arch}/libsplashscreen.so
+
+%attr(755,root,root) %{jredir}/lib/%{arch}/lib*.so
 %exclude %{jredir}/lib/%{arch}/libjavaplugin*.so
+%exclude %{jredir}/lib/%{arch}/libJdbcOdbc.so
+%exclude %{jredir}/lib/%{arch}/libjsoundalsa.so
+%exclude %{jredir}/lib/%{arch}/libnpjp2.so
+%exclude %{jredir}/lib/%{arch}/libsplashscreen.so
 
 %{jredir}/lib/deploy
 %{jredir}/lib/desktop
@@ -778,40 +828,45 @@ fi
 %{jredir}/lib/fontconfig.Sun.properties.src
 %{jredir}/lib/fontconfig.Turbo.bfc
 %{jredir}/lib/fontconfig.Turbo.properties.src
+%{jredir}/lib/fontconfig.Ubuntu.bfc
+%{jredir}/lib/fontconfig.Ubuntu.properties.src
 %{jredir}/lib/fontconfig.bfc
 %{jredir}/lib/fontconfig.properties.src
 %{jredir}/lib/servicetag
-%attr(755,root,root) %{jredir}/lib/%{arch}/headless/libmawt.so
-%attr(755,root,root) %{jredir}/lib/%{arch}/libsaproc.so
-%attr(755,root,root) %{jredir}/lib/%{arch}/libunpack.so
 %dir %{jredir}/lib/management
 %{jredir}/lib/management/jmxremote.access
 %{jredir}/lib/management/jmxremote.password.template
 %{jredir}/lib/management/management.properties
 %{jredir}/lib/management/snmp.acl.template
-%{_mandir}/man1/java.1*
-%{_mandir}/man1/keytool.1*
-%{_mandir}/man1/orbd.1*
-%{_mandir}/man1/rmid.1*
-%{_mandir}/man1/servertool.1*
-%{_mandir}/man1/tnameserv.1*
-%{_mandir}/man1/*pack200.1*
-%lang(ja) %{_mandir}/ja/man1/*pack200.1*
-%lang(ja) %{_mandir}/ja/man1/java.1*
-%lang(ja) %{_mandir}/ja/man1/keytool.1*
-%lang(ja) %{_mandir}/ja/man1/orbd.1*
-%lang(ja) %{_mandir}/ja/man1/rmid.1*
-%lang(ja) %{_mandir}/ja/man1/servertool.1*
-%lang(ja) %{_mandir}/ja/man1/tnameserv.1*
 
 %files jre-X11
 %defattr(644,root,root,755)
-%ifarch %{ix86}
-%doc jre/Xusage*
-%endif
 %attr(755,root,root) %{_bindir}/java_vm
 %attr(755,root,root) %{_bindir}/javaws
 %attr(755,root,root) %{_bindir}/jcontrol
+%{_desktopdir}/sun_java.desktop
+%{_pixmapsdir}/sun_java.png
+%attr(755,root,root) %{_bindir}/policytool
+%attr(755,root,root) %{jredir}/bin/policytool
+%attr(755,root,root) %{javadir}/bin/policytool
+%{_mandir}/man1/policytool.1*
+%lang(ja) %{_mandir}/ja/man1/policytool.1*
+%{_mandir}/man1/javaws.1*
+%ifarch %{ix86}
+%lang(ja) %{_mandir}/ja/man1/javaws.1*
+%endif
+%lang(de) %{_datadir}/locale/de/LC_MESSAGES/sunw_java_plugin.mo
+%lang(es) %{_datadir}/locale/es/LC_MESSAGES/sunw_java_plugin.mo
+%lang(fr) %{_datadir}/locale/fr/LC_MESSAGES/sunw_java_plugin.mo
+%lang(it) %{_datadir}/locale/it/LC_MESSAGES/sunw_java_plugin.mo
+%lang(ja) %{_datadir}/locale/ja/LC_MESSAGES/sunw_java_plugin.mo
+%lang(ko) %{_datadir}/locale/ko/LC_MESSAGES/sunw_java_plugin.mo
+%lang(sv) %{_datadir}/locale/sv/LC_MESSAGES/sunw_java_plugin.mo
+%lang(zh_HK) %{_datadir}/locale/zh_HK/LC_MESSAGES/sunw_java_plugin.mo
+%lang(zh_CN) %{_datadir}/locale/zh_CN/LC_MESSAGES/sunw_java_plugin.mo
+%lang(zh_TW) %{_datadir}/locale/zh_TW/LC_MESSAGES/sunw_java_plugin.mo
+
+# files jre-base-X11
 %attr(755,root,root) %{jredir}/bin/ControlPanel
 %attr(755,root,root) %{jredir}/bin/java_vm
 %attr(755,root,root) %{jredir}/bin/javaws
@@ -820,13 +875,6 @@ fi
 %attr(755,root,root) %{javadir}/bin/java_vm
 %attr(755,root,root) %{javadir}/bin/javaws
 %attr(755,root,root) %{javadir}/bin/jcontrol
-%{_desktopdir}/sun_java.desktop
-%{_pixmapsdir}/sun_java.png
-%attr(755,root,root) %{_bindir}/policytool
-%attr(755,root,root) %{jredir}/bin/policytool
-%attr(755,root,root) %{javadir}/bin/policytool
-%{_mandir}/man1/policytool.1*
-%lang(ja) %{_mandir}/ja/man1/policytool.1*
 %{jredir}/lib/fonts
 %{jredir}/lib/oblique-fonts
 %dir %{jredir}/lib/%{arch}/xawt
@@ -837,32 +885,18 @@ fi
 %attr(755,root,root) %{jredir}/lib/%{arch}/xawt/libmawt.so
 %dir %{jredir}/lib/locale
 %lang(de) %{jredir}/lib/locale/de
-%lang(de) %{_datadir}/locale/de/LC_MESSAGES/sunw_java_plugin.mo
 %lang(es) %{jredir}/lib/locale/es
-%lang(es) %{_datadir}/locale/es/LC_MESSAGES/sunw_java_plugin.mo
 %lang(fr) %{jredir}/lib/locale/fr
-%lang(fr) %{_datadir}/locale/fr/LC_MESSAGES/sunw_java_plugin.mo
 %lang(it) %{jredir}/lib/locale/it
-%lang(it) %{_datadir}/locale/it/LC_MESSAGES/sunw_java_plugin.mo
 %lang(ja) %{jredir}/lib/locale/ja
-%lang(ja) %{_datadir}/locale/ja/LC_MESSAGES/sunw_java_plugin.mo
 %lang(ko) %{jredir}/lib/locale/ko*
-%lang(ko) %{_datadir}/locale/ko/LC_MESSAGES/sunw_java_plugin.mo
 %lang(sv) %{jredir}/lib/locale/sv
-%lang(sv) %{_datadir}/locale/sv/LC_MESSAGES/sunw_java_plugin.mo
 %lang(zh_CN) %{jredir}/lib/locale/zh
 %lang(zh_CN) %{jredir}/lib/locale/zh.*
 %lang(zh_HK) %{jredir}/lib/locale/zh_HK*
-%lang(zh_HK) %{_datadir}/locale/zh_HK/LC_MESSAGES/sunw_java_plugin.mo
 %lang(zh_TW) %{jredir}/lib/locale/zh_TW*
-%lang(zh_CN) %{_datadir}/locale/zh_CN/LC_MESSAGES/sunw_java_plugin.mo
-%lang(zh_TW) %{_datadir}/locale/zh_TW/LC_MESSAGES/sunw_java_plugin.mo
 %dir %{jredir}/javaws
 %attr(755,root,root) %{jredir}/javaws/javaws
-%{_mandir}/man1/javaws.1*
-%ifarch %{ix86}
-%lang(ja) %{_mandir}/ja/man1/javaws.1*
-%endif
 
 %files jre-alsa
 %defattr(644,root,root,755)
@@ -902,9 +936,6 @@ fi
 %attr(755,root,root) %{_bindir}/jar
 %attr(755,root,root) %{_bindir}/rmic
 %attr(755,root,root) %{_bindir}/rmiregistry
-%attr(755,root,root) %{jredir}/bin/rmiregistry
-%attr(755,root,root) %{javadir}/bin/jar
-%attr(755,root,root) %{javadir}/bin/rmic
 %{_mandir}/man1/jar.1*
 %{_mandir}/man1/rmic.1*
 %{_mandir}/man1/rmiregistry.1*
