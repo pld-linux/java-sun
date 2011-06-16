@@ -10,21 +10,21 @@
 # Conditional build:
 %bcond_without	tests		# build without tests
 
-%define		_src_ver	6u25
+%define		_src_ver	6u26
 %define		_dir_ver	%(echo %{version} | sed 's/\\.\\(..\\)$/_\\1/')
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 50.0
 Summary:	Sun JDK (Java Development Kit) for Linux
 Summary(pl.UTF-8):	Sun JDK - środowisko programistyczne Javy dla Linuksa
 Name:		java-sun
-Version:	1.6.0.25
-Release:	2
+Version:	1.6.0.26
+Release:	1
 License:	restricted, distributable
 Group:		Development/Languages/Java
 Source0:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-i586.bin
-# Source0-md5:	f11b093c0f646dd2bf348cadd388ad1f
+# Source0-md5:	d54e58b69e4db80f267435be679a66b9
 Source1:	http://download.java.net/dlj/binaries/jdk-%{_src_ver}-dlj-linux-amd64.bin
-# Source1-md5:	bc239ea3f5e2ef067fb4eee79afeab9f
+# Source1-md5:	43f4e9699afce82d3ebae841c59d02fb
 Source2:	Test.java
 Source3:	Test.class
 Patch0:		%{name}-desktop.patch
