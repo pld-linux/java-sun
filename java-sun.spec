@@ -770,14 +770,14 @@ fi
 %attr(755,root,root) %{jredir}/lib/%{arch}/native_threads
 %dir %{jredir}/lib/%{arch}/server
 %attr(755,root,root) %{jredir}/lib/%{arch}/server/*
-%dir %{jredir}/lib/%{arch}/jli
-%attr(755,root,root) %{jredir}/lib/%{arch}/jli/libjli.so
-%dir %{jredir}/lib/%{arch}/headless
-%attr(755,root,root) %{jredir}/lib/%{arch}/headless/libmawt.so
 %ifarch %{ix86}
 %dir %{jredir}/lib/%{arch}/client
 %attr(755,root,root) %{jredir}/lib/%{arch}/client/*
 %endif
+%dir %{jredir}/lib/%{arch}/jli
+%attr(755,root,root) %{jredir}/lib/%{arch}/jli/libjli.so
+%dir %{jredir}/lib/%{arch}/headless
+%attr(755,root,root) %{jredir}/lib/%{arch}/headless/libmawt.so
 
 %attr(755,root,root) %{jredir}/lib/%{arch}/lib*.so
 %exclude %{jredir}/lib/%{arch}/libjavaplugin*.so
