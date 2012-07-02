@@ -1,0 +1,2 @@
+- release 2
+- symlink /usr/include/jdk -> /usr/lib/jdk%version/include
