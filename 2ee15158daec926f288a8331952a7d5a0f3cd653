@@ -1,0 +1,2 @@
+- moving provides: java, jar to subpackage jre
+- addning provides: java1.3 to subpackage jre
