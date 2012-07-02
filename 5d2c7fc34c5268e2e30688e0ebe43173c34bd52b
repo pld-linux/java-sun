@@ -1,0 +1,2 @@
+- Update to 1.3.1_01 (1.3.1 is no longer on http://java.sun.com/linux/).
+- Changed the method of unpacking the archive. Still not great.
