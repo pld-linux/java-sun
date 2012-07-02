@@ -1,0 +1,3 @@
+- %post jre -> %post -n jre
+- also moved %post command to script (not -p, because rpm trats following -n as for package name)
+- release 2
