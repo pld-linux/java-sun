@@ -12,25 +12,27 @@
 # Conditional build:
 %bcond_without	tests		# build without tests
 
-%define		src_ver	6u33
-%define		sub_ver	b03
+%define		src_ver	6u34
+%define		sub_ver	b04
 %define		dir_ver	%(echo %{version} | sed 's/\\.\\(..\\)$/_\\1/')
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 50.0
 Summary:	Oracle JDK (Java Development Kit) for Linux
 Summary(pl.UTF-8):	Oracle JDK - środowisko programistyczne Javy dla Linuksa
 Name:		java-sun
-Version:	1.6.0.33
+Version:	1.6.0.34
 Release:	1
 License:	restricted, distributable
 # http://www.oracle.com/technetwork/java/javase/terms/license/index.html
 # See "LICENSE TO DISTRIBUTE SOFTWARE" section, which states you can
 # redistribute in unmodified form.
 Group:		Development/Languages/Java
+# Download URL (requires JavaScript and interactive license agreement):
+# http://www.oracle.com/technetwork/java/javase/downloads/jdk6-downloads-1637591.html
 Source0:	http://download.oracle.com/otn-pub/java/jdk/%{src_ver}-%{sub_ver}/jdk-%{src_ver}-linux-i586.bin
-# Source0-md5:	276d31fabcc1f10b401c1e8b7680e460
+# Source0-md5:	60f304b5ecae14dab5ab0b0144b9c012
 Source1:	http://download.oracle.com/otn-pub/java/jdk/%{src_ver}-%{sub_ver}/jdk-%{src_ver}-linux-x64.bin
-# Source1-md5:	b6764210dc436d43b5bb8caa1cc1f461
+# Source1-md5:	96278470b5c981dfd3b9f3308e5057f9
 Source2:	Test.java
 Source3:	Test.class
 Patch0:		%{name}-desktop.patch
