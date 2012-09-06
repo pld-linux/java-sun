@@ -1,31 +1,38 @@
 # TODO:
-# - better way to choose preferred jvm (currently the symlinks are hardcoded)
-#   Maybe a package containing only the symlinks?
-# - dep loop (can be solved by moving shared libs to java-sun-libs):
-#   java-sun-jre>java-sun-tools
 # - 1.6.0.12 problem with RSA II:
 #  - http://forums.sun.com/thread.jspa?threadID=5375681&tstart=2
 #  - http://www.ibm.com/developerworks/forums/thread.jspa?messageID=14252965
+# NOTE
+#  - the packaging is messy, but if you've built package, check that no file is packaged to two diferent packages:
+#	 rpm -qp --qf '[%{FILENAMES} %{name}\n]' *.rpm > fl; awk '{print $1}' fl | sort | uniq -c | grep -v ' 1 '
+#	 unless _duplicate_files_terminate_build macro gets implemented :P
+#  - early access packages downloadable: http://jdk6.java.net/download.html
+#  - sample/demo available as separate download, licensesd with Oracle BSD license
 #
 # Conditional build:
 %bcond_without	tests		# build without tests
 
-%define		_src_ver	6u31
-%define		_sub_ver	b04
-%define		_dir_ver	%(echo %{version} | sed 's/\\.\\(..\\)$/_\\1/')
+%define		src_ver	6u35
+%define		sub_ver	b04
+%define		dir_ver	%(echo %{version} | sed 's/\\.\\(..\\)$/_\\1/')
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 50.0
 Summary:	Oracle JDK (Java Development Kit) for Linux
 Summary(pl.UTF-8):	Oracle JDK - środowisko programistyczne Javy dla Linuksa
 Name:		java-sun
-Version:	1.6.0.31
-Release:	3
+Version:	1.6.0.35
+Release:	1
 License:	restricted, distributable
+# http://www.oracle.com/technetwork/java/javase/terms/license/index.html
+# See "LICENSE TO DISTRIBUTE SOFTWARE" section, which states you can
+# redistribute in unmodified form.
 Group:		Development/Languages/Java
-Source0:	http://download.oracle.com/otn-pub/java/jdk/%{_src_ver}-%{_sub_ver}/jdk-%{_src_ver}-linux-i586.bin
-# Source0-md5:	9e4246fc7a6c0759b8a484ff5e820112
-Source1:	http://download.oracle.com/otn-pub/java/jdk/%{_src_ver}-%{_sub_ver}/jdk-%{_src_ver}-linux-x64.bin
-# Source1-md5:	2f74dbbee4142b7366c93b115f914fff
+# Download URL (requires JavaScript and interactive license agreement):
+# http://www.oracle.com/technetwork/java/javase/downloads/index.html
+Source0:	http://download.oracle.com/otn-pub/java/jdk/%{src_ver}-%{sub_ver}/jdk-%{src_ver}-linux-i586.bin
+# Source0-md5:	592b60fcc11cbd6d323a3f357327d701
+Source1:	http://download.oracle.com/otn-pub/java/jdk/%{src_ver}-%{sub_ver}/jdk-%{src_ver}-linux-x64.bin
+# Source1-md5:	3876e012629977ce08054347cf3bfdb0
 Source2:	Test.java
 Source3:	Test.class
 Patch0:		%{name}-desktop.patch
@@ -344,7 +351,7 @@ Sources for the standard Java library.
 Źródła standardowej bilioteki Java.
 
 %prep
-%setup -q -T -c -n jdk%{_dir_ver}
+%setup -q -T -c -n jdk%{dir_ver}
 cd ..
 %ifarch %{ix86}
 %{__unzip} -q %{SOURCE0} || :
@@ -393,9 +400,9 @@ install -d $RPM_BUILD_ROOT{%{jredir},%{javadir},%{jvmjardir},%{_javadir},%{_bind
 	$RPM_BUILD_ROOT{%{_mandir}/{,ja/}man1,%{_prefix}/src/%{name}-sources} \
 	$RPM_BUILD_ROOT{%{_desktopdir},%{_pixmapsdir},%{_browserpluginsdir}}
 
-cp -a bin sample demo include lib $RPM_BUILD_ROOT%{javadir}
-install man/man1/* $RPM_BUILD_ROOT%{_mandir}/man1
-install man/ja/man1/* $RPM_BUILD_ROOT%{_mandir}/ja/man1
+cp -a bin include lib $RPM_BUILD_ROOT%{javadir}
+cp -p man/man1/* $RPM_BUILD_ROOT%{_mandir}/man1
+cp -p man/ja/man1/* $RPM_BUILD_ROOT%{_mandir}/ja/man1
 
 if test -f jre/lib/%{arch}/client/Xusage.txt; then
 	mv -f jre/lib/%{arch}/client/Xusage.txt jre/Xusage.client
@@ -505,7 +512,7 @@ ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_jvmjardir}/jsse
 #
 # for example:
 # old javac: RPATH=$ORIGIN/../lib/i386/jli:$ORIGIN/../jre/lib/i386/jli
-# new javac: RPATH=/usr/lib/jvm/java-sun-1.6.0/jre/lib/i386/jli
+# new javac: RPATH=%{_prefix}/lib/jvm/java-sun-1.6.0/jre/lib/i386/jli
 
 # silly rpath: jre/bin/unpack200: RPATH=$ORIGIN
 chrpath -d $RPM_BUILD_ROOT%{jredir}/bin/unpack200
@@ -910,6 +917,7 @@ fi
 %lang(ja) %{_mandir}/ja/man1/jvisualvm.1*
 %{javadir}/lib/visualvm
 
+%if 0
 %files demos
 %defattr(644,root,root,755)
 %dir %{javadir}/demo
@@ -930,6 +938,7 @@ fi
 %{javadir}/demo/applets.html
 %{javadir}/demo/scripting
 %{javadir}/sample
+%endif
 
 %files tools
 %defattr(644,root,root,755)
