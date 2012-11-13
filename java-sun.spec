@@ -12,6 +12,8 @@
 # Conditional build:
 %bcond_without	tests		# build without tests
 
+# disable file duplicate packaging error
+%define		_duplicate_files_terminate_build   0
 %define		src_ver	6u37
 %define		sub_ver	b06
 %define		dir_ver	%(echo %{version} | sed 's/\\.\\(..\\)$/_\\1/')
