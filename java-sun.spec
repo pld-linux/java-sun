@@ -31,9 +31,9 @@ License:	restricted, distributable
 Group:		Development/Languages/Java
 # Download URL (requires JavaScript and interactive license agreement):
 # http://www.oracle.com/technetwork/java/javase/downloads/index.html
-Source0:	jdk-%{src_ver}-linux-i586.bin
+Source0:	http://download.oracle.com/otn-pub/java/jdk/%{src_ver}-%{sub_ver}/jdk-%{src_ver}-linux-i586.bin
 # Source0-md5:	a7a3d53b10f8bb1fb598dd7d936ecb1d
-Source1:	jdk-%{src_ver}-linux-x64.bin
+Source1:	http://download.oracle.com/otn-pub/java/jdk/%{src_ver}-%{sub_ver}/jdk-%{src_ver}-linux-x64.bin
 # Source1-md5:	82616ae15ca93ccccb37bef3618ecdec
 Source2:	Test.java
 Source3:	Test.class
