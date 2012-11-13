@@ -23,7 +23,7 @@ Summary:	Oracle JDK (Java Development Kit) for Linux
 Summary(pl.UTF-8):	Oracle JDK - środowisko programistyczne Javy dla Linuksa
 Name:		java-sun
 Version:	1.6.0.37
-Release:	1
+Release:	2
 License:	restricted, distributable
 # http://www.oracle.com/technetwork/java/javase/terms/license/index.html
 # See "LICENSE TO DISTRIBUTE SOFTWARE" section, which states you can
