@@ -658,7 +658,7 @@ fi
 %exclude %{jredir}/lib/%{arch}/libjsoundalsa.so
 %ifarch %{ix86}
 %attr(755,root,root) %{jredir}/lib/%{arch}/client
-%attr(755,root,root) %{jredir}/lib/%{arch}/libsplashscreen.so
+%exclude %{jredir}/lib/%{arch}/libsplashscreen.so
 %exclude %{jredir}/lib/%{arch}/libjavaplugin*.so
 %endif
 
