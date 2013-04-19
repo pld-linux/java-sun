@@ -14,7 +14,7 @@
 
 # disable file duplicate packaging error
 %define		_duplicate_files_terminate_build   0
-%define		src_ver	6u43
+%define		src_ver	6u45
 %define		sub_ver	b06
 %define		dir_ver	%(echo %{version} | sed 's/\\.\\(..\\)$/_\\1/')
 # class data version seen with file(1) that this jvm is able to load
@@ -22,7 +22,7 @@
 Summary:	Oracle JDK (Java Development Kit) for Linux
 Summary(pl.UTF-8):	Oracle JDK - środowisko programistyczne Javy dla Linuksa
 Name:		java-sun
-Version:	1.6.0.43
+Version:	1.6.0.45
 Release:	1
 License:	restricted, distributable
 # http://www.oracle.com/technetwork/java/javase/terms/license/index.html
@@ -32,9 +32,9 @@ Group:		Development/Languages/Java
 # Download URL (requires JavaScript and interactive license agreement):
 # http://www.oracle.com/technetwork/java/javase/downloads/index.html
 Source0:	http://download.oracle.com/otn-pub/java/jdk/%{src_ver}-%{sub_ver}/jdk-%{src_ver}-linux-i586.bin
-# Source0-md5:	42ba71917ecf17d216c3980bbc732479
+# Source0-md5:	3269370b7c34e6cbfed8785d3d0c5cbd
 Source1:	http://download.oracle.com/otn-pub/java/jdk/%{src_ver}-%{sub_ver}/jdk-%{src_ver}-linux-x64.bin
-# Source1-md5:	931b2e22c7006dae5554a9c1a620d8f8
+# Source1-md5:	40c1a87563c5c6a90a0ed6994615befe
 Source2:	Test.java
 Source3:	Test.class
 Patch0:		%{name}-desktop.patch
