@@ -384,7 +384,7 @@ cd ..
 cd -
 # patch only copy of the desktop file, leave original unchanged
 cp jre/plugin/desktop/sun_java.desktop .
-%patch0 -p1
+%patch -P0 -p1
 
 # unpack packed jar files -- in %%prep as it is done "in place"
 for pack in $(find . -name '*.pack'); do
